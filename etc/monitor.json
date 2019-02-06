@@ -1,0 +1,49 @@
+{
+    "children": [
+        {
+            "id": "redis",
+            "path": "@@APP_DIRECTORY_PREFIX@@/redis/bin",
+            "executable":  "redis-server",
+            "arguments": "@@APP_CONFIG_DIRECTORY_PREFIX@@/etc/redis/redis.conf",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@"
+        },
+        {
+            "id": "beanstalkd",
+            "path": "@@APP_DIRECTORY_PREFIX@@/beanstalkd/bin",
+            "executable":  "beanstalkd",
+            "arguments": "-b /tmp/",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@"
+        },
+        {
+            "id": "postgresql",
+            "path": "@@APP_DIRECTORY_PREFIX@@/postgresql/bin",
+            "executable":  "postgres",
+            "arguments": "-D @@APP_POSTGRESQL_DATA_DIR@@ @@APP_POSTGRESQL_ARGUMENTS@@",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@"
+        },
+        {
+            "id": "nginx-broker",
+            "path": "@@APP_DIRECTORY_PREFIX@@/nginx-broker/bin",
+            "executable":  "nginx-broker",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/nginx-broker/nginx.conf",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["redis", "beanstalkd", "postgresql"]
+        },
+        {
+            "id": "nginx-epaper",
+            "path": "@@APP_DIRECTORY_PREFIX@@/nginx-epaper/bin",
+            "executable":  "nginx-epaper",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/nginx-epaper/nginx.conf",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["redis", "beanstalkd", "postgresql"]
+        },
+        {
+            "id": "casper-print-queue",
+            "path": "@@APP_DIRECTORY_PREFIX@@/nginx-epaper/bin",
+            "executable":  "casper-print-queue",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-print-queue/conf.json -d status",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["beanstalkd", "redis", "postgresql", "nginx-broker", "nginx-epaper"]
+        }
+    ]
+}

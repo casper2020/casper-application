@@ -139,6 +139,9 @@ void casper::cef3::browser::RootWindowMAC::Show(ShowMode mode) {
         [window_ performMiniaturize:nil];
     else if (mode == ShowMaximized)
         [window_ performZoom:nil];
+    
+    [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
+    
 }
 
 void casper::cef3::browser::RootWindowMAC::Hide() {
@@ -195,6 +198,8 @@ void casper::cef3::browser::RootWindowMAC::Close (bool force)
         static_cast<RootWindowDelegate*>([window_ delegate]).force_close = force;
         [window_ performClose:nil];
     }
+    
+    [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
 
 void casper::cef3::browser::RootWindowMAC::SetDeviceScaleFactor(float device_scale_factor) {
@@ -479,8 +484,10 @@ void casper::cef3::browser::RootWindowMAC::OnSetLoadingState(bool isLoading,
 
 void casper::cef3::browser::RootWindowMAC::NotifyDestroyedIfDone() {
     // Notify once both the window and the browser have been destroyed.
-    if (window_destroyed_ && browser_destroyed_)
+    if ( window_destroyed_ && browser_destroyed_ ) {
         delegate_->OnRootWindowDestroyed(this);
+        [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
+    }
 }
 
 // static

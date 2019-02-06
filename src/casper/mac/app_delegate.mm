@@ -37,7 +37,9 @@ namespace {
     
 }  // namespace
 
+
 @implementation AppDelegate
+
 
 - (id)initWithControls:(bool)with_controls andOsr:(bool)with_osr {
     if (self = [super init]) {
@@ -91,6 +93,7 @@ namespace {
     // Set the delegate for application events.
     [application setDelegate:self];
     
+    
     if (!with_osr_) {
         // Remove the OSR-related menu items when OSR is disabled.
         NSMenuItem* tests_menu = GetMenuBarMenuWithTag(8);
@@ -106,15 +109,38 @@ namespace {
         }
     }
     
-    casper::cef3::browser::RootWindowConfig window_config;
-    window_config.with_controls = with_controls_;
-    window_config.with_osr      = with_osr_;
+    const BOOL appIsAgent = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSUIElement"] boolValue];
+    if ( YES == appIsAgent ) {
+        // ... create status bar menu ...
+        NSStatusBar *statusBar = [NSStatusBar systemStatusBar];
+        
+        statusItem = [statusBar statusItemWithLength:NSSquareStatusItemLength];
+        statusItem.image = [NSImage imageNamed: NSImageNameActionTemplate];
+        [statusItem retain];
+        
+        statusItem.menu = [[[NSMenu alloc]init]retain];
+        
+        if ( nil == statusMenuItem ) {
+            statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Child Processes" action:nil keyEquivalent:@""];
+        }
+        showWindowMenuItem      = [[NSMenuItem alloc] initWithTitle:@"Show Window"          action:@selector(showWindow:) keyEquivalent:@""];
+        preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@""];
+        quitMenuItem            = [[NSMenuItem alloc] initWithTitle:@"Quit"                 action:@selector(quit:) keyEquivalent:@""];
+        
+        [statusItem.menu addItem:statusMenuItem];
+        [statusItem.menu addItem:[NSMenuItem separatorItem]];
+        [statusItem.menu addItem:showWindowMenuItem];
+        [statusItem.menu addItem:[NSMenuItem separatorItem]];
+        [statusItem.menu addItem:preferencesMenuItem];
+        [statusItem.menu addItem:[NSMenuItem separatorItem]];
+        [statusItem.menu addItem:quitMenuItem];
+    } else {
+        [self showWindow:self];
+    }
     
-    window_config.bounds.Set(0, 0, 1024, 768);
-    
-    // Create the first window.
-    casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CreateRootWindow(window_config);
 }
+
+#pragma mark -
 
 - (void)tryToTerminateApplication:(NSApplication*)app {
     casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(false);
@@ -122,6 +148,14 @@ namespace {
 
 - (void)orderFrontStandardAboutPanel:(id)sender {
     [[NSApplication sharedApplication] orderFrontStandardAboutPanel:nil];
+}
+
+- (IBAction)checkForUpdates:(id)sender
+{
+    if ( nil == updater ) {
+        updater = [[SUUpdater alloc]initForBundle:[NSBundle mainBundle]];
+    }
+    [updater checkForUpdates:self];
 }
 
 - (IBAction)reload:(id)sender {
@@ -204,7 +238,24 @@ namespace {
     // TODO CW
     [self printPDFByURL:@"file:///tmp/sample.pdf" direclty: NO];
 }
+    
+- (void)setRunningProcesses:(const casper::app::monitor::Process::List&)list
+{
+    NSMenu* menu = [[NSMenu alloc]init];
+    for ( auto it : list ) {
+        NSString* title = [NSString stringWithFormat:@"%@ ( %@ )",
+                           [NSString stringWithUTF8String:it->info().executable_.c_str()],
+                           [NSNumber numberWithUnsignedInteger:it->pid()]
+        ];
+        [menu addItem:[[NSMenuItem alloc]initWithTitle:title action:nil keyEquivalent:@""]];
+    }
+    
+    if ( nil == statusMenuItem ) {
+        statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Child Processes" action:nil keyEquivalent:@""];
+    }
 
+    [statusMenuItem setSubmenu:menu];
+}
 
 - (void)enableAccessibility:(bool)bEnable
 {
@@ -221,9 +272,49 @@ namespace {
     }
 }
 
-- (NSApplicationTerminateReply)applicationShouldTerminate:
-(NSApplication*)sender {
+#pragma mark -
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*)sender {
     return NSTerminateNow;
+}
+
+#pragma mark -
+
+- (void)showWindow:(id)sender
+{
+    [NSApp activateIgnoringOtherApps:YES];
+
+    auto root_window_manager = casper::cef3::browser::MainContext::Get()->GetRootWindowManager();
+    scoped_refptr<casper::cef3::browser::RootWindow> root_window = root_window_manager->GetActiveRootWindow();
+    if ( nullptr != root_window ) {
+        root_window->Show(casper::cef3::browser::RootWindow::ShowMode::ShowNormal);
+    } else {
+        // Create the first window.
+        casper::cef3::browser::RootWindowConfig window_config;
+        window_config.with_controls = with_controls_;
+        window_config.with_osr      = with_osr_;
+        
+        window_config.bounds.Set(0, 0, 1024, 768);
+        root_window_manager->CreateRootWindow(window_config);
+    }
+}
+
+- (void)showPreferences:(id)sender
+{
+    [NSApp activateIgnoringOtherApps:YES];
+
+    if ( nil == preferencesWindowController ) {
+        preferencesWindowController = [[PreferencesWindowController alloc]initWithSparkle:updater];
+    }
+
+    [preferencesWindowController.window makeKeyAndOrderFront:nil];
+}
+
+- (void)quit:(id)sender
+{
+    casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(true);
+    // Quit the main message loop.
+    casper::cef3::browser::MainMessageLoop::Get()->Quit();
 }
 
 @end

@@ -10,13 +10,20 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
-                <menuItem title="cefclient" tag="1" id="56">
-                    <menu key="submenu" title="TestShell" systemMenu="apple" id="57">
+                <menuItem title="casper" tag="1" id="56">
+                    <menu key="submenu" title="casper" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About cefclient" id="58">
+                            <menuItem title="About casper" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="ybG-9m-VZX"/>
+                            <menuItem title="Check for Updates..." id="bW5-eL-DO0" userLabel="Check For Updates">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="checkForUpdates:" target="-2" id="So4-da-x7x"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="236">
@@ -32,7 +39,7 @@
                             <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide cefclient" keyEquivalent="h" id="134">
+                            <menuItem title="Hide casper" keyEquivalent="h" id="134">
                                 <connections>
                                     <action selector="hide:" target="-1" id="367"/>
                                 </connections>
@@ -51,7 +58,7 @@
                             <menuItem isSeparatorItem="YES" id="149">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit cefclient" keyEquivalent="q" id="136" userLabel="1111">
+                            <menuItem title="Quit casper" keyEquivalent="q" id="136" userLabel="1111">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="369"/>
                                 </connections>

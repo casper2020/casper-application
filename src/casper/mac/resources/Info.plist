@@ -2,8 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>SUFeedURL</key>
+	<string>http://localhost:3101</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>CASPERInitialURL</key>
-	<string>https://github.com/casper2020</string>
+	<string>http://localhost</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
