@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1010"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "47BBC27E220D8A8A00F95DCE"
+               BuildableName = "monitor"
+               BlueprintName = "monitor"
+               ReferencedContainer = "container:casper.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "47BBC27E220D8A8A00F95DCE"
+            BuildableName = "monitor"
+            BlueprintName = "monitor"
+            ReferencedContainer = "container:casper.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "47BBC27E220D8A8A00F95DCE"
+            BuildableName = "monitor"
+            BlueprintName = "monitor"
+            ReferencedContainer = "container:casper.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-d status"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-c eyJkaXJlY3RvcmllcyI6eyJjb25maWciOiIvVXNlcnMvYWpkZ29tZXMvV29yay9jYXNwZXIvaHlkcmEvY2FzcGVyLWFwcGxpY2F0aW9uL291dC9kYXJ3aW4vRGVidWcvYnVpbGQvY2FzcGVyLmFwcC9Db250ZW50cy9SZXNvdXJjZXMvIiwibG9ncyI6Ii9Vc2Vycy9hamRnb21lcy9MaWJyYXJ5L0xvZ3MvY2FzcGVyLyIsInJ1bnRpbWUiOiIvdXNyL2xvY2FsL3Zhci9ydW4vY2FzcGVyLyIsIndvcmtpbmciOiIvVXNlcnMvYWpkZ29tZXMvTGlicmFyeS9DYWNoZXMvY29tLmNsZHdhcmUuY2FzcGVyLyJ9LCJ2YXJpYWJsZXMiOnsiY29tbW9uIjp7IkBAQVBQX0NPTkZJR19ESVJFQ1RPUllfUFJFRklYQEAiOiIvdXNyL2xvY2FsLyIsIkBAQVBQX0RJUkVDVE9SWV9QUkVGSVhAQCI6Ii91c3IvbG9jYWwvY2FzcGVyIiwiQEBBUFBfV09SS0lOR19ESVJFQ1RPUllfUEFUSEBAIjoiL1VzZXJzL2FqZGdvbWVzL0xpYnJhcnkvQ2FjaGVzL2NvbS5jbGR3YXJlLmNhc3Blci8ifSwicG9zdGdyZXNxbCI6eyJAQEFQUF9QT1NUR1JFU1FMX0FSR1VNRU5UU0BAIjoiLWQyIiwiQEBBUFBfUE9TVEdSRVNRTF9EQVRBX0RJUkBAIjoiL1VzZXJzL2FqZGdvbWVzL1dvcmsvY2xkd2FyZS9wb3N0Z3Jlc3FsLTkuNC54L2RhdGEvIn19fQo&#10;&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "47BBC27E220D8A8A00F95DCE"
+            BuildableName = "monitor"
+            BlueprintName = "monitor"
+            ReferencedContainer = "container:casper.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

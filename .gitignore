@@ -1,5 +1,6 @@
 third-party/*
 out/*
 Frameworks/*
+*xcuserdata*
 
 src/casper/app/version.h

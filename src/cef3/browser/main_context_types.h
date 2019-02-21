@@ -62,6 +62,7 @@ namespace casper
                 
                 
                 typedef struct {
+                    std::string app_executable_directory_;
                     std::string app_working_directory_;
                     std::string logs_path_;
                     std::string downloads_path_;

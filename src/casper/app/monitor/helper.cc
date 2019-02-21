@@ -42,7 +42,7 @@
  *
  * @return True on success, false otherwise.
  */
-void casper::app::monitor::Helper::SetError (const casper::app::monitor::Process* a_process, casper::app::monitor::Error& o_error,
+void casper::app::monitor::Helper::SetError (const ::sys::Process* a_process, ::sys::Error& o_error,
                                              const char* const /* a_file */, const char* const a_function, const int a_line,
                                              const errno_t a_errno, const char* const a_format, ...)
 {

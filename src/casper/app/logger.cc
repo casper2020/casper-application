@@ -51,42 +51,48 @@ casper::app::Initializer::~Initializer ()
  * @brief Startup.
  *
  * @param a_path
+ * @param a_module
  * @param a_tag
  */
-void casper::app::Logger::Startup (const std::string& a_path, const std::string& a_tag)
+void casper::app::Logger::Startup (const std::string& a_path, const std::string& a_module, const std::string& a_tag)
 {
-    InnerStartup(a_path, a_tag, __FUNCTION__);
+    InnerStartup(a_path, a_module, a_tag, __FUNCTION__);
 }
 
 /**
  * @brief Restart.
  *
+ * @param a_module
  * @param a_tag
  */
-void casper::app::Logger::Restart (const std::string& a_tag)
+void casper::app::Logger::Restart (const std::string& a_module, const std::string& a_tag)
 {
     InnerShutdown(/* a_complete */ false);
-    InnerStartup(path_, a_tag, __PRETTY_FUNCTION__);
+    InnerStartup(path_, a_module, a_tag, __PRETTY_FUNCTION__);
 }
 
 /**
  * @brief Startup.
  *
  * @param a_path
+ * @param a_module
  * @param a_tag
  * @param a_caller_func
  */
-void casper::app::Logger::InnerStartup (const std::string& a_path, const std::string& a_tag,
+void casper::app::Logger::InnerStartup (const std::string& a_path,
+                                        const std::string& a_module, const std::string& a_tag,
                                         const char* const a_caller_func)
 {
     path_ = a_path;
 
+    loggable_data_->SetModule(a_module);
     loggable_data_->SetTag(a_tag);
     
     // TODO CW
     ::ev::LoggerV2::GetInstance().Startup();
-    ::ev::LoggerV2::GetInstance().Register(client_, { "status" /* , "stderr", "stdout" */ });
+    ::ev::LoggerV2::GetInstance().Register(client_, { "status", "error", /* , "stderr", "stdout" */ });
     ::ev::LoggerV2::GetInstance().Register("status", path_ + std::string("status.log"));
+    ::ev::LoggerV2::GetInstance().Register("error", path_ + std::string("error.log"));
 //    ::ev::LoggerV2::GetInstance().Register("stderr", path_ + std::string("stderr.log"));
 //    ::ev::LoggerV2::GetInstance().Register("stdout", path_ + std::string("stdout.log"));
     ::ev::LoggerV2::GetInstance().Log(client(), "status",

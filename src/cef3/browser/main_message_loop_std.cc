@@ -8,10 +8,12 @@
 
 /**
  * @brief Default constructor.
+ *
+ * @parm a_one_shot_quit_callback
  */
-casper::cef3::browser::MainMessageLoopStd::MainMessageLoopStd ()
+casper::cef3::browser::MainMessageLoopStd::MainMessageLoopStd (std::function<void()> a_one_shot_quit_callback)
 {
-    /* empty */
+    one_shot_quit_callback_ = a_one_shot_quit_callback;
 }
 
 /**
@@ -28,7 +30,12 @@ int casper::cef3::browser::MainMessageLoopStd::MainMessageLoopStd::Run ()
  */
 void casper::cef3::browser::MainMessageLoopStd::MainMessageLoopStd::Quit ()
 {
-    CefQuitMessageLoop();
+    if ( nullptr != one_shot_quit_callback_ ) {
+        one_shot_quit_callback_();
+        one_shot_quit_callback_ = nullptr;
+    } else {
+        CefQuitMessageLoop();
+    }
 }
 
 /**

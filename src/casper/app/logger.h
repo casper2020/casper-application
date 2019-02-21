@@ -27,7 +27,7 @@
 
 #include <string>
 
-#include "casper/app/monitor/singleton.h"
+#include "cc/singleton.h"
 
 #include "ev/logger_v2.h"
 
@@ -35,7 +35,7 @@
     #undef CASPER_APP_LOG
 #endif
 #define CASPER_APP_LOG(a_token, a_format, ...) \
-    ::ev::LoggerV2::GetInstance().Log(::casper::app::Logger::GetInstance().client(), a_token, a_format, __VA_ARGS__);
+    ::ev::LoggerV2::GetInstance().Log(::casper::app::Logger::GetInstance().client(), a_token, "[%-16.16s] " a_format, __FUNCTION__, __VA_ARGS__);
 
 #ifdef CASPER_APP_DEBUG_LOG
     #undef CASPER_APP_DEBUG_LOG
@@ -82,27 +82,35 @@ namespace casper
             ::ev::LoggerV2::Client* client_;
             std::string             path_;
             
-        public: // Method(s) / Fucntion(s)
+        public: // Method(s) / Function(s)
             
-            void Startup (const std::string& a_path, const std::string& a_tag);
-            void Restart (const std::string& a_tag);
+            void Startup (const std::string& a_path, const std::string& a_module, const std::string& a_tag);
+            void Restart (const std::string& a_module, const std::string& a_tag);
             
         private: // Method(s) / Fucntion(s)
             
-            void InnerStartup (const std::string& a_path, const std::string& a_tag,
+            void InnerStartup (const std::string& a_path,
+                               const std::string& a_module, const std::string& a_tag,
                                const char* const a_caller_func);
             void InnerShutdown (const bool a_complete);
             
         public: // Inline Method(s) / Function(s)
             
-            inline ::ev::LoggerV2::Client* client ()
-            {
-                return client_;
-            }
-            
-            
+            ::ev::LoggerV2::Client* client        () const;
+            ::ev::Loggable::Data&   loggable_data () const;
+
         }; // end of class 'Logger'
-        
+
+        inline ::ev::LoggerV2::Client* Logger::client () const
+        {
+            return client_;
+        }
+
+        inline ::ev::Loggable::Data& Logger::loggable_data () const
+        {
+            return *loggable_data_;
+        }
+
     } // end of namespace 'app'
     
 } // end of namespace 'casper'

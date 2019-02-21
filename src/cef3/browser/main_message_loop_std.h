@@ -9,6 +9,8 @@
 
 #include "cef3/browser/main_message_loop.h"
 
+#include <functional>
+
 namespace casper
 {
     
@@ -23,9 +25,13 @@ namespace casper
             class MainMessageLoopStd : public MainMessageLoop
             {
                 
+            private: // Ptrs
+                
+                std::function<void()> one_shot_quit_callback_;
+                
             public: // Consructor/s) / Destructor
                 
-                MainMessageLoopStd();
+                MainMessageLoopStd(std::function<void()> a_one_shot_quit_callback = nullptr);
                 
             public: // Overriden Method(s) / Function(s) - from MainMessageLoop
                 

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		471B255921DCBA8D00F8B07D /* monitor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 471B255721DCBA8D00F8B07D /* monitor.cc */; };
 		47315239219EC7F800B26E66 /* request_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47315238219EC7F800B26E66 /* request_handler.cc */; };
 		4731523C219ECFFB00B26E66 /* context_menu_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4731523A219ECFFB00B26E66 /* context_menu_handler.cc */; };
 		4731523F219ED1A400B26E66 /* download_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4731523D219ED1A400B26E66 /* download_handler.cc */; };
@@ -21,12 +20,17 @@
 		47315264219F01CF00B26E66 /* base_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47315263219F01CF00B26E66 /* base_handler.cc */; };
 		4733C1F121FF269C0028650B /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4733C1F021FF269C0028650B /* PreferencesWindow.xib */; };
 		4733C1F421FF27A70028650B /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4733C1F321FF27A70028650B /* PreferencesWindowController.m */; };
-		4739653C21E3BDC100075E2A /* posix_condition_variable.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4739653B21E3BDC100075E2A /* posix_condition_variable.cc */; };
 		4745755B21E8996500C2819D /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4745755421E898FD00C2819D /* libosal.a */; };
+		4769C78E221703A6006FEE3F /* monitor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4769C78D221703A6006FEE3F /* monitor.mm */; };
 		477EE12B218C623100235617 /* casper Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B44C31C5DF3485C88A8CA57 /* casper Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		47BBC28B220D8B2B00F95DCE /* libjsoncpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47D66CD021E73F9000FC6DF1 /* libjsoncpp.a */; };
+		47BBC28C220D8B2B00F95DCE /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4745755421E898FD00C2819D /* libosal.a */; };
+		47BBC291220D8B3D00F95DCE /* watchdog.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47BBC278220D896600F95DCE /* watchdog.cc */; };
+		47BBC293220D8B3D00F95DCE /* monitor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 471B255721DCBA8D00F8B07D /* monitor.cc */; };
+		47BBC29D220D90E300F95DCE /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1B272201ECFD005413CF /* libcasper-connectors.a */; };
+		47BBC2A7220DC84500F95DCE /* logger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DD1B322201F2F5005413CF /* logger.cc */; };
+		47BBC2A8220DC87F00F95DCE /* helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE421E79A6100FC6DF1 /* helper.cc */; };
 		47D66CD321E73FA700FC6DF1 /* libjsoncpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47D66CD021E73F9000FC6DF1 /* libjsoncpp.a */; };
-		47D66CDF21E75DD500FC6DF1 /* process.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CDD21E75DD500FC6DF1 /* process.cc */; };
-		47D66CE221E75E5600FC6DF1 /* process.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE021E75E5600FC6DF1 /* process.cc */; };
 		47D66CE621E79A6100FC6DF1 /* helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE421E79A6100FC6DF1 /* helper.cc */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
 		47D7D773220061D5004D0579 /* monitor.json in Resources */ = {isa = PBXBuildFile; fileRef = 47D7D772220061D5004D0579 /* monitor.json */; };
 		47DD1B2A2201ED85005413CF /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1B272201ECFD005413CF /* libcasper-connectors.a */; };
@@ -81,7 +85,6 @@
 		47DDA084219DC7FF009AA8A9 /* other_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA02B219DC06C009AA8A9 /* other_app.cc */; };
 		47DDA085219DC819009AA8A9 /* app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA01D219DC06C009AA8A9 /* app.cc */; };
 		47DDA08A219DDA0B009AA8A9 /* extension_util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA089219DDA0B009AA8A9 /* extension_util.cc */; };
-		47E9D6AD2209E9DA002197FD /* version.h.in in Resources */ = {isa = PBXBuildFile; fileRef = 47E9D6AC2209E9DA002197FD /* version.h.in */; };
 		47ED99DC21FF43D00057DF4E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47ED99DB21FF43D00057DF4E /* Sparkle.framework */; };
 		47ED99DD21FF43FB0057DF4E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 47ED99DB21FF43D00057DF4E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6694421949191007C11A0 /* OpenGL.framework */; };
@@ -109,6 +112,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 47CB40011E23EE58004FE268;
 			remoteInfo = osal;
+		};
+		47BBC287220D8B2400F95DCE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4745754F21E898FC00C2819D /* osal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 47CB40011E23EE58004FE268;
+			remoteInfo = osal;
+		};
+		47BBC289220D8B2400F95DCE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47D66CCB21E73F9000FC6DF1 /* jsoncpp.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A5598FF519C305F700490EBE;
+			remoteInfo = jsoncpp;
+		};
+		47BBC29B220D90DF00F95DCE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 476EF7C91E23EC91004A13C2;
+			remoteInfo = "casper-connectors";
 		};
 		47D66CCF21E73F9000FC6DF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -159,6 +183,13 @@
 			remoteGlobalIDString = 47DD2177218C4C5C005EB1A6;
 			remoteInfo = cef_dll_wrapper;
 		};
+		47F4018E2215D5E400E557A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80B1FD452CA4477D9D093D2B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 47BBC27E220D8A8A00F95DCE;
+			remoteInfo = monitor;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -177,7 +208,6 @@
 
 /* Begin PBXFileReference section */
 		471B255721DCBA8D00F8B07D /* monitor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monitor.cc; sourceTree = "<group>"; };
-		471B255821DCBA8D00F8B07D /* monitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monitor.h; sourceTree = "<group>"; };
 		47315237219EC7F800B26E66 /* request_handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = request_handler.h; sourceTree = "<group>"; };
 		47315238219EC7F800B26E66 /* request_handler.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = request_handler.cc; sourceTree = "<group>"; };
 		4731523A219ECFFB00B26E66 /* context_menu_handler.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context_menu_handler.cc; sourceTree = "<group>"; };
@@ -203,18 +233,18 @@
 		4733C1F021FF269C0028650B /* PreferencesWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		4733C1F221FF27A70028650B /* PreferencesWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PreferencesWindowController.h; path = src/casper/mac/PreferencesWindowController.h; sourceTree = SOURCE_ROOT; };
 		4733C1F321FF27A70028650B /* PreferencesWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PreferencesWindowController.m; path = src/casper/mac/PreferencesWindowController.m; sourceTree = SOURCE_ROOT; };
-		4739653A21E3BDC100075E2A /* posix_condition_variable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posix_condition_variable.h; path = "../../casper-osal/src/osal/posix/posix_condition_variable.h"; sourceTree = "<group>"; };
-		4739653B21E3BDC100075E2A /* posix_condition_variable.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = posix_condition_variable.cc; path = "../../casper-osal/src/osal/posix/posix_condition_variable.cc"; sourceTree = "<group>"; };
 		4745754F21E898FC00C2819D /* osal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = osal.xcodeproj; path = "../casper-packager/osal/osal.xcodeproj"; sourceTree = "<group>"; };
-		4745756321E8A0D600C2819D /* singleton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = singleton.h; sourceTree = "<group>"; };
 		474A8243218895BD00B1990B /* libcef_dll_wrapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcef_dll_wrapper.a; path = ../cef3/chromium_git/chromium/src/out/Debug_GN_x64/obj/cef/libcef_dll_wrapper.a; sourceTree = "<group>"; };
 		474BDFC121905A61005745E8 /* cef_sandbox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = cef_sandbox.a; path = "third-party/cef/cef_binary_3.3538.1849.g458cc98_macosx64/Debug/cef_sandbox.a"; sourceTree = "<group>"; };
+		4769C78C221703A6006FEE3F /* monitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monitor.h; sourceTree = "<group>"; };
+		4769C78D221703A6006FEE3F /* monitor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = monitor.mm; sourceTree = "<group>"; };
+		47BAE3FE2211753C0036A950 /* version.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.h.in; sourceTree = "<group>"; };
+		47BAE401221175940036A950 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		47BAE41722119B080036A950 /* common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
+		47BBC278220D896600F95DCE /* watchdog.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = watchdog.cc; sourceTree = "<group>"; };
+		47BBC279220D896700F95DCE /* watchdog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = watchdog.h; sourceTree = "<group>"; };
+		47BBC27F220D8A8A00F95DCE /* monitor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = monitor; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D66CCB21E73F9000FC6DF1 /* jsoncpp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = jsoncpp.xcodeproj; path = "../../hydra/casper-packager/jsoncpp/jsoncpp.xcodeproj"; sourceTree = "<group>"; };
-		47D66CDD21E75DD500FC6DF1 /* process.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = process.cc; sourceTree = "<group>"; };
-		47D66CDE21E75DD500FC6DF1 /* process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
-		47D66CE021E75E5600FC6DF1 /* process.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = process.cc; sourceTree = "<group>"; };
-		47D66CE121E75E5600FC6DF1 /* process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
-		47D66CE321E7996600FC6DF1 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
 		47D66CE421E79A6100FC6DF1 /* helper.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cc; sourceTree = "<group>"; };
 		47D66CE521E79A6100FC6DF1 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
 		47D7D772220061D5004D0579 /* monitor.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = monitor.json; sourceTree = "<group>"; };
@@ -340,6 +370,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		47BBC27C220D8A8A00F95DCE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47BBC29D220D90E300F95DCE /* libcasper-connectors.a in Frameworks */,
+				47BBC28B220D8B2B00F95DCE /* libjsoncpp.a in Frameworks */,
+				47BBC28C220D8B2B00F95DCE /* libosal.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -381,15 +421,6 @@
 			children = (
 			);
 			path = mac;
-			sourceTree = "<group>";
-		};
-		4739653921E3BD8A00075E2A /* osal */ = {
-			isa = PBXGroup;
-			children = (
-				4739653A21E3BDC100075E2A /* posix_condition_variable.h */,
-				4739653B21E3BDC100075E2A /* posix_condition_variable.cc */,
-			);
-			path = osal;
 			sourceTree = "<group>";
 		};
 		4745755021E898FC00C2819D /* Products */ = {
@@ -443,26 +474,15 @@
 		47D66CDB21E75DD500FC6DF1 /* monitor */ = {
 			isa = PBXGroup;
 			children = (
-				4745756321E8A0D600C2819D /* singleton.h */,
-				47D66CE321E7996600FC6DF1 /* error.h */,
-				47D66CE121E75E5600FC6DF1 /* process.h */,
-				47D66CE021E75E5600FC6DF1 /* process.cc */,
+				47BAE401221175940036A950 /* version.h */,
+				47BAE3FE2211753C0036A950 /* version.h.in */,
+				47BBC279220D896700F95DCE /* watchdog.h */,
+				47BBC278220D896600F95DCE /* watchdog.cc */,
 				47D66CE521E79A6100FC6DF1 /* helper.h */,
 				47D66CE421E79A6100FC6DF1 /* helper.cc */,
-				471B255821DCBA8D00F8B07D /* monitor.h */,
 				471B255721DCBA8D00F8B07D /* monitor.cc */,
-				47D66CDC21E75DD500FC6DF1 /* darwin */,
 			);
 			path = monitor;
-			sourceTree = "<group>";
-		};
-		47D66CDC21E75DD500FC6DF1 /* darwin */ = {
-			isa = PBXGroup;
-			children = (
-				47D66CDE21E75DD500FC6DF1 /* process.h */,
-				47D66CDD21E75DD500FC6DF1 /* process.cc */,
-			);
-			path = darwin;
 			sourceTree = "<group>";
 		};
 		47DD1B232201ECFD005413CF /* Products */ = {
@@ -660,6 +680,8 @@
 				47DDA03C219DC06C009AA8A9 /* app_delegate.h */,
 				47DDA03B219DC06C009AA8A9 /* app_delegate.mm */,
 				47DDA07F219DC4AC009AA8A9 /* cef_factory.mm */,
+				4769C78C221703A6006FEE3F /* monitor.h */,
+				4769C78D221703A6006FEE3F /* monitor.mm */,
 				47DDA03D219DC06C009AA8A9 /* main.mm */,
 				4733C1F221FF27A70028650B /* PreferencesWindowController.h */,
 				4733C1F321FF27A70028650B /* PreferencesWindowController.m */,
@@ -753,6 +775,7 @@
 			children = (
 				D0A6C5658A684EEF9956A354 /* casper.app */,
 				4B44C31C5DF3485C88A8CA57 /* casper Helper.app */,
+				47BBC27F220D8A8A00F95DCE /* monitor */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -763,8 +786,8 @@
 				47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */,
 				4745754F21E898FC00C2819D /* osal.xcodeproj */,
 				47D66CCB21E73F9000FC6DF1 /* jsoncpp.xcodeproj */,
+				47BAE41722119B080036A950 /* common.xcconfig */,
 				47D66CC721E73E8300FC6DF1 /* etc */,
-				4739653921E3BD8A00075E2A /* osal */,
 				47DD217F218C4C7E005EB1A6 /* cef_dll_wrapper.xcodeproj */,
 				47C991C821948DFA0093484D /* src */,
 				6605CAF5022E4404A2A1EF10 /* Products */,
@@ -794,11 +817,32 @@
 				47DD1B292201ED09005413CF /* PBXTargetDependency */,
 				4745755A21E8995700C2819D /* PBXTargetDependency */,
 				47D66CD221E73FA300FC6DF1 /* PBXTargetDependency */,
+				47F4018F2215D5E400E557A6 /* PBXTargetDependency */,
 			);
 			name = casper;
 			productName = minimal;
 			productReference = D0A6C5658A684EEF9956A354 /* casper.app */;
 			productType = "com.apple.product-type.application";
+		};
+		47BBC27E220D8A8A00F95DCE /* monitor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47BBC283220D8A8A00F95DCE /* Build configuration list for PBXNativeTarget "monitor" */;
+			buildPhases = (
+				47BAE4002211756F0036A950 /* ShellScript */,
+				47BBC27B220D8A8A00F95DCE /* Sources */,
+				47BBC27C220D8A8A00F95DCE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				47BBC29C220D90DF00F95DCE /* PBXTargetDependency */,
+				47BBC288220D8B2400F95DCE /* PBXTargetDependency */,
+				47BBC28A220D8B2400F95DCE /* PBXTargetDependency */,
+			);
+			name = monitor;
+			productName = monitor;
+			productReference = 47BBC27F220D8A8A00F95DCE /* monitor */;
+			productType = "com.apple.product-type.tool";
 		};
 		8B7BE920A0724A8F9E4B9522 /* casper-helper */ = {
 			isa = PBXNativeTarget;
@@ -827,6 +871,12 @@
 				BuildIndependentTargetsInParallel = YES;
 				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 1000;
+				TargetAttributes = {
+					47BBC27E220D8A8A00F95DCE = {
+						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = C647537F963E42CDAAA66819 /* Build configuration list for PBXProject "casper" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -860,6 +910,7 @@
 			targets = (
 				3446164C34854BB9B49E2D1A /* casper */,
 				8B7BE920A0724A8F9E4B9522 /* casper-helper */,
+				47BBC27E220D8A8A00F95DCE /* monitor */,
 			);
 		};
 /* End PBXProject section */
@@ -905,7 +956,6 @@
 				47DDA068219DC06C009AA8A9 /* casper.icns in Resources */,
 				47DDA06B219DC06C009AA8A9 /* MainMenu.xib in Resources */,
 				47DDA06A219DC06C009AA8A9 /* InfoPlist.strings in Resources */,
-				47E9D6AD2209E9DA002197FD /* version.h.in in Resources */,
 				47DDA064219DC06C009AA8A9 /* helper-Info.plist in Resources */,
 				47DDA069219DC06C009AA8A9 /* Info.plist in Resources */,
 			);
@@ -948,6 +998,23 @@
 			shellPath = /bin/sh;
 			shellScript = "echo \"ACTION='$ACTION'\"\necho \"CASPER_ACTION='$CASPER_ACTION'\"\necho \"XCODE_RUNTIME_APP_PATH=$XCODE_RUNTIME_APP_PATH\"\nln -sf $SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium\\ Embedded\\ Framework.framework $SRCROOT/third-party/cef/Frameworks/\nmkdir -p \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\ncp -RfL \"$SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium Embedded Framework.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\nchmod -R go+rX \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\nif [ $CASPER_ACTION = \"clean\" ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\nelif [ $CASPER_ACTION = \"build\" ] ; then\n    if [ -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n        rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    fi\n    cp -vf $SRCROOT/etc/monitor.json $METAL_LIBRARY_OUTPUT_DIR\nelif [ ! -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    ( cd $METAL_LIBRARY_OUTPUT_DIR && ln -sf $SRCROOT/etc/monitor.json monitor.json )\nfi\n";
 		};
+		47BAE4002211756F0036A950 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ ! -f src/casper/app/monitor/version.h ] ; then\n    cp -fv src/casper/app/monitor/version.h.in src/casper/app/monitor/version.h\nfi\n";
+		};
 		47E9D6AA2209E99C002197FD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -979,7 +1046,6 @@
 				47DDA059219DC06C009AA8A9 /* main_message_loop_external_pump.mm in Sources */,
 				47315260219EEF5F00B26E66 /* context_menu_handler.cc in Sources */,
 				47DDA05D219DC06C009AA8A9 /* main_context.cc in Sources */,
-				47D66CE221E75E5600FC6DF1 /* process.cc in Sources */,
 				47DDA05E219DC06C009AA8A9 /* main_message_loop_std.cc in Sources */,
 				47DDA05F219DC06C009AA8A9 /* main_message_loop.cc in Sources */,
 				47DDA04E219DC06C009AA8A9 /* file_util_posix.cc in Sources */,
@@ -998,10 +1064,10 @@
 				47DDA062219DC06C009AA8A9 /* app.cc in Sources */,
 				47DDA056219DC06C009AA8A9 /* browser_window.cc in Sources */,
 				47DDA070219DC06C009AA8A9 /* main_context.mm in Sources */,
+				4769C78E221703A6006FEE3F /* monitor.mm in Sources */,
 				47DDA05B219DC06C009AA8A9 /* temp_window.mm in Sources */,
 				47DDA072219DC06C009AA8A9 /* client_app_browser.cc in Sources */,
 				47DDA058219DC06C009AA8A9 /* browser_window_std_mac.mm in Sources */,
-				4739653C21E3BDC100075E2A /* posix_condition_variable.cc in Sources */,
 				47DDA076219DC06C009AA8A9 /* main_context.cc in Sources */,
 				47315264219F01CF00B26E66 /* base_handler.cc in Sources */,
 				47DDA061219DC06C009AA8A9 /* main.cc in Sources */,
@@ -1013,8 +1079,6 @@
 				47DDA060219DC06C009AA8A9 /* root_window_manager.cc in Sources */,
 				47DDA063219DC06C009AA8A9 /* switches.cc in Sources */,
 				47D66CE621E79A6100FC6DF1 /* helper.cc in Sources */,
-				471B255921DCBA8D00F8B07D /* monitor.cc in Sources */,
-				47D66CDF21E75DD500FC6DF1 /* process.cc in Sources */,
 				4733C1F421FF27A70028650B /* PreferencesWindowController.m in Sources */,
 				47DDA071219DC06C009AA8A9 /* image_cache.cc in Sources */,
 				47DDA06C219DC06C009AA8A9 /* client_handler.mm in Sources */,
@@ -1024,6 +1088,17 @@
 				47DDA052219DC06C009AA8A9 /* request_context_handler.cc in Sources */,
 				47DDA051219DC06C009AA8A9 /* extension_handler.cc in Sources */,
 				47DDA080219DC4AC009AA8A9 /* cef_factory.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47BBC27B220D8A8A00F95DCE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47BBC2A8220DC87F00F95DCE /* helper.cc in Sources */,
+				47BBC291220D8B3D00F95DCE /* watchdog.cc in Sources */,
+				47BBC293220D8B3D00F95DCE /* monitor.cc in Sources */,
+				47BBC2A7220DC84500F95DCE /* logger.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1052,6 +1127,21 @@
 			name = osal;
 			targetProxy = 4745755921E8995700C2819D /* PBXContainerItemProxy */;
 		};
+		47BBC288220D8B2400F95DCE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = osal;
+			targetProxy = 47BBC287220D8B2400F95DCE /* PBXContainerItemProxy */;
+		};
+		47BBC28A220D8B2400F95DCE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = jsoncpp;
+			targetProxy = 47BBC289220D8B2400F95DCE /* PBXContainerItemProxy */;
+		};
+		47BBC29C220D90DF00F95DCE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "casper-connectors";
+			targetProxy = 47BBC29B220D90DF00F95DCE /* PBXContainerItemProxy */;
+		};
 		47D66CD221E73FA300FC6DF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = jsoncpp;
@@ -1071,6 +1161,11 @@
 			isa = PBXTargetDependency;
 			name = cef_dll_wrapper;
 			targetProxy = 47DD240B218C4DE8005EB1A6 /* PBXContainerItemProxy */;
+		};
+		47F4018F2215D5E400E557A6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 47BBC27E220D8A8A00F95DCE /* monitor */;
+			targetProxy = 47F4018E2215D5E400E557A6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1188,6 +1283,133 @@
 			};
 			name = Debug;
 		};
+		47BBC284220D8A8A00F95DCE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 47BAE41722119B080036A950 /* common.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../lemon",
+					/usr/local/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = /usr/local/lib/libevent.a;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../casper-osal/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";
+			};
+			name = Debug;
+		};
+		47BBC285220D8A8A00F95DCE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 47BAE41722119B080036A950 /* common.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../lemon",
+					/usr/local/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = /usr/local/lib/libevent.a;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../casper-osal/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";
+			};
+			name = Release;
+		};
 		6C4E98CCC98A44B7977001F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1238,6 +1460,7 @@
 					"$(SRCROOT)/src",
 					"$(SRCROOT)/third-party/cef",
 					"$(SRCROOT)/../lemon",
+					/usr/local/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/casper/mac/resources/Info.plist";
 				INSTALL_PATH = "";
@@ -1276,13 +1499,14 @@
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
 					"-lpthread",
+					/usr/local/lib/libevent.a,
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cldware.casper;
 				PRODUCT_NAME = casper;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/out/darwin/build/$(CONFIGURATION)";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../casper-osal/src $(SRCROOT)/third-party/cef $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../lemon";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../casper-osal/src $(SRCROOT)/third-party/cef $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1344,6 +1568,7 @@
 					"$(SRCROOT)/src",
 					"$(SRCROOT)/third-party/cef",
 					"$(SRCROOT)/../lemon",
+					/usr/local/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/casper/mac/resources/Info.plist";
 				INSTALL_PATH = "";
@@ -1382,6 +1607,7 @@
 					"-lpthread",
 					"\"$(SRCROOT)/third-party/cef/Frameworks/$(CONFIGURATION)/Chromium Embedded Framework.framework/Chromium Embedded Framework\"",
 					"\"$(SRCROOT)/third-party/cef/Frameworks/$(CONFIGURATION)/cef_sandbox.a\"",
+					/usr/local/lib/libevent.a,
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cldware.casper;
@@ -1389,7 +1615,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/out/darwin/build/$(CONFIGURATION)";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../casper-osal/src $(SRCROOT)/third-party/cef $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../lemon";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../casper-osal/src $(SRCROOT)/third-party/cef $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1496,6 +1722,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		47BBC283220D8A8A00F95DCE /* Build configuration list for PBXNativeTarget "monitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47BBC284220D8A8A00F95DCE /* Debug */,
+				47BBC285220D8A8A00F95DCE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		745FEDF1428848DFAE224C96 /* Build configuration list for PBXNativeTarget "casper-helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

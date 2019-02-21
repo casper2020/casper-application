@@ -239,13 +239,15 @@ namespace {
     [self printPDFByURL:@"file:///tmp/sample.pdf" direclty: NO];
 }
     
-- (void)setRunningProcesses:(const casper::app::monitor::Process::List&)list
+- (void)setRunningProcesses:(const Json::Value&)list
 {
     NSMenu* menu = [[NSMenu alloc]init];
-    for ( auto it : list ) {
+    
+    for ( Json::ArrayIndex idx = 0 ; idx < list.size() ; ++idx ) {
+        const Json::Value& process = list[idx];
         NSString* title = [NSString stringWithFormat:@"%@ ( %@ )",
-                           [NSString stringWithUTF8String:it->info().executable_.c_str()],
-                           [NSNumber numberWithUnsignedInteger:it->pid()]
+                           [NSString stringWithUTF8String:process["id"].asCString()],
+                           [NSNumber numberWithUnsignedInteger:process["pid"].asUInt()]
         ];
         [menu addItem:[[NSMenuItem alloc]initWithTitle:title action:nil keyEquivalent:@""]];
     }
@@ -255,6 +257,102 @@ namespace {
     }
 
     [statusMenuItem setSubmenu:menu];
+}
+
+- (void)showError:(const Json::Value&)error
+{
+    // error["no"].asCString();
+    // error["str"].asCString();
+    // error["msg"].asCString();
+    // error["fnc"].asCString();
+    // error["ln"].asCString();
+    // error["fatal"].asCString();
+
+    NSAlert* alert = [[NSAlert alloc]init];
+    [alert setAlertStyle:NSAlertStyleCritical];
+    [alert setMessageText:[NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]];
+    [alert addButtonWithTitle:@"OK"];
+    [alert runModal];
+    
+    if ( true == error.get("fatal", false).asBool() ) {
+        [self quit: nil];
+    }
+}
+
+- (void)showException:(const std::exception&)exception delayFor:(NSTimeInterval)seconds andQuit:(BOOL)quit
+{
+    
+    __block std::exception __exception = exception;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        NSAlert* alert = [[NSAlert alloc]init];
+        [alert setAlertStyle:NSAlertStyleCritical];
+        [alert setMessageText:[NSString stringWithCString: __exception.what() encoding: NSUTF8StringEncoding]];
+        [alert addButtonWithTitle:@"OK"];
+        const NSModalResponse r = [alert runModal];
+        if ( r == NSAlertFirstButtonReturn ) {
+            if ( YES == quit ) {
+                [self quit: nil];
+            }
+        }
+    });
+}
+
+- (void)startProcess:(const Json::Value&)process notifyWhenStarted:(void(^)(pid_t))startedCallback andWhenFinished:(void(^)(int))finishedCallback
+{
+    
+    __block const Json::Value config = process;
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        const Json::Value& arguments   = config["monitor"]["arguments"];
+        
+        NSString*       __launch_path = [NSString stringWithUTF8String: config["monitor"]["path"].asCString()];
+        NSMutableArray* __arguments   = [[NSMutableArray alloc]init];
+        for ( Json::ArrayIndex idx = 0 ; idx < arguments.size() ; ++idx ) {
+            [__arguments addObject:[NSString stringWithUTF8String: arguments[idx].asCString()]];
+        }
+        
+        NSTask* task = [[NSTask alloc]init];
+        task.launchPath = __launch_path;
+        task.arguments  = __arguments;
+        [task launch];
+        
+        const pid_t pid = static_cast<pid_t>(task.processIdentifier);
+        
+        running_tasks_[pid] = task;
+        
+        startedCallback(pid);
+                
+        [task waitUntilExit];
+        
+        const auto it = running_tasks_.find(pid);
+        if ( running_tasks_.end() != it ) {
+            running_tasks_.erase(it);
+        }
+        
+        finishedCallback(EXIT_SUCCESS);
+        
+    });
+}
+
+- (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int))finishedCallback
+{
+    __block const pid_t __pid = pid;
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        const auto it = running_tasks_.find(__pid);
+        if ( running_tasks_.end() != it ) {
+            
+            [it->second terminate];
+            running_tasks_.erase(it);
+        }
+        
+        finishedCallback(EXIT_SUCCESS);
+        
+    });
 }
 
 - (void)enableAccessibility:(bool)bEnable
@@ -312,8 +410,9 @@ namespace {
 
 - (void)quit:(id)sender
 {
+    // .. close open window(s) ( if any ) ...
     casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(true);
-    // Quit the main message loop.
+    // ... and the main message loop ...
     casper::cef3::browser::MainMessageLoop::Get()->Quit();
 }
 

@@ -28,8 +28,8 @@
 #include <unistd.h> // getppid
 #include <mutex>    // std::mutex
 
-#include "casper/app/monitor/error.h"
-#include "casper/app/monitor/process.h"
+#include "sys/error.h"
+#include "sys/process.h"
 
 #include "casper/app/logger.h"
 
@@ -44,6 +44,19 @@
 #endif
 #define CASPER_APP_MONITOR_RESET_ERROR(o_error) \
     o_error.Reset();
+
+#ifdef CASPER_APP_MONITOR_LOG_ERROR
+    #undef CASPER_APP_MONITOR_LOG_ERROR
+#endif
+#define CASPER_APP_MONITOR_LOG_ERROR(a_token, a_error) [&] () { \
+    CASPER_APP_LOG(a_token, "------ [B] %s ------", "ERROR"); \
+    CASPER_APP_LOG(a_token, "%s:%d", a_error.function(), a_error.line()); \
+    CASPER_APP_LOG(a_token, "message: %s", a_error.message().c_str()); \
+    if ( sys::Error::k_no_error_ != a_error.no() ) { \
+        CASPER_APP_LOG(a_token, "system: %s", a_error.str().c_str()); \
+    } \
+    CASPER_APP_LOG(a_token, "------ [E] %s ------", "ERROR"); \
+} ()
 
 #ifdef CASPER_APP_MONITOR_FATAL_ERROR
     #undef CASPER_APP_MONITOR_FATAL_ERROR
@@ -72,7 +85,7 @@ namespace casper
                                 
             public: // Method(s) / Function(s)
                 
-                void SetError (const casper::app::monitor::Process* a_process, casper::app::monitor::Error& o_error,
+                void SetError (const ::sys::Process* a_process, ::sys::Error& o_error,
                                const char* const a_file, const char* const a_function, const int a_line,
                                const errno_t a_errno, const char* const a_format, ...)  __attribute__((format(printf, 8, 9))
                 );

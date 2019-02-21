@@ -19,19 +19,19 @@
  * along with casper. If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#ifndef CASPER_VERSION_H_
+#ifndef CASPER_APP_MONITOR_VERSION_H_
 #define CASPER_VERSION_H_
 
-#ifndef CASPER_NAME
-#define CASPER_NAME "casper"
+#ifndef CASPER_MONITOR_NAME
+    #define CASPER_MONITOR_NAME "casper"
 #endif
 
-#ifndef CASPER_VERSION
-#define CASPER_VERSION "x.x.x"
+#ifndef CASPER_MONITOR_VERSION
+    #define CASPER_MONITOR_VERSION "x.x.x"
 #endif
 
-#ifndef CASPER_INFO
-#define CASPER_INFO CASPER_NAME " v" CASPER_VERSION
+#ifndef CASPER_MONITOR_INFO
+    #define CASPER_MONITOR_INFO CASPER_MONITOR_NAME " v" CASPER_MONITOR_VERSION
 #endif
 
-#endif // CASPER_VERSION_H_
+#endif // CASPER_APP_MONITOR_VERSION_H_
