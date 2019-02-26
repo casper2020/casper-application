@@ -52,6 +52,8 @@
 #include "osal/osalite.h"
 #include "osal/osal_file.h"
 
+#include "ev/signals.h"
+
 #include "cc/b64.h"
 
 #define READ_LINK(a_link, a_fallback)[&] () { \
@@ -246,7 +248,8 @@ public: // Static Method(s) / Function(s)
  */
 static int StartCEF3 (int a_argc, char* a_argv[],
                       const casper::cef3::browser::Settings& a_settings,
-                      const std::function<void(CefRefPtr<CEF2APPHook>, casper::app::mac::Monitor::QuitCallback)>& a_started_callback)
+                      const std::function<void(CefRefPtr<CEF2APPHook>, casper::app::mac::Monitor::QuitCallback)>& a_started_callback,
+                      const std::function<void()> a_finished_callback)
 {
     //... load the CEF framework library at runtime instead of linking directly ...
     // ... as required by the macOS sandbox implementation ...
@@ -302,7 +305,7 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     // ... create the main message loop object ...
     scoped_ptr<casper::cef3::browser::MainMessageLoop> message_loop;
     message_loop.reset(new casper::cef3::browser::MainMessageLoopStd([]() {
-        casper::app::mac::Monitor::GetInstance().Stop();
+        casper::app::mac::Monitor::GetInstance().Stop(/* a_soft*/ true);
     }));
     
     // ... initialize CEF ...
@@ -334,9 +337,13 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     // ... finally shut down CEF ...
     CASPER_APP_DEBUG_LOG("status", "%s", "CEF shutdown...");
     context->Shutdown();
-        
+
+    a_finished_callback();
+
     // ... reset delegate ..
     hook->Set(static_cast<AppDelegate*>(nullptr));
+    
+    const BOOL relaunch = [delegate shouldRelaunch];
     
     // ... release objects ( in reverse order of creation ) ...
     [delegate release];
@@ -345,6 +352,11 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     [autopool release];
     
     CASPER_APP_DEBUG_LOG("status", "%s", "Stopped...");
+    
+    if ( YES == relaunch ) {
+        CASPER_APP_DEBUG_LOG("status", "%s", "Relaunch...");
+        [NSTask launchedTaskWithLaunchPath:[[NSBundle mainBundle]executablePath] arguments: @[]];
+    }
     
     // ... done ...
     return result;
@@ -362,6 +374,28 @@ int main (int a_argc, char* a_argv[])
     signal(SIGPIPE, SIG_IGN);
 #endif
 
+    // ... install signal(s) handler ...
+    ::ev::Signals::GetInstance().Startup(::casper::app::Logger::GetInstance().loggable_data());
+    ::ev::Signals::GetInstance().Register(
+                                          /* a_signals */
+                                          { SIGUSR1, SIGTERM, SIGQUIT, SIGTTIN },
+                                          /* a_callback */
+                                          [](const int a_sig_no) {
+                                              // ... is a 'shutdown' signal?
+                                              switch(a_sig_no) {
+                                                  case SIGQUIT:
+                                                  case SIGTERM:
+                                                  {
+                                                      AppDelegate* delegate = (AppDelegate*)[NSApp delegate];
+                                                      [delegate quit: nil];
+                                                  }
+                                                      return true;
+                                                  default:
+                                                      return false;
+                                              }
+                                          }
+    );
+    
     osal::debug::Trace::GetInstance().Register("status", stdout);
 
     osal::debug::Trace::GetInstance().Log("status", "\n* %s - starting up %s process w/pid %u...\n",
@@ -478,22 +512,32 @@ int main (int a_argc, char* a_argv[])
     
     const std::string runtime_path        = "/usr/local/var/run/casper/";
     
+
+    const char* rt_app_dir_prefix;
+    const char* rt_monitor_app_dir;
+
 #ifdef DEBUG
-    const char* const rt_app_dir_prefix  = getenv("XCODE_RUNTIME_APP_PATH");
-    const char* const rt_monitor_app_dir = getenv("XCODE_RUNTIME_MONITOR_APP_DIR");
+    const char* const xcode_app_debug = getenv("XCODE_APP_DEBUG");
+    if ( nullptr != xcode_app_debug && 0 == strcasecmp("true", xcode_app_debug) ) {
+        rt_app_dir_prefix  = getenv("XCODE_RUNTIME_APP_PATH");
+        rt_monitor_app_dir = getenv("XCODE_RUNTIME_MONITOR_APP_DIR");
+    } else {
+        rt_app_dir_prefix  = nullptr;
+        rt_monitor_app_dir = nullptr;
+    }
 #else
-    const char* const rt_app_dir_prefix  = nullptr;
-    const char* const rt_monitor_app_dir = nullptr;
+    rt_app_dir_prefix  = nullptr;
+    rt_monitor_app_dir = nullptr;
 #endif
     
-    const std::string app_dir_prefix    = NORMALIZE_PATH(nil != rt_app_dir_prefix
+    const std::string app_dir_prefix    = NORMALIZE_PATH(nullptr != rt_app_dir_prefix
                                                           ?
                                                          rt_app_dir_prefix
                                                           :
                                                          exec_dir
                                           );
     
-    const std::string monitor_app_dir   = NORMALIZE_PATH(nil != rt_monitor_app_dir
+    const std::string monitor_app_dir   = NORMALIZE_PATH(nullptr != rt_monitor_app_dir
                                                           ?
                                                          rt_monitor_app_dir
                                                           :
@@ -538,7 +582,7 @@ int main (int a_argc, char* a_argv[])
             /* arguments_ */ postgresql_arguments
         },
         /* config_dir_prefix_ */ config_dir_prefix,
-        /* apps_dir_prefix_   */ rt_app_dir_prefix,
+        /* apps_dir_prefix_   */ app_dir_prefix,
         /* working_directory_ */ working_dir
     };
 
@@ -567,8 +611,7 @@ int main (int a_argc, char* a_argv[])
     Json::FastWriter fast_writer;
     
     const std::string b64_config  = cc::base64_url_unpadded::encode(fast_writer.write(config));
-    const std::string launch_path = monitor_app_dir + "monitor";
-    
+    const std::string launch_path = monitor_app_dir + "monitor";    
     
     osal::File::Delete(directories["runtime"].asCString(), "*.socket", nullptr);
     
@@ -603,6 +646,10 @@ int main (int a_argc, char* a_argv[])
                                                                         quit_callback
                         );
                          
+                     },
+                     [] {
+                         casper::app::mac::Monitor::GetInstance().Stop(/* a_destroy */ true);
+                         casper::app::mac::Monitor::Destroy();
                      }
     );
 }

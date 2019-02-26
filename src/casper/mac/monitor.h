@@ -88,7 +88,7 @@ namespace casper
                 
                 void Start (const Json::Value& a_config, BindCallback a_bind_callback, DispatchCallback a_dispatch_callback,
                             QuitCallback a_quit_callback);
-                void Stop  ();
+                void Stop  (bool a_soft);
                 
             private: // Method(s) / Function(s)
                 

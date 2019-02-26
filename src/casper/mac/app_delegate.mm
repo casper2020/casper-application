@@ -45,6 +45,7 @@ namespace {
     if (self = [super init]) {
         with_controls_ = with_controls;
         with_osr_ = with_osr;
+        relaunch = NO;
     }
     return self;
 }
@@ -259,7 +260,7 @@ namespace {
     [statusMenuItem setSubmenu:menu];
 }
 
-- (void)showError:(const Json::Value&)error
+- (void)showError:(const Json::Value&)error andRelaunch:(BOOL)relaunch
 {
     // error["no"].asCString();
     // error["str"].asCString();
@@ -271,12 +272,16 @@ namespace {
     NSAlert* alert = [[NSAlert alloc]init];
     [alert setAlertStyle:NSAlertStyleCritical];
     [alert setMessageText:[NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]];
-    [alert addButtonWithTitle:@"OK"];
-    [alert runModal];
+    [alert addButtonWithTitle:@"Relaunch"];
+    [alert addButtonWithTitle:@"Quit"];
     
-    if ( true == error.get("fatal", false).asBool() ) {
-        [self quit: nil];
+    const NSModalResponse r = [alert runModal];
+    if ( r == NSAlertFirstButtonReturn ) {
+        self->relaunch = YES;
+    } else {
+        self->relaunch = NO;
     }
+    [self quit: nil];
 }
 
 - (void)showException:(const std::exception&)exception delayFor:(NSTimeInterval)seconds andQuit:(BOOL)quit
@@ -297,46 +302,69 @@ namespace {
     });
 }
 
-- (void)startProcess:(const Json::Value&)process notifyWhenStarted:(void(^)(pid_t))startedCallback andWhenFinished:(void(^)(int))finishedCallback
+- (void)startProcess:(const Json::Value&)process notifyWhenStarted:(void(^)(pid_t))startedCallback andWhenFinished:(void(^)(int,Json::Value))finishedCallback
 {
     
     __block const Json::Value config = process;
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
-        
-        const Json::Value& arguments   = config["monitor"]["arguments"];
+
+        pid_t pid = 0;
+
+        const Json::Value& arguments  = config["monitor"]["arguments"];
         
         NSString*       __launch_path = [NSString stringWithUTF8String: config["monitor"]["path"].asCString()];
         NSMutableArray* __arguments   = [[NSMutableArray alloc]init];
-        for ( Json::ArrayIndex idx = 0 ; idx < arguments.size() ; ++idx ) {
-            [__arguments addObject:[NSString stringWithUTF8String: arguments[idx].asCString()]];
+
+        @try {
+            
+            for ( Json::ArrayIndex idx = 0 ; idx < arguments.size() ; ++idx ) {
+                [__arguments addObject:[NSString stringWithUTF8String: arguments[idx].asCString()]];
+            }
+            
+            NSTask* task = [[NSTask alloc]init];
+            task.launchPath = __launch_path;
+            task.arguments  = __arguments;
+            [task launch];
+            
+            pid = static_cast<pid_t>(task.processIdentifier);
+            
+            running_tasks_[pid] = task;
+            
+            startedCallback(pid);
+            
+            [task waitUntilExit];
+            
+            const auto it = running_tasks_.find(pid);
+            if ( running_tasks_.end() != it ) {
+                running_tasks_.erase(it);
+            }
+            
+            finishedCallback(EXIT_SUCCESS, Json::Value::null);
+            
+        } @catch (NSException* a_exception) {
+
+            const auto it = running_tasks_.find(pid);
+            if ( running_tasks_.end() != it ) {
+                [it->second terminate];
+                running_tasks_.erase(it);
+            }
+            
+            Json::Value error = Json::Value(Json::ValueType::objectValue);
+            error["msg"]   = [[NSString stringWithFormat:@"An error occurred while starting process\n\n%@\n\n%@",
+                               __launch_path, a_exception.reason
+                               ] cStringUsingEncoding:NSUTF8StringEncoding];
+            error["fatal"] = true;
+
+            finishedCallback(EXIT_FAILURE, error);
+
         }
-        
-        NSTask* task = [[NSTask alloc]init];
-        task.launchPath = __launch_path;
-        task.arguments  = __arguments;
-        [task launch];
-        
-        const pid_t pid = static_cast<pid_t>(task.processIdentifier);
-        
-        running_tasks_[pid] = task;
-        
-        startedCallback(pid);
-                
-        [task waitUntilExit];
-        
-        const auto it = running_tasks_.find(pid);
-        if ( running_tasks_.end() != it ) {
-            running_tasks_.erase(it);
-        }
-        
-        finishedCallback(EXIT_SUCCESS);
         
     });
 }
 
-- (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int))finishedCallback
+- (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int,Json::Value))finishedCallback
 {
     __block const pid_t __pid = pid;
     
@@ -350,9 +378,22 @@ namespace {
             running_tasks_.erase(it);
         }
         
-        finishedCallback(EXIT_SUCCESS);
+        finishedCallback(EXIT_SUCCESS, Json::Value::null);
         
     });
+}
+
+- (BOOL)shouldRelaunch
+{
+    return ( YES == relaunch );
+}
+
+- (void)quit:(id)sender
+{
+    // .. close open window(s) ( if any ) ...
+    casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(true);
+    // ... and the main message loop ...
+    casper::cef3::browser::MainMessageLoop::Get()->Quit();
 }
 
 - (void)enableAccessibility:(bool)bEnable
@@ -402,18 +443,35 @@ namespace {
     [NSApp activateIgnoringOtherApps:YES];
 
     if ( nil == preferencesWindowController ) {
-        preferencesWindowController = [[PreferencesWindowController alloc]initWithSparkle:updater];
+        preferencesWindowController = [[PreferencesWindowController alloc]initWithSparkle:updater andWithListener:self];
     }
 
     [preferencesWindowController.window makeKeyAndOrderFront:nil];
 }
 
-- (void)quit:(id)sender
+#pragma mark - PreferencesWindowListener
+
+- (void)onSettingsChangedRelaunchRequired:(BOOL)relaunch
 {
-    // .. close open window(s) ( if any ) ...
-    casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(true);
-    // ... and the main message loop ...
-    casper::cef3::browser::MainMessageLoop::Get()->Quit();
+    self->relaunch = relaunch;
+    
+    if ( YES == self->relaunch ) {
+        
+        NSAlert* alert = [[NSAlert alloc]init];
+        [alert setAlertStyle: NSAlertStyleInformational];
+        [alert setMessageText:@"Settings Changed"];
+        [alert setInformativeText:@"In order to apply new settings, this application need to restart.\nRestart now?"];
+        [alert addButtonWithTitle:@"OK"];
+        [alert addButtonWithTitle:@"Cancel"];
+        
+        const NSModalResponse r = [alert runModal];
+        if ( NSAlertFirstButtonReturn == r ) {
+            [self quit: nil];
+        } else {
+            self->relaunch = NO;
+        }
+        
+    }
 }
 
 @end

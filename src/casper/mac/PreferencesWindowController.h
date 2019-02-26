@@ -23,6 +23,12 @@
 
 #import <Sparkle/Sparkle.h>
 
+@protocol PreferencesWindowListener <NSObject>
+
+-(void)onSettingsChangedRelaunchRequired:(BOOL)relaunch;
+
+@end
+
 @interface PreferencesWindowController : NSWindowController<NSWindowDelegate, NSTextFieldDelegate> {
 
     IBOutlet NSToolbar*     toolbar;
@@ -45,18 +51,21 @@
         NSTextField* field;
         NSURL*       value;
         BOOL         set;
+        BOOL         changed;
     } ;
 
     struct StringSetting {
         NSTextField* field;
         NSString*    value;
         BOOL         set;
+        BOOL         changed;
     } ;
 
     struct ControlStateSetting {
         NSButton*           control;
         NSControlStateValue value;
         BOOL                set;
+        BOOL                changed;
     } ;
 
     struct URLSetting          configDirectoryPrefixSetting;
@@ -67,9 +76,15 @@
     struct ControlStateSetting automaticallyCheckForUpdatesSetting;
     struct ControlStateSetting automaticallyDownloadUpdatesSetting;
     
+    @private
+    
+    BOOL                          settingsDidChange;
+    BOOL                          settingsApplied;
+    id<PreferencesWindowListener> listener;
+    
 }
 
-- (instancetype)initWithSparkle:(SUUpdater*)updater;
+- (instancetype)initWithSparkle:(SUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener;
 
 - (IBAction)showGeneralPreferences:(id)sender;
 

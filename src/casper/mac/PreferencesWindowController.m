@@ -47,6 +47,8 @@
         [self bindControlSetting: &automaticallyDownloadUpdatesSetting withControl: automaticallyDownloadUpdatesButton
                  andSettingValue: NSControlStateValueOff
         ];
+        settingsDidChange = NO;
+        settingsApplied   = YES;
     }
     return self;
 }
@@ -65,8 +67,14 @@
     }
 }
 
-- (void)windowWillClose:(NSNotification *)notification
+- (BOOL)windowShouldClose:(NSWindow *)sender
 {
+    // TODO CW a)
+    return YES;
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{    
     if ( self.window == notification.object ) {
         const int windowCount = [[[NSApplication sharedApplication] windows] count];
         // TODO CW 2 ==
@@ -76,11 +84,12 @@
     }
 }
 
-- (instancetype)initWithSparkle:(SUUpdater*)updater
+- (instancetype)initWithSparkle:(SUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener;
 {
     self = [self init];
     if ( nil != self ) {
-        self->updater = updater;
+        self->updater  = updater;
+        self->listener = listener;
         [self bindControlSetting: &automaticallyCheckForUpdatesSetting withControl: automaticallyCheckForUpdatesButton
                  andSettingValue: ( YES == updater.automaticallyChecksForUpdates ? NSControlStateValueOn : NSControlStateValueOff )
         ];
@@ -134,6 +143,9 @@
 
     [self setControlSetting: &automaticallyCheckForUpdatesSetting withValue: NSControlStateValueOn];
     [self setControlSetting: &automaticallyDownloadUpdatesSetting withValue: NSControlStateValueOff];
+    
+    settingsDidChange = YES;
+    settingsApplied   = NO;
 }
 
 - (IBAction)cancel:(id)sender
@@ -143,41 +155,66 @@
 
 - (IBAction)apply:(id)sender
 {
-    if ( YES == runtimeDirectoryPrefixSetting.set ) {
+    NSUInteger changesCount = 0;
+    
+    if ( YES == runtimeDirectoryPrefixSetting.set && YES == runtimeDirectoryPrefixSetting.changed ) {
+        changesCount++;
         if ( nil != runtimeDirectoryPrefixSetting.value ) {
             [PreferencesWindowController setRuntimeDirectoryPrefixURL:runtimeDirectoryPrefixSetting.value.path];
         } else {
             [PreferencesWindowController setRuntimeDirectoryPrefixURL: @""];
         }
     }
-    if ( YES == configDirectoryPrefixSetting.set ) {
+    
+    if ( YES == configDirectoryPrefixSetting.set && YES == configDirectoryPrefixSetting.changed ) {
+        changesCount++;
         if ( nil != configDirectoryPrefixSetting.value ) {
             [PreferencesWindowController setConfigDirectoryPrefixURL:configDirectoryPrefixSetting.value.path];
         } else {
             [PreferencesWindowController setConfigDirectoryPrefixURL: @""];
         }
     }
-    if ( YES == postgresqlDataDirectorySetting.set ) {
+    
+    if ( YES == postgresqlDataDirectorySetting.set && YES == postgresqlDataDirectorySetting.changed ) {
+        changesCount++;
         if ( nil != runtimeDirectoryPrefixSetting.value ) {
             [PreferencesWindowController setPostgreSQLDataDirectoryURL:postgresqlDataDirectorySetting.value.path];
         } else {
             [PreferencesWindowController setPostgreSQLDataDirectoryURL: @""];
         }
     }
-    if ( YES == postgreSQLArgumentsSetting.set ) {
+    
+    if ( YES == postgreSQLArgumentsSetting.set && YES == postgreSQLArgumentsSetting.changed ) {
+        changesCount++;
         if ( nil != postgreSQLArgumentsSetting.value ) {
             [PreferencesWindowController setPostgreSQLArguments: postgreSQLArgumentsSetting.value];
         } else {
             [PreferencesWindowController setPostgreSQLArguments: @""];
         }
     }
-    if ( YES == automaticallyCheckForUpdatesSetting.set ) {
+    
+    if ( YES == automaticallyCheckForUpdatesSetting.set && YES == automaticallyCheckForUpdatesSetting.changed ) {
+        changesCount++;
         self->updater.automaticallyChecksForUpdates = automaticallyCheckForUpdatesSetting.value;
     }
     
-    if ( YES == automaticallyDownloadUpdatesSetting.set ) {
+    if ( YES == automaticallyDownloadUpdatesSetting.set && YES == automaticallyDownloadUpdatesSetting.changed ) {
+        changesCount++;
         self->updater.automaticallyDownloadsUpdates = automaticallyDownloadUpdatesSetting.value;
     }
+    
+    settingsDidChange = ( changesCount > 0 );
+    settingsApplied   = ( NO == settingsDidChange );
+    
+    // TODO CW a)
+    if ( NO == settingsApplied ) {
+        if ( nil != listener ) {
+            if ( YES == settingsDidChange ) {
+                [listener onSettingsChangedRelaunchRequired: YES];
+            }
+        }
+    }
+
     [self close];
 }
 
@@ -261,8 +298,9 @@
 
 - (void)setURLSetting:(struct URLSetting*)setting withValue:(const NSURL*)value
 {
-    setting->set   = YES;
-    setting->value = ( nil != value ? [[NSURL alloc]initWithString:[value path]] : nil );
+    setting->set     = YES;
+    setting->changed = ( setting->value != value ||  ( nil != value && NSOrderedSame != [value.path compare:setting->value.path] ) );
+    setting->value   = ( nil != value ? [[NSURL alloc]initWithString:[value path]] : nil );
     if ( nil != setting->value ) {
         [setting->field setStringValue: setting->value.path];
     } else {
@@ -272,9 +310,10 @@
 
 - (void)bindURLSetting:(struct URLSetting*)setting withField:(NSTextField*)field andSettingValue:(NSString*)path
 {
-    setting->field = field;
-    setting->set   = NO;
-    setting->value = ( nil != path ? [[NSURL alloc]initWithString:path] : nil );
+    setting->field   = field;
+    setting->set     = NO;
+    setting->changed = NO;
+    setting->value   = ( nil != path ? [[NSURL alloc]initWithString:path] : nil );
     if ( nil != setting->value && nil != setting->value.path ) {
         [setting->field setStringValue: setting->value.path];
     } else {
@@ -284,8 +323,9 @@
 
 - (void)setStringSetting:(struct StringSetting*)setting withValue:(const NSString*)value
 {
-    setting->set   = YES;
-    setting->value = ( nil != value ? value.mutableCopy : nil );
+    setting->set     = YES;
+    setting->changed = ( setting->value != value ||  ( nil != value && NSOrderedSame != [value compare:setting->value] ) );
+    setting->value   = ( nil != value ? value.mutableCopy : nil );
     if ( nil != setting->value ) {
         [setting->field setStringValue: setting->value];
     } else {
@@ -295,9 +335,10 @@
 
 - (void)bindStringSetting:(struct StringSetting*)setting withField:(NSTextField*)field andSettingValue:(const NSString*)value
 {
-    setting->field = field;
-    setting->set   = NO;
-    setting->value = ( nil != value ? value.mutableCopy : nil );
+    setting->field   = field;
+    setting->set     = NO;
+    setting->changed = NO;
+    setting->value   = ( nil != value ? value.mutableCopy : nil );
     if ( nil != setting->value ) {
         [setting->field setStringValue: setting->value];
     } else {
@@ -310,6 +351,7 @@
     setting->set   = YES;
     setting->value = value;
     if ( nil != setting->control ) {
+        setting->changed = ( value != [setting->control state] );
         [setting->control setState: value];
     }
 }
@@ -318,6 +360,7 @@
 {
     setting->control = control;
     setting->set     = NO;
+    setting->changed = NO;
     setting->value   = value;
     if ( nil != setting->control ) {
         [setting->control setState: value];

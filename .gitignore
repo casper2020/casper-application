@@ -4,3 +4,6 @@ Frameworks/*
 *xcuserdata*
 
 src/casper/app/version.h
+
+build
+libcef_dll_wrapper

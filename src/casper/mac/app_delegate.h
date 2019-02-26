@@ -8,7 +8,7 @@
 #include "json/json.h"
 
 // Receives notifications from the application. Will delete itself when done.
-@interface AppDelegate : NSObject<NSApplicationDelegate> {
+@interface AppDelegate : NSObject<NSApplicationDelegate, PreferencesWindowListener> {
     @private
     bool with_controls_;
     bool with_osr_;
@@ -21,6 +21,7 @@
     @private
     
     SUUpdater    *updater;
+    BOOL         relaunch;
     
     @private
     
@@ -47,10 +48,12 @@
 - (IBAction)printDemoPDFDirectly:(id)sender;
     
 - (void)setRunningProcesses:(const Json::Value&)list;
-- (void)showError:(const Json::Value&)error;
+- (void)showError:(const Json::Value&)error andRelaunch:(BOOL)relaunch;
 - (void)showException:(const std::exception&)exception delayFor:(NSTimeInterval)seconds andQuit:(BOOL)quit;
-- (void)startProcess:(const Json::Value&)process notifyWhenStarted:(void(^)(pid_t))startedCallback andWhenFinished:(void(^)(int))finishedCallback;
-- (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int))finishedCallback;
+- (void)startProcess:(const Json::Value&)process notifyWhenStarted:(void(^)(pid_t))startedCallback andWhenFinished:(void(^)(int,Json::Value))finishedCallback;
+- (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int,Json::Value))finishedCallback;
+- (BOOL)shouldRelaunch;
+- (void)quit:(id)sender;
     
 @end
 

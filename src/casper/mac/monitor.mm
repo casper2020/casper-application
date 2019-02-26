@@ -53,7 +53,7 @@ casper::app::mac::MonitorInitializer::MonitorInitializer (casper::app::mac::Moni
  */
 casper::app::mac::MonitorInitializer::~MonitorInitializer ()
 {
-    instance_.Stop();
+    instance_.Stop(/* a_soft */ false);
     if ( nullptr != instance_.process_ ) {
         delete instance_.process_;
     }
@@ -78,7 +78,7 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
                                        casper::app::mac::Monitor::DispatchCallback a_dispatch_callback,
                                        casper::app::mac::Monitor::QuitCallback a_quit_callback)
 {
-    Stop();
+    Stop(/* a_soft */ false);
     
     main_thread_dispatcher_ = a_dispatch_callback;
     app_delegate_           = a_bind_callback(std::bind(&casper::app::mac::Monitor::ProcessReceivedMessages, this));
@@ -90,28 +90,27 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
     
     osal::File::Delete(directories["runtime"].asCString(), "*.socket", nullptr);
 
-    //    CASPER_APP_DEBUG_LOG("status", "%s", "IPC...");
-
     // ... start a unidirectional message channel to send messages to parent process ...
     // ( on error, an exception will be thrown )
     cc::sockets::dgram::ipc::Server::GetInstance().Start("casper", runtime_dir,
                                                            {
                                                                /* on_message_received_ */
                                                                [this] (const Json::Value& a_value) {
+                                                                   // ... on this callback message must be handled ...
                                                                    std::lock_guard<std::mutex> lock(mutex_);
                                                                    messages_.push_back(a_value);
                                                                    main_thread_dispatcher_();
                                                                },
                                                                /* on_terminated_ */
                                                                [] () {
-                                                                   // TODO CW
-                                                                   fprintf(stderr, "terminated\n");
+                                                                   // ... just an 'info' callback, no action required ...
+                                                                   fprintf(stderr, "casper-application: monitor terminated\n");
                                                                    fflush(stderr);
                                                                },
                                                                /* on_fatal_exception_ */
                                                                [] (const ::cc::Exception& a_cc_exception) {
-                                                                   // TODO CW
-                                                                   fprintf(stderr, "a_cc_exception: %s\n", a_cc_exception.what());
+                                                                   // ... just an 'info' callback, no action required ...
+                                                                   fprintf(stderr, "casper-application: %s\n", a_cc_exception.what());
                                                                    fflush(stderr);
                                                                }
                                                            }
@@ -157,21 +156,30 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
              (*process_) = a_pid;
              process_->WritePID();
              
-             cc::sockets::dgram::ipc::Server::GetInstance().Schedule(new cc::sockets::dgram::ipc::Callback([this]() {
-                 try {
-                     cc::sockets::dgram::ipc::Client::GetInstance().Send(rc_object_);
-                 } catch (...) {
-                     // ... process is shutting down ...
-                 }
-             }, /* a_timeout_ms */ 5000, /* a_recurrent */ true));
+             cc::sockets::dgram::ipc::Server::GetInstance().Schedule([this]() {
+                 std::lock_guard<std::mutex> lock(mutex_);
+                 messages_.push_back(rc_object_);
+                 main_thread_dispatcher_();
+             }, /* a_timeout_ms */ 5000, /* a_recurrent */ true);
              
          }
-         andWhenFinished:^(int a_code) {
+        andWhenFinished:^(int a_code, Json::Value a_error) {
              if ( nullptr != process_ ) {
                  (void)process_->UnlinkPID(/* a_optional */ true);
                  delete process_;
                  process_ = nullptr;
              }
+            if ( EXIT_SUCCESS != a_code ) {
+                
+                Json::Value message = Json::Value(Json::ValueType::objectValue);
+                message["type"]  = "error";
+                message["error"] = a_error;
+                
+                std::lock_guard<std::mutex> lock(mutex_);
+                messages_.push_back(message);
+                main_thread_dispatcher_();
+                                
+            }
          }
     ];
     
@@ -179,11 +187,20 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
 
 /**
  * @brief Stop this singleton inter process comunication.
+ *
+ * @param a_soft When false, it's a full stop.
  */
-void casper::app::mac::Monitor::Stop ()
+void casper::app::mac::Monitor::Stop (bool a_soft)
 {
     if ( nullptr != process_ ) {
         process_->Terminate(/* a_optional */ false);
+    }
+    if ( false == a_soft ) {
+        cc::sockets::dgram::ipc::Server::GetInstance().Stop(SIGQUIT);
+        cc::sockets::dgram::ipc::Server::Destroy();
+    } else {
+        cc::sockets::dgram::ipc::Client::GetInstance().Stop(SIGQUIT);
+        cc::sockets::dgram::ipc::Client::Destroy();
     }
 }
 
@@ -193,6 +210,8 @@ void casper::app::mac::Monitor::Stop ()
 void casper::app::mac::Monitor::ProcessReceivedMessages ()
 {
     std::lock_guard<std::mutex> lock(mutex_);
+    
+    cc::sockets::dgram::ipc::Client& client = cc::sockets::dgram::ipc::Client::GetInstance();
     
     while ( messages_.size() > 0 ) {
 
@@ -207,7 +226,7 @@ void casper::app::mac::Monitor::ProcessReceivedMessages ()
             
         } else if ( 0 == strcasecmp("error", type_c_str) ) {
             
-            [app_delegate_ showError: data];
+            [app_delegate_ showError: data andRelaunch: YES];
             
         } else if ( 0 == strcasecmp("status", type_c_str) ) {
 
@@ -215,11 +234,19 @@ void casper::app::mac::Monitor::ProcessReceivedMessages ()
                 Json::Value message = Json::Value(Json::ValueType::objectValue);
                 message["type"]    = "control";
                 message["control"] = "start";
-                cc::sockets::dgram::ipc::Client::GetInstance().Send(message);
+                client.Send(message);
             } else if ( 0 == strcasecmp("terminated", data.asCString()) ) {
                 quit_callback_();
             }
             
+        } else if ( 0 == strcasecmp("control", type_c_str) ) {
+            try {
+                if ( true == client.IsReady() ) {
+                    client.Send(rc_object_);
+                }
+            } catch (...) {
+                // ... process is shutting down ...
+            }
         }
     
         messages_.pop_front();

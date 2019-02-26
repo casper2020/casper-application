@@ -86,7 +86,7 @@ int main (int a_argc, char* a_argv[])
 
     // ... parse arguments ...
     char opt;
-    while ( -1 != ( opt = getopt(a_argc, a_argv, "hvc:d:") ) ) {
+    while ( -1 != ( opt = getopt(a_argc, a_argv, "hvc:") ) ) {
         switch (opt) {
             case 'h':
                 show_help(a_argv[0]);
@@ -113,10 +113,6 @@ int main (int a_argc, char* a_argv[])
                     return -1;
                 }
             }
-                break;
-            case 'd':
-                // TODO CW OSALITE_REGISTER_DEBUG_TOKEN(optarg, stdout);
-                break;
                 break;
             default:
                 fprintf(stderr, "llegal option %s:\n", optarg);
@@ -287,7 +283,7 @@ int main (int a_argc, char* a_argv[])
                                                                                if ( 0 == strcasecmp("start", control_c_str) ) {
                                                                                    start_cv.Wake();
                                                                                } else if ( 0 == strcasecmp("refresh", control_c_str) ) {
-                                                                                   casper::app::monitor::Watchdog::GetInstance().Refresh();                                                                                   
+                                                                                   casper::app::monitor::Watchdog::GetInstance().Refresh();
                                                                                } else if ( 0 == strcasecmp("stop", control_c_str) ) {
                                                                                    casper::app::monitor::Watchdog::GetInstance().Stop();
                                                                                }
