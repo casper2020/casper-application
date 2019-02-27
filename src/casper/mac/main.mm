@@ -373,6 +373,13 @@ int main (int a_argc, char* a_argv[])
 #ifdef __APPLE__
     signal(SIGPIPE, SIG_IGN);
 #endif
+    
+    // ... set locale must be called @ main(int argc, char** argv) ...
+    const char* lc_all = setlocale (LC_ALL, NULL);
+    
+    setlocale (LC_NUMERIC, "C");
+    
+    const char* lc_numeric = setlocale (LC_NUMERIC, NULL);
 
     // ... install signal(s) handler ...
     ::ev::Signals::GetInstance().Startup(::casper::app::Logger::GetInstance().loggable_data());
@@ -415,6 +422,9 @@ int main (int a_argc, char* a_argv[])
     osal::debug::Trace::GetInstance().Log("status", "\t- %-12s: %s\n", "INT64_FMT" , INT64_FMT);
     osal::debug::Trace::GetInstance().Log("status", "\t- %-12s: %s\n", "UINT64_FMT", UINT64_FMT);
 #endif
+    osal::debug::Trace::GetInstance().Log("status", "\t- %-12s: %s\n"     , "LC_ALL"    , lc_all);
+    osal::debug::Trace::GetInstance().Log("status", "\t- %-12s: %s - " DOUBLE_FMT "\n", "LC_NUMERIC", lc_numeric, (double)123.456);
+
     osal::debug::Trace::GetInstance().Log("status", "* %s - %s process w/pid %u configured...\n",
                                           CASPER_INFO, "main", getpid()
     );

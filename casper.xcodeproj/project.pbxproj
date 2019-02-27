@@ -30,6 +30,7 @@
 		47BBC29D220D90E300F95DCE /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1B272201ECFD005413CF /* libcasper-connectors.a */; };
 		47BBC2A7220DC84500F95DCE /* logger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DD1B322201F2F5005413CF /* logger.cc */; };
 		47BBC2A8220DC87F00F95DCE /* helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE421E79A6100FC6DF1 /* helper.cc */; };
+		47D3D2332226CBAC001194AD /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47D3D2322226CBAC001194AD /* Icons.xcassets */; };
 		47D66CD321E73FA700FC6DF1 /* libjsoncpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47D66CD021E73F9000FC6DF1 /* libjsoncpp.a */; };
 		47D66CE621E79A6100FC6DF1 /* helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE421E79A6100FC6DF1 /* helper.cc */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
 		47D7D773220061D5004D0579 /* monitor.json in Resources */ = {isa = PBXBuildFile; fileRef = 47D7D772220061D5004D0579 /* monitor.json */; };
@@ -244,6 +245,8 @@
 		47BBC278220D896600F95DCE /* watchdog.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = watchdog.cc; sourceTree = "<group>"; };
 		47BBC279220D896700F95DCE /* watchdog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = watchdog.h; sourceTree = "<group>"; };
 		47BBC27F220D8A8A00F95DCE /* monitor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = monitor; sourceTree = BUILT_PRODUCTS_DIR; };
+		47D3D2322226CBAC001194AD /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		47D3D2372226D0BD001194AD /* English */ = {isa = PBXFileReference; lastKnownFileType = text; name = English; path = English.lproj/InfoPlist.strings.in; sourceTree = "<group>"; };
 		47D66CCB21E73F9000FC6DF1 /* jsoncpp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = jsoncpp.xcodeproj; path = "../../hydra/casper-packager/jsoncpp/jsoncpp.xcodeproj"; sourceTree = "<group>"; };
 		47D66CE421E79A6100FC6DF1 /* helper.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cc; sourceTree = "<group>"; };
 		47D66CE521E79A6100FC6DF1 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
@@ -663,8 +666,10 @@
 		47DDA02E219DC06C009AA8A9 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				47D3D2322226CBAC001194AD /* Icons.xcassets */,
 				47DDA02F219DC06C009AA8A9 /* casper.icns */,
 				47DDA030219DC06C009AA8A9 /* Info.plist */,
+				47D3D2362226D0BD001194AD /* InfoPlist.strings.in */,
 				47DDA031219DC06C009AA8A9 /* InfoPlist.strings */,
 				47DDA033219DC06C009AA8A9 /* MainMenu.xib */,
 				4733C1F021FF269C0028650B /* PreferencesWindow.xib */,
@@ -953,6 +958,7 @@
 			files = (
 				47D7D773220061D5004D0579 /* monitor.json in Resources */,
 				4733C1F121FF269C0028650B /* PreferencesWindow.xib in Resources */,
+				47D3D2332226CBAC001194AD /* Icons.xcassets in Resources */,
 				47DDA068219DC06C009AA8A9 /* casper.icns in Resources */,
 				47DDA06B219DC06C009AA8A9 /* MainMenu.xib in Resources */,
 				47DDA06A219DC06C009AA8A9 /* InfoPlist.strings in Resources */,
@@ -1170,6 +1176,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		47D3D2362226D0BD001194AD /* InfoPlist.strings.in */ = {
+			isa = PBXVariantGroup;
+			children = (
+				47D3D2372226D0BD001194AD /* English */,
+			);
+			name = InfoPlist.strings.in;
+			sourceTree = "<group>";
+		};
 		47DDA031219DC06C009AA8A9 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -1,9 +1,13 @@
 #!/bin/bash
 
-SRC_PNG=Casper2020\@2x.png
+SRC_PNG=Casper2020\@3x.png
 ICONSET=src/casper/mac/resources/casper.iconset
 
 mkdir -p $ICONSET
+
+sips -z 18 18     $SRC_PNG --out $ICONSET/icon_18x18.png
+sips -z 36 36     $SRC_PNG --out $ICONSET/icon_18x18\@2.png
+sips -z 54 54     $SRC_PNG --out $ICONSET/icon_18x18\@3.png
 
 sips -z 16 16     $SRC_PNG --out $ICONSET/icon_16x16.png
 sips -z 32 32     $SRC_PNG --out $ICONSET/icon_16x16\@2x.png

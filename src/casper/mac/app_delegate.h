@@ -16,6 +16,7 @@
     NSMenuItem   *statusMenuItem;
     NSMenuItem   *showWindowMenuItem;
     NSMenuItem   *preferencesMenuItem;
+    NSMenuItem   *aboutMenuItem;
     NSMenuItem   *quitMenuItem;
     
     @private

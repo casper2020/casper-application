@@ -116,7 +116,8 @@ namespace {
         NSStatusBar *statusBar = [NSStatusBar systemStatusBar];
         
         statusItem = [statusBar statusItemWithLength:NSSquareStatusItemLength];
-        statusItem.image = [NSImage imageNamed: NSImageNameActionTemplate];
+        statusItem.image =  [NSImage imageNamed:@"StatusBar"];
+        [statusItem.image setTemplate:YES];
         [statusItem retain];
         
         statusItem.menu = [[[NSMenu alloc]init]retain];
@@ -126,6 +127,7 @@ namespace {
         }
         showWindowMenuItem      = [[NSMenuItem alloc] initWithTitle:@"Show Window"          action:@selector(showWindow:) keyEquivalent:@""];
         preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@""];
+        aboutMenuItem           = [[NSMenuItem alloc] initWithTitle:@"About"                action:@selector(about:) keyEquivalent:@""];
         quitMenuItem            = [[NSMenuItem alloc] initWithTitle:@"Quit"                 action:@selector(quit:) keyEquivalent:@""];
         
         [statusItem.menu addItem:statusMenuItem];
@@ -134,6 +136,7 @@ namespace {
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:preferencesMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
+        [statusItem.menu addItem:aboutMenuItem];
         [statusItem.menu addItem:quitMenuItem];
     } else {
         [self showWindow:self];
@@ -447,6 +450,11 @@ namespace {
     }
 
     [preferencesWindowController.window makeKeyAndOrderFront:nil];
+}
+
+- (void)about:(id)sender
+{
+    [self orderFrontStandardAboutPanel: sender];
 }
 
 #pragma mark - PreferencesWindowListener
