@@ -21,6 +21,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "Alerts.h"
+
 #import "casper/mac/app_delegate.h"
 
 #include "include/cef_app.h"
@@ -135,17 +137,6 @@ static bool EnsurePath (NSSearchPathDirectory a_path, const std::vector<std::str
         NSLog(@"Unable to create directory: %@", error);
     }
     return ( YES == success );
-}
-
-static int ShowFatalException (const std::exception& a_std_exception)
-{
-    NSAlert* alert = [[NSAlert alloc]init];
-    [alert setAlertStyle:NSAlertStyleCritical];
-    [alert setMessageText:[NSString stringWithCString:a_std_exception.what() encoding:NSUTF8StringEncoding]];
-    [alert addButtonWithTitle:@"OK"];
-    [alert runModal];
-    
-    return 1;
 }
 
 /**
@@ -263,6 +254,8 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     
     const CefMainArgs main_args(a_argc, a_argv);
     
+    const BOOL firstRun = ( NO == [PreferencesWindowController configured] );
+    
     //... initialize the AutoRelease pool ...
     NSAutoreleasePool* autopool = [[NSAutoreleasePool alloc] init];
     
@@ -287,10 +280,19 @@ static int StartCEF3 (int a_argc, char* a_argv[],
         ::casper::app::Logger::GetInstance().Startup(a_settings.paths_.logs_path_, "casper", CASPER_INFO);
         
     } catch (const std::exception* a_std_exception) {
-        return ShowFatalException(*a_std_exception);
+        [Alerts showCriticalMessage: @"An std::exception Occurred"
+                    informativeText: [NSString stringWithCString: a_std_exception->what() encoding: NSUTF8StringEncoding]
+                         andButtons: @[@"Ok"]
+        ];
+        return -1;
     } catch (const std::exception& a_std_exception) {
-        return ShowFatalException(a_std_exception);
+        [Alerts showCriticalMessage: @"An std::exception Occurred"
+                    informativeText: [NSString stringWithCString: a_std_exception.what() encoding: NSUTF8StringEncoding]
+                         andButtons: @[@"Ok"]
+         ];
+        return -1;
     }
+    
     
     CASPER_APP_DEBUG_LOG("status", "%s", "CEF creating main context...");
     
@@ -304,9 +306,13 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     
     // ... create the main message loop object ...
     scoped_ptr<casper::cef3::browser::MainMessageLoop> message_loop;
-    message_loop.reset(new casper::cef3::browser::MainMessageLoopStd([]() {
-        casper::app::mac::Monitor::GetInstance().Stop(/* a_soft*/ true);
-    }));
+    if ( NO == firstRun ) {
+        message_loop.reset(new casper::cef3::browser::MainMessageLoopStd([]() {
+            casper::app::mac::Monitor::GetInstance().Stop(/* a_soft*/ true);
+        }));
+    } else {
+        message_loop.reset(new casper::cef3::browser::MainMessageLoopStd());
+    }
     
     // ... initialize CEF ...
     CASPER_APP_DEBUG_LOG("status", "%s", "CEF initializing...");
@@ -324,11 +330,20 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     CefRefPtr<CEF2APPHook> hook = new CEF2APPHook();
     
     hook->Set(delegate);
-
-    a_started_callback(hook, [&message_loop] {
-        message_loop->Quit();
-    });
     
+    if ( NO == firstRun ) {
+        a_started_callback(hook, [&message_loop, delegate] (const Json::Value& a_error) {
+            // ... monitor process exited ...
+            [delegate setRunningProcesses: Json::Value::null];
+            if ( false == a_error.isNull() ) {
+                [delegate showError: a_error andRelaunch: YES];
+            }
+            message_loop->Quit();
+        });
+    } else {
+        [delegate showPreferences: nil];
+    }
+
     CASPER_APP_DEBUG_LOG("status", "%s", "CEF run loop...");
     // ... run the message loop?
     // ... this will block until Quit() is called ...
@@ -338,7 +353,9 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     CASPER_APP_DEBUG_LOG("status", "%s", "CEF shutdown...");
     context->Shutdown();
 
-    a_finished_callback();
+    if ( NO == firstRun ) {
+        a_finished_callback();
+    }
 
     // ... reset delegate ..
     hook->Set(static_cast<AppDelegate*>(nullptr));

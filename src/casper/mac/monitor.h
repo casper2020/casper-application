@@ -69,7 +69,7 @@ namespace casper
                 
                 typedef std::function<void()>                         DispatchCallback;
                 typedef std::function<AppDelegate*(DispatchCallback)> BindCallback;
-                typedef std::function<void()>                         QuitCallback;
+                typedef std::function<void(const Json::Value&)>       QuitCallback;
                 
             private: // Threading
                 

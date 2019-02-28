@@ -236,7 +236,8 @@ void casper::app::mac::Monitor::ProcessReceivedMessages ()
                 message["control"] = "start";
                 client.Send(message);
             } else if ( 0 == strcasecmp("terminated", data.asCString()) ) {
-                quit_callback_();
+                client.Stop(SIGQUIT);
+                quit_callback_(message.get("error", Json::Value::null));
             }
             
         } else if ( 0 == strcasecmp("control", type_c_str) ) {

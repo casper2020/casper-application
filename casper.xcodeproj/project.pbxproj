@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		471D0C2C22281C810093F53B /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 471D0C2B22281C810093F53B /* Alerts.m */; };
 		47315239219EC7F800B26E66 /* request_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47315238219EC7F800B26E66 /* request_handler.cc */; };
 		4731523C219ECFFB00B26E66 /* context_menu_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4731523A219ECFFB00B26E66 /* context_menu_handler.cc */; };
 		4731523F219ED1A400B26E66 /* download_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4731523D219ED1A400B26E66 /* download_handler.cc */; };
@@ -19,7 +20,7 @@
 		47315260219EEF5F00B26E66 /* context_menu_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4731525F219EEF5E00B26E66 /* context_menu_handler.cc */; };
 		47315264219F01CF00B26E66 /* base_handler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47315263219F01CF00B26E66 /* base_handler.cc */; };
 		4733C1F121FF269C0028650B /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4733C1F021FF269C0028650B /* PreferencesWindow.xib */; };
-		4733C1F421FF27A70028650B /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4733C1F321FF27A70028650B /* PreferencesWindowController.m */; };
+		4733C1F421FF27A70028650B /* PreferencesWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4733C1F321FF27A70028650B /* PreferencesWindowController.mm */; };
 		4745755B21E8996500C2819D /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4745755421E898FD00C2819D /* libosal.a */; };
 		4769C78E221703A6006FEE3F /* monitor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4769C78D221703A6006FEE3F /* monitor.mm */; };
 		477EE12B218C623100235617 /* casper Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B44C31C5DF3485C88A8CA57 /* casper Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -209,6 +210,8 @@
 
 /* Begin PBXFileReference section */
 		471B255721DCBA8D00F8B07D /* monitor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monitor.cc; sourceTree = "<group>"; };
+		471D0C2A22281C810093F53B /* Alerts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
+		471D0C2B22281C810093F53B /* Alerts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
 		47315237219EC7F800B26E66 /* request_handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = request_handler.h; sourceTree = "<group>"; };
 		47315238219EC7F800B26E66 /* request_handler.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = request_handler.cc; sourceTree = "<group>"; };
 		4731523A219ECFFB00B26E66 /* context_menu_handler.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context_menu_handler.cc; sourceTree = "<group>"; };
@@ -233,7 +236,7 @@
 		47315263219F01CF00B26E66 /* base_handler.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base_handler.cc; sourceTree = "<group>"; };
 		4733C1F021FF269C0028650B /* PreferencesWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		4733C1F221FF27A70028650B /* PreferencesWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PreferencesWindowController.h; path = src/casper/mac/PreferencesWindowController.h; sourceTree = SOURCE_ROOT; };
-		4733C1F321FF27A70028650B /* PreferencesWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PreferencesWindowController.m; path = src/casper/mac/PreferencesWindowController.m; sourceTree = SOURCE_ROOT; };
+		4733C1F321FF27A70028650B /* PreferencesWindowController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = PreferencesWindowController.mm; path = src/casper/mac/PreferencesWindowController.mm; sourceTree = SOURCE_ROOT; };
 		4745754F21E898FC00C2819D /* osal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = osal.xcodeproj; path = "../casper-packager/osal/osal.xcodeproj"; sourceTree = "<group>"; };
 		474A8243218895BD00B1990B /* libcef_dll_wrapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcef_dll_wrapper.a; path = ../cef3/chromium_git/chromium/src/out/Debug_GN_x64/obj/cef/libcef_dll_wrapper.a; sourceTree = "<group>"; };
 		474BDFC121905A61005745E8 /* cef_sandbox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = cef_sandbox.a; path = "third-party/cef/cef_binary_3.3538.1849.g458cc98_macosx64/Debug/cef_sandbox.a"; sourceTree = "<group>"; };
@@ -680,6 +683,8 @@
 		47DDA035219DC06C009AA8A9 /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				471D0C2A22281C810093F53B /* Alerts.h */,
+				471D0C2B22281C810093F53B /* Alerts.m */,
 				47DDA03A219DC06C009AA8A9 /* client_handler.h */,
 				47DDA036219DC06C009AA8A9 /* client_handler.mm */,
 				47DDA03C219DC06C009AA8A9 /* app_delegate.h */,
@@ -689,7 +694,7 @@
 				4769C78D221703A6006FEE3F /* monitor.mm */,
 				47DDA03D219DC06C009AA8A9 /* main.mm */,
 				4733C1F221FF27A70028650B /* PreferencesWindowController.h */,
-				4733C1F321FF27A70028650B /* PreferencesWindowController.m */,
+				4733C1F321FF27A70028650B /* PreferencesWindowController.mm */,
 				47DDA02E219DC06C009AA8A9 /* resources */,
 			);
 			path = mac;
@@ -1085,8 +1090,9 @@
 				47DDA060219DC06C009AA8A9 /* root_window_manager.cc in Sources */,
 				47DDA063219DC06C009AA8A9 /* switches.cc in Sources */,
 				47D66CE621E79A6100FC6DF1 /* helper.cc in Sources */,
-				4733C1F421FF27A70028650B /* PreferencesWindowController.m in Sources */,
+				4733C1F421FF27A70028650B /* PreferencesWindowController.mm in Sources */,
 				47DDA071219DC06C009AA8A9 /* image_cache.cc in Sources */,
+				471D0C2C22281C810093F53B /* Alerts.m in Sources */,
 				47DDA06C219DC06C009AA8A9 /* client_handler.mm in Sources */,
 				47315251219EDFFF00B26E66 /* life_span_handler.cc in Sources */,
 				47DDA06F219DC06C009AA8A9 /* main.mm in Sources */,

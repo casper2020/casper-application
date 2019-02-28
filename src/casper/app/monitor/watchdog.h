@@ -123,6 +123,11 @@ namespace casper
                 void        Stop      ();
                 void        Quit      ();
                 void        Refresh   ();
+            
+            public: // Inline Method(s) / Function(s)
+                
+                bool        IsErrorSet ();
+                void        GetError   (const std::function<void(const ::sys::Error& a_last_error)>& a_callback);
                 
             private: // Method(s) / Function(s)
 
@@ -148,7 +153,6 @@ namespace casper
                 
             private:
                 
-                bool IsErrorSet         ();
                 bool IsErrorSetUnsafe   () const;
                 void Bite               (const bool a_fatal = false);
                 void BiteUnsafe         (const bool a_fatal = false);
@@ -157,13 +161,29 @@ namespace casper
                 
             }; // end of class 'Watchdog'
             
+            /**
+             * @return True if an error is set, false otherwise.
+             */
             inline bool Watchdog::IsErrorSet ()
             {
                 std::lock_guard<std::mutex> lock(mutex_);
                 return IsErrorSetUnsafe();
             }
             
+            /**
+             * @brief Call a function to access RO error data.
+             *
+             * @param a_callback The function to call.
+             */
+            inline void Watchdog::GetError (const std::function<void(const ::sys::Error& a_last_error)>& a_callback)
+            {
+                std::lock_guard<std::mutex> lock(mutex_);
+                a_callback(last_error_);
+            }
             
+            /**
+             * @return True if an error is set, false otherwise.
+             */
             inline bool Watchdog::IsErrorSetUnsafe () const
             {
                 return ( 0 != last_error_.message().length() );

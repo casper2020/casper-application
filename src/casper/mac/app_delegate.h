@@ -14,9 +14,9 @@
     bool with_osr_;
     NSStatusItem *statusItem;
     NSMenuItem   *statusMenuItem;
+    NSMenuItem   *aboutMenuItem;
     NSMenuItem   *showWindowMenuItem;
     NSMenuItem   *preferencesMenuItem;
-    NSMenuItem   *aboutMenuItem;
     NSMenuItem   *quitMenuItem;
     
     @private
@@ -47,7 +47,9 @@
 - (IBAction)hideDeveloperTools:(id)sender;
 - (IBAction)printDemoPDF:(id)sender;
 - (IBAction)printDemoPDFDirectly:(id)sender;
-    
+
+- (void)about:(id)sender;
+- (void)showPreferences:(id)sender;
 - (void)setRunningProcesses:(const Json::Value&)list;
 - (void)showError:(const Json::Value&)error andRelaunch:(BOOL)relaunch;
 - (void)showException:(const std::exception&)exception delayFor:(NSTimeInterval)seconds andQuit:(BOOL)quit;

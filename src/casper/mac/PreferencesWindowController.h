@@ -25,7 +25,8 @@
 
 @protocol PreferencesWindowListener <NSObject>
 
--(void)onSettingsChangedRelaunchRequired:(BOOL)relaunch;
+-(void)onSettingsChangedRelaunchRequired:(BOOL)relaunch now:(BOOL)now;
+-(void)onSettingsWindowDidClose;
 
 @end
 
@@ -47,25 +48,24 @@
     
     @private
     
-    struct URLSetting {
+    struct BaseSetting {
+        BOOL         set;
+        BOOL         changed;
+    };
+    
+    struct URLSetting : public BaseSetting {
         NSTextField* field;
         NSURL*       value;
-        BOOL         set;
-        BOOL         changed;
     } ;
 
-    struct StringSetting {
+    struct StringSetting : public BaseSetting {
         NSTextField* field;
         NSString*    value;
-        BOOL         set;
-        BOOL         changed;
     } ;
 
-    struct ControlStateSetting {
+    struct ControlStateSetting : public BaseSetting {
         NSButton*           control;
         NSControlStateValue value;
-        BOOL                set;
-        BOOL                changed;
     } ;
 
     struct URLSetting          configDirectoryPrefixSetting;
@@ -92,8 +92,11 @@
 - (IBAction)cancel:(id)sender;
 - (IBAction)apply:(id)sender;
 
- + (void)setRuntimeDirectoryPrefixURL:(NSString*)url;
- + (NSString*)runtimeDirectoryPrefixURL;
++ (void)setConfigured:(BOOL)configured;
++ (BOOL)configured;
+
++ (void)setRuntimeDirectoryPrefixURL:(NSString*)url;
++ (NSString*)runtimeDirectoryPrefixURL;
 
 + (void)setConfigDirectoryPrefixURL:(NSString*)url;
 + (NSString*)configDirectoryPrefixURL;

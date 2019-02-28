@@ -650,11 +650,13 @@ void casper::app::monitor::Watchdog::Loop ()
 
     }
 
-    // ... notify fatal error ( if any ) ...
-    CASPER_APP_WATCHDOG_FATAL_BITE();
-
     // ... log ...
     CASPER_APP_DEBUG_LOG("status", "%s", "Cleanup...");
+    
+    // ... uninstall signal(s) handler(s) ...
+    signal(SIGUSR2, SIG_DFL);
+    signal(SIGCHLD, SIG_DFL);
+    signal(SIGTERM, SIG_DFL);
 
     CASPER_APP_WATCHDOG_LOCK();
     

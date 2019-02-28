@@ -20,6 +20,10 @@
  */
 #import "PreferencesWindowController.h"
 
+#import "Alerts.h"
+
+#include <vector>
+
 @implementation PreferencesWindowController
 
 - (instancetype)init
@@ -27,7 +31,6 @@
     self = [self initWithWindowNibName:@"PreferencesWindow"];
     if ( nil != self ) {
         [self.window setTitle:@"Preferences"];
-        [self.window setDelegate:self];
         [self bindURLSetting: &configDirectoryPrefixSetting   withField: configDirectoryPrefixTextField
              andSettingValue: [PreferencesWindowController configDirectoryPrefixURL]
         ];
@@ -69,8 +72,23 @@
 
 - (BOOL)windowShouldClose:(NSWindow *)sender
 {
-    // TODO CW a)
-    return YES;
+    if ( 0 == [self countChanges] ) {
+        return YES;
+    }
+    const NSModalResponse r = [Alerts showWarningMessage: @"Confirm Discard Changes"
+                                         informativeText: @"Are you sure you want to discard  all changes?"
+                                              andButtons:@[@"Discard Changes", @"Cancel"]
+    ];
+    switch(r) {
+        case NSAlertFirstButtonReturn:
+            if ( nil != listener ) {
+                [listener onSettingsWindowDidClose];
+            }
+            return YES;
+        default:
+            break;
+    }
+    return NO;
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -84,7 +102,7 @@
     }
 }
 
-- (instancetype)initWithSparkle:(SUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener;
+- (instancetype)initWithSparkle:(SUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener
 {
     self = [self init];
     if ( nil != self ) {
@@ -128,24 +146,21 @@
 
 - (IBAction)reset:(id)sender
 {
-    [configDirectoryPrefixTextField setStringValue:@""];
-    [runtimeDirectoryPrefixTextField setStringValue:@""];
-    [postgreSQLDataDirectoryTextField setStringValue:@""];
-    [postgreSQLArgumentsTextField setStringValue:@""];
-    
     [self setURLSetting:     &configDirectoryPrefixSetting   withValue: nil];
     [self setURLSetting:     &runtimeDirectoryPrefixSetting  withValue: nil];
     [self setURLSetting:     &postgresqlDataDirectorySetting withValue: nil];
     [self setStringSetting:  &postgreSQLArgumentsSetting     withValue: nil];
+    
+    // TODO CW [automaticallyCheckForUpdatesButton setState:NSControlStateValueOn];
+    // TODO CW [automaticallyDownloadUpdatesButton setState:NSControlStateValueOff];
 
-    [automaticallyCheckForUpdatesButton setState:NSControlStateValueOn];
-    [automaticallyDownloadUpdatesButton setState:NSControlStateValueOff];
-
-    [self setControlSetting: &automaticallyCheckForUpdatesSetting withValue: NSControlStateValueOn];
-    [self setControlSetting: &automaticallyDownloadUpdatesSetting withValue: NSControlStateValueOff];
+    // TODO CW [self setControlSetting: &automaticallyCheckForUpdatesSetting withValue: NSControlStateValueOn];
+    // TODO CW [self setControlSetting: &automaticallyDownloadUpdatesSetting withValue: NSControlStateValueOff];
     
     settingsDidChange = YES;
     settingsApplied   = NO;
+    
+    // TODO CW [PreferencesWindowController setConfigured: NO];
 }
 
 - (IBAction)cancel:(id)sender
@@ -160,7 +175,7 @@
     if ( YES == runtimeDirectoryPrefixSetting.set && YES == runtimeDirectoryPrefixSetting.changed ) {
         changesCount++;
         if ( nil != runtimeDirectoryPrefixSetting.value ) {
-            [PreferencesWindowController setRuntimeDirectoryPrefixURL:runtimeDirectoryPrefixSetting.value.path];
+            [PreferencesWindowController setRuntimeDirectoryPrefixURL: runtimeDirectoryPrefixSetting.value.path];
         } else {
             [PreferencesWindowController setRuntimeDirectoryPrefixURL: @""];
         }
@@ -169,7 +184,7 @@
     if ( YES == configDirectoryPrefixSetting.set && YES == configDirectoryPrefixSetting.changed ) {
         changesCount++;
         if ( nil != configDirectoryPrefixSetting.value ) {
-            [PreferencesWindowController setConfigDirectoryPrefixURL:configDirectoryPrefixSetting.value.path];
+            [PreferencesWindowController setConfigDirectoryPrefixURL: configDirectoryPrefixSetting.value.path];
         } else {
             [PreferencesWindowController setConfigDirectoryPrefixURL: @""];
         }
@@ -177,8 +192,8 @@
     
     if ( YES == postgresqlDataDirectorySetting.set && YES == postgresqlDataDirectorySetting.changed ) {
         changesCount++;
-        if ( nil != runtimeDirectoryPrefixSetting.value ) {
-            [PreferencesWindowController setPostgreSQLDataDirectoryURL:postgresqlDataDirectorySetting.value.path];
+        if ( nil != postgresqlDataDirectorySetting.value ) {
+            [PreferencesWindowController setPostgreSQLDataDirectoryURL: postgresqlDataDirectorySetting.value.path];
         } else {
             [PreferencesWindowController setPostgreSQLDataDirectoryURL: @""];
         }
@@ -203,19 +218,29 @@
         self->updater.automaticallyDownloadsUpdates = automaticallyDownloadUpdatesSetting.value;
     }
     
-    settingsDidChange = ( changesCount > 0 );
+    settingsDidChange = ( changesCount > 0 ) || ( NO == [PreferencesWindowController configured] );
     settingsApplied   = ( NO == settingsDidChange );
     
     // TODO CW a)
     if ( NO == settingsApplied ) {
         if ( nil != listener ) {
             if ( YES == settingsDidChange ) {
-                [listener onSettingsChangedRelaunchRequired: YES];
+                [listener onSettingsChangedRelaunchRequired: YES now:( NO == [PreferencesWindowController configured] )];
             }
         }
     }
 
     [self close];
+}
+
++ (void)setConfigured:(BOOL)configured
+{
+    [[NSUserDefaults standardUserDefaults]setBool: configured forKey: @"configured"];
+}
+
++ (BOOL)configured
+{
+    return [[NSUserDefaults standardUserDefaults]boolForKey:@"configured"];
 }
 
 + (void)setRuntimeDirectoryPrefixURL:(NSString*)url
@@ -256,6 +281,15 @@
 + (NSString*)postgreSQLArguments
 {
     return [[NSUserDefaults standardUserDefaults]objectForKey:@"postgreSQLArguments"];
+}
+
++ (void)resetDefaults
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    for ( id key in @[@"configured", @"runtimeDirectoryPrefixURL", @"configDirectoryPrefixURL", @"postgreSQLDataDirectoryURL", @"postgreSQLArguments"] ) {
+        [defaults removeObjectForKey:key];
+    }
+    [defaults synchronize];
 }
 
 #pragma mark - PRIVATE
@@ -367,4 +401,22 @@
     }
 }
 
+- (NSUInteger)countChanges
+{
+    NSUInteger changesCount = 0;
+
+    const std::vector<struct BaseSetting*> all_settings = {
+        &configDirectoryPrefixSetting, &runtimeDirectoryPrefixSetting, &postgresqlDataDirectorySetting,
+        &postgreSQLArgumentsSetting,
+        &automaticallyCheckForUpdatesSetting, &automaticallyDownloadUpdatesSetting
+    };
+    
+    for ( auto it : all_settings ) {
+        if ( YES == (*it).set && YES == (*it).changed ) {
+            changesCount++;
+        }
+    }
+    
+    return changesCount;
+}
 @end

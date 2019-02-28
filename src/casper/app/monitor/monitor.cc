@@ -181,7 +181,11 @@ int main (int a_argc, char* a_argv[])
             
             data_["list"] = array;
             
-            cc::sockets::dgram::ipc::Client::GetInstance().Send(data_);                        
+            try {
+                cc::sockets::dgram::ipc::Client::GetInstance().Send(data_);
+            } catch (const ::cc::Exception& a_cc_exception) {
+                CASPER_APP_LOG("error", "%s", a_cc_exception.what());
+            }
         }
         
         virtual void OnError (const sys::Error& a_error, const bool a_fatal)
@@ -323,10 +327,24 @@ int main (int a_argc, char* a_argv[])
         
         // ... start monitoring process(es) ...
         // ( on error, an exception will be thrown )
+        
+        casper::app::monitor::Watchdog& watchdog = casper::app::monitor::Watchdog::GetInstance();
+        
         CASPER_APP_LOG("status", "%s", "Resuming monitor...");
-        casper::app::monitor::Watchdog::GetInstance().Start(config, /* a_detached */ false, listener, &listener.abort_flag_);
+        watchdog.Start(config, /* a_detached */ false, listener, &listener.abort_flag_);
         
         status["status"] = "terminated";
+        if ( true == watchdog.IsErrorSet() ) {
+            watchdog.GetError([&status] (const ::sys::Error& a_error) {
+                status["error"]        = Json::Value(Json::ValueType::objectValue);
+                status["error"]["no"]  = a_error.no();
+                status["error"]["str"] = a_error.str();
+                status["error"]["msg"] = a_error.message();
+                status["error"]["fnc"] = a_error.function();
+                status["error"]["ln"]  = a_error.line();
+            });
+        }
+        
         cc::sockets::dgram::ipc::Client::GetInstance().Send(status);
 
         CASPER_APP_LOG("status", "%s", "Cleanup...");

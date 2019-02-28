@@ -2,6 +2,8 @@
 
 #import <Quartz/Quartz.h> // PDFDocument
 
+#import "Alerts.h"
+
 #include "cef3/browser/root_window.h"
 #include "cef3/browser/root_window_manager.h"
 
@@ -123,20 +125,21 @@ namespace {
         statusItem.menu = [[[NSMenu alloc]init]retain];
         
         if ( nil == statusMenuItem ) {
-            statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Child Processes" action:nil keyEquivalent:@""];
+            statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Monitor" action:nil keyEquivalent:@""];
         }
+        aboutMenuItem           = [[NSMenuItem alloc] initWithTitle:@"About"                action:@selector(about:) keyEquivalent:@""];
         showWindowMenuItem      = [[NSMenuItem alloc] initWithTitle:@"Show Window"          action:@selector(showWindow:) keyEquivalent:@""];
         preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@""];
-        aboutMenuItem           = [[NSMenuItem alloc] initWithTitle:@"About"                action:@selector(about:) keyEquivalent:@""];
         quitMenuItem            = [[NSMenuItem alloc] initWithTitle:@"Quit"                 action:@selector(quit:) keyEquivalent:@""];
         
+        [statusItem.menu addItem:aboutMenuItem];
+        [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:statusMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:showWindowMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:preferencesMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
-        [statusItem.menu addItem:aboutMenuItem];
         [statusItem.menu addItem:quitMenuItem];
     } else {
         [self showWindow:self];
@@ -151,7 +154,8 @@ namespace {
 }
 
 - (void)orderFrontStandardAboutPanel:(id)sender {
-    [[NSApplication sharedApplication] orderFrontStandardAboutPanel:nil];
+    [NSApp activateIgnoringOtherApps:YES];
+    [[NSApplication sharedApplication] orderFrontStandardAboutPanel: self];
 }
 
 - (IBAction)checkForUpdates:(id)sender
@@ -242,49 +246,71 @@ namespace {
     // TODO CW
     [self printPDFByURL:@"file:///tmp/sample.pdf" direclty: NO];
 }
+
+- (void)showPreferences:(id)sender
+{
+    [NSApp activateIgnoringOtherApps:YES];
     
+    if ( nil == preferencesWindowController ) {
+        preferencesWindowController = [[PreferencesWindowController alloc]initWithSparkle: updater andWithListener: self];
+    }
+    
+    [preferencesWindowController.window makeKeyAndOrderFront:nil];
+}
+
+- (void)showConsole:(id)sender
+{
+    [[NSWorkspace sharedWorkspace]launchApplication:@"/Applications/Utilities/Console.app"];
+}
+
+- (void)about:(id)sender
+{
+    [self orderFrontStandardAboutPanel: sender];
+}
+
 - (void)setRunningProcesses:(const Json::Value&)list
 {
     NSMenu* menu = [[NSMenu alloc]init];
     
-    for ( Json::ArrayIndex idx = 0 ; idx < list.size() ; ++idx ) {
-        const Json::Value& process = list[idx];
-        NSString* title = [NSString stringWithFormat:@"%@ ( %@ )",
-                           [NSString stringWithUTF8String:process["id"].asCString()],
-                           [NSNumber numberWithUnsignedInteger:process["pid"].asUInt()]
-        ];
-        [menu addItem:[[NSMenuItem alloc]initWithTitle:title action:nil keyEquivalent:@""]];
-    }
-    
-    if ( nil == statusMenuItem ) {
-        statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Child Processes" action:nil keyEquivalent:@""];
+    if ( true == list.isNull() ) {
+        if ( nil != statusMenuItem ) {
+            [[statusMenuItem submenu] removeAllItems];
+            [statusMenuItem setSubmenu:nil];
+        }
+    } else {
+        for ( Json::ArrayIndex idx = 0 ; idx < list.size() ; ++idx ) {
+            const Json::Value& process = list[idx];
+            NSString* title = [NSString stringWithFormat:@"%@ ( %@ )",
+                               [NSString stringWithUTF8String:process["id"].asCString()],
+                               [NSNumber numberWithUnsignedInteger:process.get("pid", 0).asInt()]
+            ];
+            [menu addItem:[[NSMenuItem alloc]initWithTitle:title action:nil keyEquivalent:@""]];
+        }
+        
+        if ( nil == statusMenuItem ) {
+            statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Monitor" action:nil keyEquivalent:@""];
+        }
+        [statusMenuItem setSubmenu:menu];
     }
 
-    [statusMenuItem setSubmenu:menu];
 }
 
 - (void)showError:(const Json::Value&)error andRelaunch:(BOOL)relaunch
 {
-    // error["no"].asCString();
-    // error["str"].asCString();
-    // error["msg"].asCString();
-    // error["fnc"].asCString();
-    // error["ln"].asCString();
-    // error["fatal"].asCString();
-
-    NSAlert* alert = [[NSAlert alloc]init];
-    [alert setAlertStyle:NSAlertStyleCritical];
-    [alert setMessageText:[NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]];
-    [alert addButtonWithTitle:@"Relaunch"];
-    [alert addButtonWithTitle:@"Quit"];
-    
-    const NSModalResponse r = [alert runModal];
-    if ( r == NSAlertFirstButtonReturn ) {
-        self->relaunch = YES;
+    const NSModalResponse r = [Alerts showCriticalMessage: @""
+                                          informativeText: [NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]
+                                               andButtons: @[@"Relaunch", @"Quit", @"Console"]
+    ];
+    if ( r == NSAlertThirdButtonReturn ) {
+        [self showConsole: nil];
     } else {
-        self->relaunch = NO;
+        if ( r == NSAlertFirstButtonReturn ) {
+            self->relaunch = YES;
+        } else {
+            self->relaunch = NO;
+        }
+        [self quit: nil];
     }
-    [self quit: nil];
 }
 
 - (void)showException:(const std::exception&)exception delayFor:(NSTimeInterval)seconds andQuit:(BOOL)quit
@@ -292,11 +318,10 @@ namespace {
     
     __block std::exception __exception = exception;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        NSAlert* alert = [[NSAlert alloc]init];
-        [alert setAlertStyle:NSAlertStyleCritical];
-        [alert setMessageText:[NSString stringWithCString: __exception.what() encoding: NSUTF8StringEncoding]];
-        [alert addButtonWithTitle:@"OK"];
-        const NSModalResponse r = [alert runModal];
+        const NSModalResponse r = [Alerts showCriticalMessage: @"An std::exception Occurred"
+                                              informativeText: [NSString stringWithCString: __exception.what() encoding: NSUTF8StringEncoding]
+                                                   andButtons: @[@"Ok"]
+        ];
         if ( r == NSAlertFirstButtonReturn ) {
             if ( YES == quit ) {
                 [self quit: nil];
@@ -441,45 +466,39 @@ namespace {
     }
 }
 
-- (void)showPreferences:(id)sender
-{
-    [NSApp activateIgnoringOtherApps:YES];
-
-    if ( nil == preferencesWindowController ) {
-        preferencesWindowController = [[PreferencesWindowController alloc]initWithSparkle:updater andWithListener:self];
-    }
-
-    [preferencesWindowController.window makeKeyAndOrderFront:nil];
-}
-
-- (void)about:(id)sender
-{
-    [self orderFrontStandardAboutPanel: sender];
-}
-
 #pragma mark - PreferencesWindowListener
 
-- (void)onSettingsChangedRelaunchRequired:(BOOL)relaunch
+- (void)onSettingsChangedRelaunchRequired:(BOOL)relaunch now:(BOOL)now
 {
     self->relaunch = relaunch;
-    
-    if ( YES == self->relaunch ) {
-        
-        NSAlert* alert = [[NSAlert alloc]init];
-        [alert setAlertStyle: NSAlertStyleInformational];
-        [alert setMessageText:@"Settings Changed"];
-        [alert setInformativeText:@"In order to apply new settings, this application need to restart.\nRestart now?"];
-        [alert addButtonWithTitle:@"OK"];
-        [alert addButtonWithTitle:@"Cancel"];
-        
-        const NSModalResponse r = [alert runModal];
-        if ( NSAlertFirstButtonReturn == r ) {
-            [self quit: nil];
-        } else {
-            self->relaunch = NO;
-        }
-        
+    if ( NO == self->relaunch ) {
+        return;
     }
+    const NSModalResponse r = [Alerts showWarningMessage: @"Settings Changed"
+                                         informativeText: (YES == now
+                                                            ?
+                                                                @"In order to apply new settings, this application will restart."
+                                                            :
+                                                                @"In order to apply new settings, this application needs to restart.\nRestart now?"
+                                                           )
+                                              andButtons: ( YES == now
+                                                            ?
+                                                                @[@"Restart"]
+                                                            :
+                                                                @[@"Restart", @"Cancel"]
+                                                           )
+                               ];
+    if ( NSAlertFirstButtonReturn == r ) {
+        [PreferencesWindowController setConfigured: YES];
+        [self quit: nil];
+    } else {
+        self->relaunch = NO;
+    }
+}
+
+-(void)onSettingsWindowDidClose
+{
+    preferencesWindowController = nil;
 }
 
 @end
