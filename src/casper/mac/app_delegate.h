@@ -19,6 +19,8 @@
     NSMenuItem   *preferencesMenuItem;
     NSMenuItem   *quitMenuItem;
     
+    NSMutableDictionary* monitorMenuItems;
+    
     @private
     
     SUUpdater    *updater;

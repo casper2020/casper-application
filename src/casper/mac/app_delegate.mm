@@ -268,29 +268,79 @@ namespace {
     [self orderFrontStandardAboutPanel: sender];
 }
 
++ (NSImage*)tintImage:(NSImage*)image withColor:(NSColor*)color
+{
+    NSImage* newImage = [[NSImage imageNamed:@"StatusBar"] copy];
+    
+    [newImage lockFocus];
+    
+    [color set];
+    
+    NSRectFillUsingOperation(NSMakeRect(0, 0, image.size.width, image.size.height), NSCompositingOperationSourceAtop);
+    
+    [newImage unlockFocus];
+    
+    [newImage setTemplate:NO];
+
+    return newImage;
+}
+
 - (void)setRunningProcesses:(const Json::Value&)list
 {
-    NSMenu* menu = [[NSMenu alloc]init];
+    if ( nil == monitorMenuItems ) {
+        monitorMenuItems = [[NSMutableDictionary alloc]init];
+    }
+
+    if ( nil == statusMenuItem ) {
+        statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Monitor" action:nil keyEquivalent:@""];
+    }
+
+    if ( nil == statusMenuItem.submenu ) {
+        statusMenuItem.submenu = [[NSMenu alloc]init];
+    }
     
     if ( true == list.isNull() ) {
-        if ( nil != statusMenuItem ) {
-            [[statusMenuItem submenu] removeAllItems];
-            [statusMenuItem setSubmenu:nil];
-        }
+        statusItem.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor redColor]];
     } else {
+        
+        Json::ArrayIndex cnt = 0;
+        
         for ( Json::ArrayIndex idx = 0 ; idx < list.size() ; ++idx ) {
+            
             const Json::Value& process = list[idx];
-            NSString* title = [NSString stringWithFormat:@"%@ ( %@ )",
-                               [NSString stringWithUTF8String:process["id"].asCString()],
-                               [NSNumber numberWithUnsignedInteger:process.get("pid", 0).asInt()]
+
+            const auto pid = process.get("pid", 0).asInt();
+            if ( pid > 0 ) {
+                cnt++;
+            }
+
+            NSString* key   = [NSString stringWithUTF8String: process["id"].asCString()];
+            NSString* title = [NSString stringWithFormat: @"%@ ( %@ )",
+                               [NSString stringWithUTF8String: process["id"].asCString()],
+                               ( 0 != pid  ? [NSNumber numberWithUnsignedInteger: pid] : @"not running" )
             ];
-            [menu addItem:[[NSMenuItem alloc]initWithTitle:title action:nil keyEquivalent:@""]];
+            
+            NSMenuItem* item = (NSMenuItem*)[monitorMenuItems objectForKey: key];
+            if ( nil == item ) {
+                item = [[NSMenuItem alloc]initWithTitle: title action: nil keyEquivalent: @""];
+                [monitorMenuItems setObject: item forKey: key];
+                [statusMenuItem.submenu addItem: item];
+            } else {
+                [item setTitle:title];
+            }
+            
         }
         
-        if ( nil == statusMenuItem ) {
-            statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Monitor" action:nil keyEquivalent:@""];
+        if ( list.size() != cnt ) {
+            if ( 0 == cnt ) {
+                statusItem.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor redColor]];
+            } else {
+                statusItem.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor yellowColor]];
+            }
+        } else {
+            statusItem.image = [NSImage imageNamed:@"StatusBar"];
         }
-        [statusMenuItem setSubmenu:menu];
+        
     }
 
 }

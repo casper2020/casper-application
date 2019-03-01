@@ -383,7 +383,7 @@ static int StartCEF3 (int a_argc, char* a_argv[],
  * @brief casper-app entry point
  *
  * @param a_argc
- * @parma a_arvg
+ * @param a_arvg
  */
 int main (int a_argc, char* a_argv[])
 {
@@ -680,4 +680,3 @@ int main (int a_argc, char* a_argv[])
                      }
     );
 }
-

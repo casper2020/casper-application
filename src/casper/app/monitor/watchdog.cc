@@ -660,9 +660,70 @@ void casper::app::monitor::Watchdog::Loop ()
 
     CASPER_APP_WATCHDOG_LOCK();
     
-    TerminateAll(/* a_optional */ true, getpid());            
+    const pid_t my_pid = getpid();
+    
+    TerminateAll(/* a_optional */ true, my_pid);
+
+    std::list<const sys::Process*> interest;
+    for ( auto it : list_ ) {
+        interest.push_back(it);
+    }
+
+    std::list<const sys::Process*> pending;
+    if ( true == sys::Process::Filter(interest, pending) ) {
+        
+        while ( pending.size() > 0 ) {
+
+            CASPER_APP_DEBUG_LOG("status", "%lu processe(s) remaining...", pending.size());
+
+            for ( std::list<const ::sys::Process*>::reverse_iterator it = pending.rbegin() ; pending.rend() != it ; ++it ) {
+                ::sys::Process* process = const_cast<::sys::Process*>(*it);
+                
+                bool is_running, is_zombie, erased = false;
+                
+                if ( ( true == process->IsRunning(/* a_optional */ true, /* a_parent_pid */ my_pid, is_running) && false == is_running )
+                    ||
+                    ( true == process->IsZombie(/* a_optional */ true, is_zombie) && true == is_zombie )
+                )
+                {
+                    for ( std::list<const sys::Process*>::iterator it2 = interest.begin(); interest.end() != it2 ; ++it2 ) {
+                        const ::sys::Process* p2 = (*it2);
+                        if ( p2 == process ) {
+                            erased = true;
+                            interest.erase(it2);
+                            break;
+                        }
+                    }
+                }
+                
+                CASPER_APP_DEBUG_LOG("status", "%s ( %d ) %s running...",
+                                     process->info().id_.c_str(), process->pid(), true == erased ? "no longer" : "still"
+                );
+                
+                if ( true == erased ) {
+                    (*process) = static_cast<pid_t>(0);
+                }
+                
+            }
+
+            CASPER_APP_WATCHDOG_UNLOCK();
+
+            Notify(SIGUSR2);
+            usleep(500*1000);
+
+            CASPER_APP_WATCHDOG_LOCK();
+
+            pending.clear();
+            if ( false == sys::Process::Filter(interest, pending) ) {
+                break;
+            }
+            
+        }
+    }
     
     CASPER_APP_WATCHDOG_UNLOCK();
+
+    Notify(SIGUSR2);
 
     // ... log ...
     CASPER_APP_DEBUG_LOG("status", "%s", "Shutting down...");
