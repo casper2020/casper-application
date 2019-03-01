@@ -674,7 +674,7 @@ void casper::app::monitor::Watchdog::Loop ()
         
         while ( pending.size() > 0 ) {
 
-            CASPER_APP_DEBUG_LOG("status", "%lu processe(s) remaining...", pending.size());
+            CASPER_APP_DEBUG_LOG("status", "%lu process(es) remaining...", pending.size());
 
             for ( std::list<const ::sys::Process*>::reverse_iterator it = pending.rbegin() ; pending.rend() != it ; ++it ) {
                 ::sys::Process* process = const_cast<::sys::Process*>(*it);

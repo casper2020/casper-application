@@ -128,9 +128,13 @@ namespace {
             statusMenuItem = [[NSMenuItem alloc] initWithTitle:@"Monitor" action:nil keyEquivalent:@""];
         }
         aboutMenuItem           = [[NSMenuItem alloc] initWithTitle:@"About"                action:@selector(about:) keyEquivalent:@""];
-        showWindowMenuItem      = [[NSMenuItem alloc] initWithTitle:@"Show Window"          action:@selector(showWindow:) keyEquivalent:@""];
-        preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@""];
-        quitMenuItem            = [[NSMenuItem alloc] initWithTitle:@"Quit"                 action:@selector(quit:) keyEquivalent:@""];
+        
+        showWindowMenuItem      = [[NSMenuItem alloc] initWithTitle:@"Show Window"          action:@selector(showWindow:) keyEquivalent:@"1"];
+        [showWindowMenuItem setKeyEquivalentModifierMask: ( NSShiftKeyMask | NSCommandKeyMask )];
+        
+        preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@","];
+        consoleMenuItem         = [[NSMenuItem alloc] initWithTitle:@"Console..."           action:@selector(showConsole:) keyEquivalent:@"k"];
+        quitMenuItem            = [[NSMenuItem alloc] initWithTitle:@"Quit"                 action:@selector(quit:) keyEquivalent:@"Q"];
         
         [statusItem.menu addItem:aboutMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
@@ -139,6 +143,7 @@ namespace {
         [statusItem.menu addItem:showWindowMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:preferencesMenuItem];
+        [statusItem.menu addItem:consoleMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:quitMenuItem];
     } else {

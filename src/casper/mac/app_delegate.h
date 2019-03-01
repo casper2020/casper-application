@@ -17,6 +17,7 @@
     NSMenuItem   *aboutMenuItem;
     NSMenuItem   *showWindowMenuItem;
     NSMenuItem   *preferencesMenuItem;
+    NSMenuItem   *consoleMenuItem;
     NSMenuItem   *quitMenuItem;
     
     NSMutableDictionary* monitorMenuItems;
