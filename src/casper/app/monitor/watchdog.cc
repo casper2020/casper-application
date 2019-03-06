@@ -441,6 +441,12 @@ void casper::app::monitor::Watchdog::Loop ()
     sigaddset(&sigmask, SIGCHLD);
     pthread_sigmask(SIG_BLOCK, &sigmask, &saved_sigmask);
     
+    if ( true == detached_ ) {
+        pthread_setname_np("Monitor Watchdog");
+    } else {
+        pthread_setname_np("Monitor");
+    }
+    
     CASPER_APP_WATCHDOG_LOCK();
 
     // ... first try to terminate all running processes, launched by this app ...
