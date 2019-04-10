@@ -96,7 +96,6 @@ namespace {
     // Set the delegate for application events.
     [application setDelegate:self];
     
-    
     if (!with_osr_) {
         // Remove the OSR-related menu items when OSR is disabled.
         NSMenuItem* tests_menu = GetMenuBarMenuWithTag(8);
@@ -150,6 +149,7 @@ namespace {
         [self showWindow:self];
     }
     
+    updater = [[SUUpdater alloc]initForBundle:[NSBundle mainBundle]];
 }
 
 #pragma mark -
@@ -165,9 +165,6 @@ namespace {
 
 - (IBAction)checkForUpdates:(id)sender
 {
-    if ( nil == updater ) {
-        updater = [[SUUpdater alloc]initForBundle:[NSBundle mainBundle]];
-    }
     [updater checkForUpdates:self];
 }
 

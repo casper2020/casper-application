@@ -1041,7 +1041,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/xcode-prebuild.sh\nif [ ! -f src/casper/app/version.h ] ; then\n    cp -fv src/casper/app/version.h.in src/casper/app/version.h\nfi\n";
+			shellScript = "if [ ! -f src/casper/app/version.h ] ; then\n    cp -fv src/casper/app/version.h.in src/casper/app/version.h\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

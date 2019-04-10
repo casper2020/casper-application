@@ -163,6 +163,11 @@
     // TODO CW [PreferencesWindowController setConfigured: NO];
 }
 
+- (IBAction)checkForUpdates:(id)sender
+{
+    [updater checkForUpdates:self];
+}
+
 - (IBAction)cancel:(id)sender
 {
     [self close];
