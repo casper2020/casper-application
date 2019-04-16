@@ -363,14 +363,19 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     const BOOL relaunch = [delegate shouldRelaunch];
     
     // ... release objects ( in reverse order of creation ) ...
-    [delegate release];
     message_loop.reset();
     context.reset();
-    [autopool release];
     
     CASPER_APP_DEBUG_LOG("status", "%s", "Stopped...");
     
-    if ( YES == relaunch ) {
+    if ( [delegate updatePending] ) {
+        [delegate proceedWithUpdate];
+        [delegate release];
+        [autopool release];
+        CASPER_APP_DEBUG_LOG("status", "%s", "Updating...");
+    } else if ( YES == relaunch ) {
+        [delegate release];
+        [autopool release];
         CASPER_APP_DEBUG_LOG("status", "%s", "Relaunch...");
         [NSTask launchedTaskWithLaunchPath:[[NSBundle mainBundle]executablePath] arguments: @[]];
     }

@@ -40,8 +40,8 @@
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://localhost:3101</string>
+	<string>&lt;insert-SUFeedURL-here&gt;</string>
 	<key>SUPublicEDKey</key>
-	<string>q9pl9cP5TVNF2dvjUKeTKTFdmK12LrGiFh5zvythzgI=</string>
+	<string>&lt;insert-SUPublicEDKey-here&gt;</string>
 </dict>
 </plist>

@@ -45,9 +45,12 @@ namespace {
 
 - (id)initWithControls:(bool)with_controls andOsr:(bool)with_osr {
     if (self = [super init]) {
-        with_controls_ = with_controls;
-        with_osr_ = with_osr;
-        relaunch = NO;
+        with_controls_    = with_controls;
+        with_osr_         = with_osr;
+        relaunch          = NO;
+        relaunching       = NO;
+        updater           = nil;
+        updaterInvocation = nil;
     }
     return self;
 }
@@ -150,12 +153,18 @@ namespace {
     }
     
     updater = [[SUUpdater alloc]initForBundle:[NSBundle mainBundle]];
+    [updater setDelegate:self];
 }
 
 #pragma mark -
 
 - (void)tryToTerminateApplication:(NSApplication*)app {
-    casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(false);
+    if ( NO == relaunching ) {
+        casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(false);
+        if ( nil != updaterInvocation ) {
+            [updaterInvocation release];
+        }
+    }
 }
 
 - (void)orderFrontStandardAboutPanel:(id)sender {
@@ -351,17 +360,25 @@ namespace {
 {
     const NSModalResponse r = [Alerts showCriticalMessage: @""
                                           informativeText: [NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]
-                                               andButtons: @[@"Relaunch", @"Quit", @"Console"]
+                                               andButtons: @[@"Preferences", @"Quit", @"Relaunch", @"Console"]
     ];
-    if ( r == NSAlertThirdButtonReturn ) {
-        [self showConsole: nil];
-    } else {
-        if ( r == NSAlertFirstButtonReturn ) {
+    switch(r) {
+        case 1003:
+            [self showConsole: nil];
+            break;
+        case NSAlertThirdButtonReturn:
             self->relaunch = YES;
-        } else {
+            [self quit: nil];
+            break;
+        case NSAlertSecondButtonReturn:
             self->relaunch = NO;
-        }
-        [self quit: nil];
+            [self quit: nil];
+            break;
+        case NSAlertFirstButtonReturn:
+            [self showPreferences:self];
+            break;
+        default:
+            break;
     }
 }
 
@@ -476,6 +493,18 @@ namespace {
     casper::cef3::browser::MainMessageLoop::Get()->Quit();
 }
 
+- (BOOL)updatePending
+{
+    return ( nil != updaterInvocation );
+}
+
+- (void)proceedWithUpdate
+{
+    [updaterInvocation invoke];
+    [updaterInvocation release];
+    updaterInvocation = nil;
+}
+
 - (void)enableAccessibility:(bool)bEnable
 {
     NSWindow* key_window = [[NSApplication sharedApplication] keyWindow];
@@ -551,6 +580,23 @@ namespace {
 -(void)onSettingsWindowDidClose
 {
     preferencesWindowController = nil;
+}
+
+#pragma mark - SUUpdaterDelegate
+
+- (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)item untilInvoking:(NSInvocation *)invocation
+{
+    updaterInvocation = invocation;
+    [updaterInvocation retain];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self quit:self];
+    });
+    return YES;
+}
+
+-(void)updaterWillRelaunchApplication:(SUUpdater *)updater
+{
+    relaunching = YES;
 }
 
 @end

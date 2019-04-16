@@ -8,7 +8,7 @@
 #include "json/json.h"
 
 // Receives notifications from the application. Will delete itself when done.
-@interface AppDelegate : NSObject<NSApplicationDelegate, PreferencesWindowListener> {
+@interface AppDelegate : NSObject<NSApplicationDelegate, PreferencesWindowListener, SUUpdaterDelegate> {
     @private
     bool with_controls_;
     bool with_osr_;
@@ -25,7 +25,9 @@
     @private
     
     SUUpdater    *updater;
+    NSInvocation *updaterInvocation;
     BOOL         relaunch;
+    BOOL         relaunching;
     
     @private
     
@@ -60,6 +62,8 @@
 - (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int,Json::Value))finishedCallback;
 - (BOOL)shouldRelaunch;
 - (void)quit:(id)sender;
+- (BOOL)updatePending;
+- (void)proceedWithUpdate;
     
 @end
 
