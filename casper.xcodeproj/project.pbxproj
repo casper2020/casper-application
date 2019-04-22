@@ -87,8 +87,6 @@
 		47DDA084219DC7FF009AA8A9 /* other_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA02B219DC06C009AA8A9 /* other_app.cc */; };
 		47DDA085219DC819009AA8A9 /* app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA01D219DC06C009AA8A9 /* app.cc */; };
 		47DDA08A219DDA0B009AA8A9 /* extension_util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA089219DDA0B009AA8A9 /* extension_util.cc */; };
-		47ED99DC21FF43D00057DF4E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47ED99DB21FF43D00057DF4E /* Sparkle.framework */; };
-		47ED99DD21FF43FB0057DF4E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 47ED99DB21FF43D00057DF4E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6694421949191007C11A0 /* OpenGL.framework */; };
 		47F669602194ACEF007C11A0 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6695F2194ACEF007C11A0 /* Quartz.framework */; };
 /* End PBXBuildFile section */
@@ -201,7 +199,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				47ED99DD21FF43FB0057DF4E /* Sparkle.framework in CopyFiles */,
 				477EE12B218C623100235617 /* casper Helper.app in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -342,7 +339,6 @@
 		47DDA089219DDA0B009AA8A9 /* extension_util.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = extension_util.cc; sourceTree = "<group>"; };
 		47E9D6AB2209E9D9002197FD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		47E9D6AC2209E9DA002197FD /* version.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.h.in; sourceTree = "<group>"; };
-		47ED99DB21FF43D00057DF4E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "third-party/Sparkle/Sparkle.framework"; sourceTree = "<group>"; };
 		47F6694421949191007C11A0 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		47F6695F2194ACEF007C11A0 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4B44C31C5DF3485C88A8CA57 /* casper Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = "casper Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -358,7 +354,6 @@
 				47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */,
 				47DD216C218C4BCD005EB1A6 /* AppKit.framework in Frameworks */,
 				47DD216A218C4BC9005EB1A6 /* Cocoa.framework in Frameworks */,
-				47ED99DC21FF43D00057DF4E /* Sparkle.framework in Frameworks */,
 				47DD2407218C4DC4005EB1A6 /* libcef_dll_wrapper.a in Frameworks */,
 				47DD1B2A2201ED85005413CF /* libcasper-connectors.a in Frameworks */,
 				4745755B21E8996500C2819D /* libosal.a in Frameworks */,
@@ -441,7 +436,6 @@
 			isa = PBXGroup;
 			children = (
 				47DD1B1E2201ECC7005413CF /* libcasper-connectors.a */,
-				47ED99DB21FF43D00057DF4E /* Sparkle.framework */,
 				47F6695F2194ACEF007C11A0 /* Quartz.framework */,
 				47F6694421949191007C11A0 /* OpenGL.framework */,
 				474BDFC121905A61005745E8 /* cef_sandbox.a */,
@@ -1007,7 +1001,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"ACTION='$ACTION'\"\necho \"CASPER_ACTION='$CASPER_ACTION'\"\necho \"XCODE_RUNTIME_APP_PATH=$XCODE_RUNTIME_APP_PATH\"\nln -sf $SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium\\ Embedded\\ Framework.framework $SRCROOT/third-party/cef/Frameworks/\nmkdir -p \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\ncp -RfL \"$SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium Embedded Framework.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\nchmod -R go+rX \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\nif [ $CASPER_ACTION = \"clean\" ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\nelif [ $CASPER_ACTION = \"build\" ] ; then\n    if [ -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n        rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    fi\n    cp -vf $SRCROOT/etc/monitor.json $METAL_LIBRARY_OUTPUT_DIR\nelif [ ! -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    ( cd $METAL_LIBRARY_OUTPUT_DIR && ln -sf $SRCROOT/etc/monitor.json monitor.json )\nfi\n";
+			shellScript = "echo \"ACTION='$ACTION'\"\necho \"CASPER_ACTION='$CASPER_ACTION'\"\necho \"XCODE_RUNTIME_APP_PATH=$XCODE_RUNTIME_APP_PATH\"\nln -sf $SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium\\ Embedded\\ Framework.framework $SRCROOT/third-party/cef/Frameworks/\nrm -rf \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks/\"\nmkdir -p \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\necho \"CEF\"\ncp -RfL \"$SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium Embedded Framework.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\necho \"Sparkle\"\ncp -Rf \"$SRCROOT/../Sparkle/build/$CONFIGURATION/Sparkle.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\n\nchmod -R go+rX \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\n\nif [ $CASPER_ACTION = \"clean\" ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\nelif [ $CASPER_ACTION = \"build\" ] ; then\n    if [ -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n        rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    fi\n    cp -vf $SRCROOT/etc/monitor.json $METAL_LIBRARY_OUTPUT_DIR\nelif [ ! -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    ( cd $METAL_LIBRARY_OUTPUT_DIR && ln -sf $SRCROOT/etc/monitor.json monitor.json )\nfi\n";
 		};
 		47BAE4002211756F0036A950 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1455,7 +1449,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/third-party/Sparkle";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Sparkle/build/$(CONFIGURATION)/Sparkle.framework";
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1481,11 +1475,12 @@
 					"$(SRCROOT)/third-party/cef",
 					"$(SRCROOT)/../lemon",
 					/usr/local/include,
+					"$(PROJECT_DIR)/../Sparkle/",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/casper/mac/resources/Info.plist";
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/third-party/cef/cef_binary_3.3538.1849.g458cc98_macosx64/Debug";
+				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1563,7 +1558,7 @@
 				DEVELOPMENT_TEAM = "";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/third-party/Sparkle";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Sparkle/build/$(CONFIGURATION)/Sparkle.framework";
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1589,11 +1584,12 @@
 					"$(SRCROOT)/third-party/cef",
 					"$(SRCROOT)/../lemon",
 					/usr/local/include,
+					"$(PROJECT_DIR)/../Sparkle/",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/casper/mac/resources/Info.plist";
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/third-party/cef/cef_binary_3.3538.1849.g458cc98_macosx64/Debug";
+				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
