@@ -87,6 +87,7 @@
 		47DDA084219DC7FF009AA8A9 /* other_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA02B219DC06C009AA8A9 /* other_app.cc */; };
 		47DDA085219DC819009AA8A9 /* app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA01D219DC06C009AA8A9 /* app.cc */; };
 		47DDA08A219DDA0B009AA8A9 /* extension_util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA089219DDA0B009AA8A9 /* extension_util.cc */; };
+		47EBA85C226DFD7000EAFB02 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47EBA851226DFD5200EAFB02 /* Sparkle.framework */; };
 		47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6694421949191007C11A0 /* OpenGL.framework */; };
 		47F669602194ACEF007C11A0 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6695F2194ACEF007C11A0 /* Quartz.framework */; };
 /* End PBXBuildFile section */
@@ -182,6 +183,48 @@
 			proxyType = 1;
 			remoteGlobalIDString = 47DD2177218C4C5C005EB1A6;
 			remoteInfo = cef_dll_wrapper;
+		};
+		47EBA850226DFD5200EAFB02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = Sparkle;
+		};
+		47EBA852226DFD5200EAFB02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55C14BB7136EEF1500649790;
+			remoteInfo = Autoupdate;
+		};
+		47EBA854226DFD5200EAFB02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5AE13FB31E0D9E07000D2C2C;
+			remoteInfo = generate_appcast;
+		};
+		47EBA856226DFD5200EAFB02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5AB8F19F214DA72000A1187F;
+			remoteInfo = generate_keys;
+		};
+		47EBA858226DFD5200EAFB02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5A5ADED7214EDE4900DF0099;
+			remoteInfo = sign_update;
+		};
+		47EBA85A226DFD6900EAFB02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = Sparkle;
 		};
 		47F4018E2215D5E400E557A6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -339,6 +382,7 @@
 		47DDA089219DDA0B009AA8A9 /* extension_util.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = extension_util.cc; sourceTree = "<group>"; };
 		47E9D6AB2209E9D9002197FD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		47E9D6AC2209E9DA002197FD /* version.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.h.in; sourceTree = "<group>"; };
+		47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = "../casper-packager/Sparkle/Sparkle.xcodeproj"; sourceTree = "<group>"; };
 		47F6694421949191007C11A0 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		47F6695F2194ACEF007C11A0 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4B44C31C5DF3485C88A8CA57 /* casper Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = "casper Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -354,6 +398,7 @@
 				47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */,
 				47DD216C218C4BCD005EB1A6 /* AppKit.framework in Frameworks */,
 				47DD216A218C4BC9005EB1A6 /* Cocoa.framework in Frameworks */,
+				47EBA85C226DFD7000EAFB02 /* Sparkle.framework in Frameworks */,
 				47DD2407218C4DC4005EB1A6 /* libcef_dll_wrapper.a in Frameworks */,
 				47DD1B2A2201ED85005413CF /* libcasper-connectors.a in Frameworks */,
 				4745755B21E8996500C2819D /* libosal.a in Frameworks */,
@@ -765,6 +810,18 @@
 			path = browser;
 			sourceTree = "<group>";
 		};
+		47EBA849226DFD5200EAFB02 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				47EBA851226DFD5200EAFB02 /* Sparkle.framework */,
+				47EBA853226DFD5200EAFB02 /* Autoupdate.app */,
+				47EBA855226DFD5200EAFB02 /* generate_appcast */,
+				47EBA857226DFD5200EAFB02 /* generate_keys */,
+				47EBA859226DFD5200EAFB02 /* sign_update */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		47F6694621949313007C11A0 /* casper */ = {
 			isa = PBXGroup;
 			children = (
@@ -787,6 +844,7 @@
 		BFB75B9DB41641668211584A = {
 			isa = PBXGroup;
 			children = (
+				47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */,
 				47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */,
 				4745754F21E898FC00C2819D /* osal.xcodeproj */,
 				47D66CCB21E73F9000FC6DF1 /* jsoncpp.xcodeproj */,
@@ -816,6 +874,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				47EBA85B226DFD6900EAFB02 /* PBXTargetDependency */,
 				47420685218C5DF5006B43E5 /* PBXTargetDependency */,
 				47DD240C218C4DE8005EB1A6 /* PBXTargetDependency */,
 				47DD1B292201ED09005413CF /* PBXTargetDependency */,
@@ -909,6 +968,10 @@
 					ProductGroup = 4745755021E898FC00C2819D /* Products */;
 					ProjectRef = 4745754F21E898FC00C2819D /* osal.xcodeproj */;
 				},
+				{
+					ProductGroup = 47EBA849226DFD5200EAFB02 /* Products */;
+					ProjectRef = 47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -946,6 +1009,41 @@
 			fileType = archive.ar;
 			path = libcef_dll_wrapper.a;
 			remoteRef = 47DD2183218C4C7E005EB1A6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		47EBA851226DFD5200EAFB02 /* Sparkle.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Sparkle.framework;
+			remoteRef = 47EBA850226DFD5200EAFB02 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		47EBA853226DFD5200EAFB02 /* Autoupdate.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Autoupdate.app;
+			remoteRef = 47EBA852226DFD5200EAFB02 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		47EBA855226DFD5200EAFB02 /* generate_appcast */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = generate_appcast;
+			remoteRef = 47EBA854226DFD5200EAFB02 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		47EBA857226DFD5200EAFB02 /* generate_keys */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = generate_keys;
+			remoteRef = 47EBA856226DFD5200EAFB02 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		47EBA859226DFD5200EAFB02 /* sign_update */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = sign_update;
+			remoteRef = 47EBA858226DFD5200EAFB02 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1001,7 +1099,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"ACTION='$ACTION'\"\necho \"CASPER_ACTION='$CASPER_ACTION'\"\necho \"XCODE_RUNTIME_APP_PATH=$XCODE_RUNTIME_APP_PATH\"\nln -sf $SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium\\ Embedded\\ Framework.framework $SRCROOT/third-party/cef/Frameworks/\nrm -rf \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks/\"\nmkdir -p \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\necho \"CEF\"\ncp -RfL \"$SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium Embedded Framework.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\necho \"Sparkle\"\ncp -Rf \"$SRCROOT/../Sparkle/build/$CONFIGURATION/Sparkle.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\n\nchmod -R go+rX \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\n\nif [ $CASPER_ACTION = \"clean\" ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\nelif [ $CASPER_ACTION = \"build\" ] ; then\n    if [ -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n        rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    fi\n    cp -vf $SRCROOT/etc/monitor.json $METAL_LIBRARY_OUTPUT_DIR\nelif [ ! -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n    ( cd $METAL_LIBRARY_OUTPUT_DIR && ln -sf $SRCROOT/etc/monitor.json monitor.json )\nfi\n";
+			shellScript = "set -e\necho \"ACTION='$ACTION'\"\necho \"CASPER_ACTION='$CASPER_ACTION'\"\necho \"XCODE_RUNTIME_APP_PATH=$XCODE_RUNTIME_APP_PATH\"\nln -sf $SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium\\ Embedded\\ Framework.framework $SRCROOT/third-party/cef/Frameworks/\nrm -rf \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks/\"\nmkdir -p \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\necho \"CEF\"\ncp -RfL \"$SRCROOT/third-party/cef/Frameworks/$CONFIGURATION/Chromium Embedded Framework.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\necho \"Sparkle\"\ncp -Rf \"$SRCROOT/../casper-packager/Sparkle/build/$CONFIGURATION/Sparkle.framework\" \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\n\nchmod -R go+rX \"$SRCROOT/out/darwin/Debug/build/casper.app/Contents/Frameworks\"\n\nif [ \"${CASPER_ACTION}\" == \"clean\" ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\nelif [ \"${CASPER_ACTION}\" == \"build\" ] ; then\n  if [ -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n    rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n  fi\n  cp -vf $SRCROOT/etc/monitor.json $METAL_LIBRARY_OUTPUT_DIR\nelif [ ! -h $METAL_LIBRARY_OUTPUT_DIR/monitor.json ] ; then\n  rm -f $METAL_LIBRARY_OUTPUT_DIR/monitor.json\n  ( cd $METAL_LIBRARY_OUTPUT_DIR && ln -sf $SRCROOT/etc/monitor.json monitor.json )\nfi\n";
 		};
 		47BAE4002211756F0036A950 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1035,7 +1133,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ ! -f src/casper/app/version.h ] ; then\n    cp -fv src/casper/app/version.h.in src/casper/app/version.h\nfi\n";
+			shellScript = "if [ ! -f src/casper/app/version.h ] ; then\n    cp -fv src/casper/app/version.h.in src/casper/app/version.h\nfi\n\nif [ ! -f src/casper/mac/resources/English.lproj/InfoPlist.strings ] ; then\n    cp -fv src/casper/mac/resources/English.lproj/InfoPlist.strings.in src/casper/mac/resources/English.lproj/InfoPlist.strings\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1167,6 +1265,11 @@
 			isa = PBXTargetDependency;
 			name = cef_dll_wrapper;
 			targetProxy = 47DD240B218C4DE8005EB1A6 /* PBXContainerItemProxy */;
+		};
+		47EBA85B226DFD6900EAFB02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Sparkle;
+			targetProxy = 47EBA85A226DFD6900EAFB02 /* PBXContainerItemProxy */;
 		};
 		47F4018F2215D5E400E557A6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
