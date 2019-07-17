@@ -38,10 +38,10 @@
             "depends_on" : ["redis", "beanstalkd", "postgresql"]
         },
         {
-            "id": "nginx-broker-cdb",
+            "id": "nginx-cdb",
             "path": "@@APP_DIRECTORY_PREFIX@@/nginx-broker/bin",
             "executable":  "nginx-broker",
-            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/nginx-broker-cdb/nginx.conf",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/nginx-cdb/nginx.conf",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["redis", "beanstalkd", "postgresql"]
         },
