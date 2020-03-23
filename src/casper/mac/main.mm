@@ -404,26 +404,33 @@ int main (int a_argc, char* a_argv[])
     const char* lc_numeric = setlocale (LC_NUMERIC, NULL);
 
     // ... install signal(s) handler ...
-    ::ev::Signals::GetInstance().Startup(::casper::app::Logger::GetInstance().loggable_data());
-    ::ev::Signals::GetInstance().Register(
-                                          /* a_signals */
-                                          { SIGUSR1, SIGTERM, SIGQUIT, SIGTTIN },
-                                          /* a_callback */
-                                          [](const int a_sig_no) {
-                                              // ... is a 'shutdown' signal?
-                                              switch(a_sig_no) {
-                                                  case SIGQUIT:
-                                                  case SIGTERM:
-                                                  {
-                                                      AppDelegate* delegate = (AppDelegate*)[NSApp delegate];
-                                                      [delegate quit: nil];
-                                                  }
-                                                      return true;
-                                                  default:
-                                                      return false;
-                                              }
-                                          }
-    );
+    
+    ::ev::Signals::GetInstance().Startup(::casper::app::Logger::GetInstance().loggable_data(),
+                                                /* a_signals */
+                                                { SIGUSR1, SIGTERM, SIGQUIT, SIGTTIN },
+                                                /* a_callbacks */
+                                                {
+                                                   /* on_signal_           */
+                                                   [](const int a_sig_no) {
+                                                       // ... is a 'shutdown' signal?
+                                                       switch(a_sig_no) {
+                                                           case SIGQUIT:
+                                                           case SIGTERM:
+                                                           {
+                                                                AppDelegate* delegate = (AppDelegate*)[NSApp delegate];
+                                                                [delegate quit: nil];
+                                                           }
+                                                               return true;
+                                                           default:
+                                                               return false;
+                                                       }
+                                                   },
+                                                   /* on_fatal_exception_  */ nullptr,
+                                                   /* call_on_main_thread_ */ [] (std::function<void()> a_callback) {
+                                                       a_callback();
+                                                   }
+                                               }
+           );      
     
     osal::debug::Trace::GetInstance().Register("status", stdout);
 

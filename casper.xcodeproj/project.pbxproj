@@ -22,18 +22,18 @@
 		4733C1F121FF269C0028650B /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4733C1F021FF269C0028650B /* PreferencesWindow.xib */; };
 		4733C1F421FF27A70028650B /* PreferencesWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4733C1F321FF27A70028650B /* PreferencesWindowController.mm */; };
 		4745755B21E8996500C2819D /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4745755421E898FD00C2819D /* libosal.a */; };
+		4757B09E2428BC1E00A3EBC0 /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4757B06A2428B48300A3EBC0 /* libcasper-connectors.a */; };
+		4757B0A12428BF3A00A3EBC0 /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4757B06A2428B48300A3EBC0 /* libcasper-connectors.a */; };
 		4769C78E221703A6006FEE3F /* monitor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4769C78D221703A6006FEE3F /* monitor.mm */; };
 		477EE12B218C623100235617 /* casper Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B44C31C5DF3485C88A8CA57 /* casper Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		47BBC28C220D8B2B00F95DCE /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4745755421E898FD00C2819D /* libosal.a */; };
 		47BBC291220D8B3D00F95DCE /* watchdog.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47BBC278220D896600F95DCE /* watchdog.cc */; };
 		47BBC293220D8B3D00F95DCE /* monitor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 471B255721DCBA8D00F8B07D /* monitor.cc */; };
-		47BBC29D220D90E300F95DCE /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1B272201ECFD005413CF /* libcasper-connectors.a */; };
 		47BBC2A7220DC84500F95DCE /* logger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DD1B322201F2F5005413CF /* logger.cc */; };
 		47BBC2A8220DC87F00F95DCE /* helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE421E79A6100FC6DF1 /* helper.cc */; };
 		47D3D2332226CBAC001194AD /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47D3D2322226CBAC001194AD /* Icons.xcassets */; };
 		47D66CE621E79A6100FC6DF1 /* helper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47D66CE421E79A6100FC6DF1 /* helper.cc */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
 		47D7D773220061D5004D0579 /* monitor.json in Resources */ = {isa = PBXBuildFile; fileRef = 47D7D772220061D5004D0579 /* monitor.json */; };
-		47DD1B2A2201ED85005413CF /* libcasper-connectors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1B272201ECFD005413CF /* libcasper-connectors.a */; };
 		47DD1B332201F2F5005413CF /* logger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DD1B322201F2F5005413CF /* logger.cc */; };
 		47DD216A218C4BC9005EB1A6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD2169218C4BC9005EB1A6 /* Cocoa.framework */; };
 		47DD216C218C4BCD005EB1A6 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD216B218C4BCD005EB1A6 /* AppKit.framework */; };
@@ -114,33 +114,40 @@
 			remoteGlobalIDString = 47CB40011E23EE58004FE268;
 			remoteInfo = osal;
 		};
+		4757B0692428B48300A3EBC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 476EF7CA1E23EC91004A13C2;
+			remoteInfo = "casper-connectors";
+		};
+		4757B06B2428B48300A3EBC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 47E9FA8822300AE80043E8DF;
+			remoteInfo = "casper-connectors-v8";
+		};
+		4757B0952428BC0900A3EBC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 476EF7C91E23EC91004A13C2;
+			remoteInfo = "casper-connectors";
+		};
+		4757B09F2428BF3700A3EBC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 476EF7C91E23EC91004A13C2;
+			remoteInfo = "casper-connectors";
+		};
 		47BBC287220D8B2400F95DCE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4745754F21E898FC00C2819D /* osal.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 47CB40011E23EE58004FE268;
 			remoteInfo = osal;
-		};
-		47BBC29B220D90DF00F95DCE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 476EF7C91E23EC91004A13C2;
-			remoteInfo = "casper-connectors";
-		};
-		47DD1B262201ECFD005413CF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 476EF7CA1E23EC91004A13C2;
-			remoteInfo = "casper-connectors";
-		};
-		47DD1B282201ED09005413CF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 476EF7C91E23EC91004A13C2;
-			remoteInfo = "casper-connectors";
 		};
 		47DD2183218C4C7E005EB1A6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -287,6 +294,7 @@
 		4745754F21E898FC00C2819D /* osal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = osal.xcodeproj; path = "../casper-packager/osal/osal.xcodeproj"; sourceTree = "<group>"; };
 		474A8243218895BD00B1990B /* libcef_dll_wrapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcef_dll_wrapper.a; path = ../cef3/chromium_git/chromium/src/out/Debug_GN_x64/obj/cef/libcef_dll_wrapper.a; sourceTree = "<group>"; };
 		474BDFC121905A61005745E8 /* cef_sandbox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = cef_sandbox.a; path = "third-party/cef/cef_binary_3.3538.1849.g458cc98_macosx64/Debug/cef_sandbox.a"; sourceTree = "<group>"; };
+		4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "casper-connectors.xcodeproj"; path = "../casper-packager/connectors/casper-connectors.xcodeproj"; sourceTree = "<group>"; };
 		4769C78C221703A6006FEE3F /* monitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monitor.h; sourceTree = "<group>"; };
 		4769C78D221703A6006FEE3F /* monitor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = monitor.mm; sourceTree = "<group>"; };
 		47BAE3FE2211753C0036A950 /* version.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.h.in; sourceTree = "<group>"; };
@@ -300,7 +308,6 @@
 		47D66CE421E79A6100FC6DF1 /* helper.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cc; sourceTree = "<group>"; };
 		47D66CE521E79A6100FC6DF1 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
 		47D7D772220061D5004D0579 /* monitor.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = monitor.json; sourceTree = "<group>"; };
-		47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "casper-connectors.xcodeproj"; path = "../casper-packager/casper-connectors/casper-connectors.xcodeproj"; sourceTree = "<group>"; };
 		47DD1B1E2201ECC7005413CF /* libcasper-connectors.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libcasper-connectors.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		47DD1B2F2201EFAB005413CF /* logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logger.h; sourceTree = "<group>"; };
 		47DD1B322201F2F5005413CF /* logger.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logger.cc; sourceTree = "<group>"; };
@@ -407,8 +414,8 @@
 				47DD216A218C4BC9005EB1A6 /* Cocoa.framework in Frameworks */,
 				47EBA85C226DFD7000EAFB02 /* Sparkle.framework in Frameworks */,
 				47DD2407218C4DC4005EB1A6 /* libcef_dll_wrapper.a in Frameworks */,
-				47DD1B2A2201ED85005413CF /* libcasper-connectors.a in Frameworks */,
 				4745755B21E8996500C2819D /* libosal.a in Frameworks */,
+				4757B09E2428BC1E00A3EBC0 /* libcasper-connectors.a in Frameworks */,
 				C1BE775A2342149700DB305B /* libjsoncpp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,9 +434,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1BE775F234214EF00DB305B /* libjsoncpp.a in Frameworks */,
-				47BBC29D220D90E300F95DCE /* libcasper-connectors.a in Frameworks */,
 				47BBC28C220D8B2B00F95DCE /* libosal.a in Frameworks */,
+				4757B0A12428BF3A00A3EBC0 /* libcasper-connectors.a in Frameworks */,
+				C1BE775F234214EF00DB305B /* libjsoncpp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,6 +505,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4757B0652428B48300A3EBC0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4757B06A2428B48300A3EBC0 /* libcasper-connectors.a */,
+				4757B06C2428B48300A3EBC0 /* libcasper-connectors-v8.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		47C991C821948DFA0093484D /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -527,14 +543,6 @@
 				471B255721DCBA8D00F8B07D /* monitor.cc */,
 			);
 			path = monitor;
-			sourceTree = "<group>";
-		};
-		47DD1B232201ECFD005413CF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				47DD1B272201ECFD005413CF /* libcasper-connectors.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		47DD2180218C4C7E005EB1A6 /* Products */ = {
@@ -844,9 +852,9 @@
 		BFB75B9DB41641668211584A = {
 			isa = PBXGroup;
 			children = (
+				4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */,
 				C1BE77542342147300DB305B /* jsoncpp.xcodeproj */,
 				47EBA848226DFD5200EAFB02 /* Sparkle.xcodeproj */,
-				47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */,
 				4745754F21E898FC00C2819D /* osal.xcodeproj */,
 				47BAE41722119B080036A950 /* common.xcconfig */,
 				47D66CC721E73E8300FC6DF1 /* etc */,
@@ -885,8 +893,8 @@
 				47EBA85B226DFD6900EAFB02 /* PBXTargetDependency */,
 				47420685218C5DF5006B43E5 /* PBXTargetDependency */,
 				47DD240C218C4DE8005EB1A6 /* PBXTargetDependency */,
-				47DD1B292201ED09005413CF /* PBXTargetDependency */,
 				4745755A21E8995700C2819D /* PBXTargetDependency */,
+				4757B0962428BC0900A3EBC0 /* PBXTargetDependency */,
 				C1BE775C234214A200DB305B /* PBXTargetDependency */,
 				47F4018F2215D5E400E557A6 /* PBXTargetDependency */,
 			);
@@ -906,9 +914,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				C1BE775E234214EB00DB305B /* PBXTargetDependency */,
-				47BBC29C220D90DF00F95DCE /* PBXTargetDependency */,
 				47BBC288220D8B2400F95DCE /* PBXTargetDependency */,
+				4757B0A02428BF3700A3EBC0 /* PBXTargetDependency */,
+				C1BE775E234214EB00DB305B /* PBXTargetDependency */,
 			);
 			name = monitor;
 			productName = monitor;
@@ -961,8 +969,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 47DD1B232201ECFD005413CF /* Products */;
-					ProjectRef = 47DD1B182201EC32005413CF /* casper-connectors.xcodeproj */;
+					ProductGroup = 4757B0652428B48300A3EBC0 /* Products */;
+					ProjectRef = 4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */;
 				},
 				{
 					ProductGroup = 47DD2180218C4C7E005EB1A6 /* Products */;
@@ -998,11 +1006,18 @@
 			remoteRef = 4745755321E898FD00C2819D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		47DD1B272201ECFD005413CF /* libcasper-connectors.a */ = {
+		4757B06A2428B48300A3EBC0 /* libcasper-connectors.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libcasper-connectors.a";
-			remoteRef = 47DD1B262201ECFD005413CF /* PBXContainerItemProxy */;
+			remoteRef = 4757B0692428B48300A3EBC0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4757B06C2428B48300A3EBC0 /* libcasper-connectors-v8.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libcasper-connectors-v8.a";
+			remoteRef = 4757B06B2428B48300A3EBC0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		47DD2184218C4C7E005EB1A6 /* libcef_dll_wrapper.a */ = {
@@ -1246,20 +1261,20 @@
 			name = osal;
 			targetProxy = 4745755921E8995700C2819D /* PBXContainerItemProxy */;
 		};
+		4757B0962428BC0900A3EBC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "casper-connectors";
+			targetProxy = 4757B0952428BC0900A3EBC0 /* PBXContainerItemProxy */;
+		};
+		4757B0A02428BF3700A3EBC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "casper-connectors";
+			targetProxy = 4757B09F2428BF3700A3EBC0 /* PBXContainerItemProxy */;
+		};
 		47BBC288220D8B2400F95DCE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = osal;
 			targetProxy = 47BBC287220D8B2400F95DCE /* PBXContainerItemProxy */;
-		};
-		47BBC29C220D90DF00F95DCE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "casper-connectors";
-			targetProxy = 47BBC29B220D90DF00F95DCE /* PBXContainerItemProxy */;
-		};
-		47DD1B292201ED09005413CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "casper-connectors";
-			targetProxy = 47DD1B282201ED09005413CF /* PBXContainerItemProxy */;
 		};
 		47DD240A218C4DE2005EB1A6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

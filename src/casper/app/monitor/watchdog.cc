@@ -241,7 +241,7 @@ void casper::app::monitor::Watchdog::Start (const Json::Value& a_config, const b
     // ... load processes to launch and monitor ...
     //
    
-    std::vector<const ::sys::Process::Info> vector;
+    std::vector<::sys::Process::Info> vector;
     
     for ( Json::ArrayIndex idx = 0 ; idx < children.size() ; ++idx ) {
         
@@ -279,7 +279,7 @@ void casper::app::monitor::Watchdog::Start (const Json::Value& a_config, const b
         
     }
  
-    std::list<const ::sys::Process::Info> sorted;
+    std::list<::sys::Process::Info> sorted;
     
     // ... solve dependencies ...
     sys::Process::Sort(vector, sorted);
@@ -301,7 +301,7 @@ void casper::app::monitor::Watchdog::Start (const Json::Value& a_config, const b
  *
  * @return True on success, false otherwise.
  */
-bool casper::app::monitor::Watchdog::Start (const std::list<const ::sys::Process::Info>& a_list, const bool a_detached,
+bool casper::app::monitor::Watchdog::Start (const std::list<::sys::Process::Info>& a_list, const bool a_detached,
                                             casper::app::monitor::Watchdog::Listener& a_listener,
                                             bool volatile* a_abort_flag)
 {

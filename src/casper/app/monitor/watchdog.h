@@ -91,7 +91,7 @@ namespace casper
                     
                 public: // API Pure Virtual Method(s) / Function(s)
                     
-                    virtual void OnRunningProcessesUpdated (const ::sys::Process::List& a_list             ) = 0;
+                    virtual void OnRunningProcessesUpdated (const std::list<::sys::Process*>& a_list       ) = 0;
                     virtual void OnError                   (const ::sys::Error& a_error, const bool a_fatal) = 0;
                     virtual void OnTerminated              ()                                                = 0;
                     
@@ -103,8 +103,8 @@ namespace casper
                 
             private: // Data
                 
-                ::sys::Process::List list_;
-                ::sys::Error         last_error_;
+                std::list<::sys::Process*> list_;
+                ::sys::Error               last_error_;
                 
             private: // Threading
                 
@@ -131,7 +131,7 @@ namespace casper
                 
             private: // Method(s) / Function(s)
 
-                bool Start             (const std::list<const ::sys::Process::Info>& a_list, const bool a_detached, Listener& a_listener,
+                bool Start             (const std::list<::sys::Process::Info>& a_list, const bool a_detached, Listener& a_listener,
                                         bool volatile* a_abort_flag);
                 void Loop              ();
                 
