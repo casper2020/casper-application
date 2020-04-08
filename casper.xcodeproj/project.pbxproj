@@ -947,13 +947,12 @@
 		80B1FD452CA4477D9D093D2B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = YES;
 				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 1000;
 				TargetAttributes = {
 					47BBC27E220D8A8A00F95DCE = {
 						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1464,9 +1463,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1493,6 +1493,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = /usr/local/lib/libevent.a;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../casper-osal/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";
 			};
 			name = Debug;
@@ -1531,9 +1532,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1553,6 +1555,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = /usr/local/lib/libevent.a;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../casper-osal/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";
 			};
 			name = Release;
@@ -1575,11 +1578,13 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++11";
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/out/darwin/$(CONFIGURATION)/build";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Sparkle/build/$(CONFIGURATION)/Sparkle.framework";
@@ -1652,6 +1657,7 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cldware.casper;
 				PRODUCT_NAME = casper;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/out/darwin/build/$(CONFIGURATION)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/src $(SRCROOT)/../jsoncpp/dist $(SRCROOT)/../casper-osal/src $(SRCROOT)/third-party/cef $(SRCROOT)/../casper-connectors/src $(SRCROOT)/../lemon $(SRCROOT)/../cppcodec";

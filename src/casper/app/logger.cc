@@ -91,8 +91,8 @@ void casper::app::Logger::InnerStartup (const std::string& a_path,
     // TODO CW
     ::ev::LoggerV2::GetInstance().Startup();
     ::ev::LoggerV2::GetInstance().Register(client_, { "status", "error", /* , "stderr", "stdout" */ });
-    ::ev::LoggerV2::GetInstance().Register("status", path_ + std::string("status.log"));
-    ::ev::LoggerV2::GetInstance().Register("error", path_ + std::string("error.log"));
+    ::ev::LoggerV2::GetInstance().cc::logs::Logger::Register("status", path_ + std::string("status.log"));
+    ::ev::LoggerV2::GetInstance().cc::logs::Logger::Register("error", path_ + std::string("error.log"));
 //    ::ev::LoggerV2::GetInstance().Register("stderr", path_ + std::string("stderr.log"));
 //    ::ev::LoggerV2::GetInstance().Register("stdout", path_ + std::string("stdout.log"));
     ::ev::LoggerV2::GetInstance().Log(client(), "status",

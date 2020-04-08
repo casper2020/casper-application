@@ -263,32 +263,30 @@ int main (int a_argc, char* a_argv[])
         //
         // ... signal handing ...
         //
-        ::ev::Signals::GetInstance().Startup(::casper::app::Logger::GetInstance().loggable_data(),
-                                             /* a_signals */
-                                             { SIGUSR1, SIGTERM, SIGQUIT, SIGTTIN },
-                                             /* a_callbacks */
-                                             {
-                                                /* on_signal_           */
-                                                [](const int a_sig_no) {
-                                                    // ... is a 'shutdown' signal?
-                                                    switch(a_sig_no) {
-                                                        case SIGQUIT:
-                                                        case SIGTERM:
-                                                        {
-                                                            casper::app::monitor::Watchdog::GetInstance().Quit();
-                                                        }
-                                                            return true;
-                                                        default:
-                                                            return false;
-                                                    }
-                                                },
-                                                /* on_fatal_exception_  */ on_fatal_exception,
-                                                /* call_on_main_thread_ */ [] (std::function<void()> a_callback) {
-                                                    a_callback();
-                                                }
-                                            }
-        );
-             
+        ::ev::Signals::GetInstance().Startup(
+               /* a_signals */
+               { SIGUSR1, SIGTERM, SIGQUIT, SIGTTIN },
+               /* a_callbacks */
+               {
+                   /* on_signal_           */ [](const int a_sig_no) {
+                       // ... is a 'shutdown' signal?
+                       switch(a_sig_no) {
+                           case SIGQUIT:
+                           case SIGTERM:
+                           {
+                               casper::app::monitor::Watchdog::GetInstance().Quit();
+                           }
+                               return true;
+                           default:
+                               return false;
+                       }
+                   },
+                   /* on_fatal_exception_  */ on_fatal_exception,
+                   /* call_on_main_thread_ */ [] (std::function<void()> a_callback) {
+                       a_callback();
+                   }
+               }
+        ); 
         
         // ( on error, an exception will be thrown )
         cc::sockets::dgram::ipc::Server::GetInstance().Start("monitor", directories["runtime"].asString(),
