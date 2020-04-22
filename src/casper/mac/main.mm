@@ -58,6 +58,8 @@
 
 #include "cc/b64.h"
 
+#include "ev/loggable.h"
+
 #define READ_LINK(a_link, a_fallback)[&] () { \
     char tmp[PATH_MAX];  tmp[0] = 0; \
     const size_t len = ( sizeof(tmp) / sizeof(tmp[0]) ); \
@@ -402,6 +404,19 @@ int main (int a_argc, char* a_argv[])
     setlocale (LC_NUMERIC, "C");
     
     const char* lc_numeric = setlocale (LC_NUMERIC, NULL);
+    
+    class Dummy {
+        
+    };
+    Dummy owner;
+    
+    ::ev::Loggable::Data* loggable_data_ = new ::ev::Loggable::Data(
+            /* owner_ptr_ */ &owner,
+            /* ip_addr_   */ "127.0.0.1",
+            /* module_    */ "casper-app",
+            /* tag_       */ ""
+    );
+    ::ev::Signals::GetInstance().WarmUp(*loggable_data_);
 
     // ... install signal(s) handler ...
     ::ev::Signals::GetInstance().Startup(
@@ -409,12 +424,13 @@ int main (int a_argc, char* a_argv[])
                   { SIGUSR1, SIGTERM, SIGQUIT, SIGTTIN },
                   /* a_callbacks */
                   {
-                      /* on_signal_           */ [](const int a_sig_no) {
+                      /* on_signal_           */ [loggable_data_](const int a_sig_no) {
                           // ... is a 'shutdown' signal?
                           switch(a_sig_no) {
                               case SIGQUIT:
                               case SIGTERM:
                               {
+                                  delete loggable_data_;
                                   AppDelegate* delegate = (AppDelegate*)[NSApp delegate];
                                   [delegate quit: nil];
                               }
