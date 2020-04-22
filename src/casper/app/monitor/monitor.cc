@@ -61,7 +61,7 @@ static void show_help (const char* a_name)
 {
     fprintf(stderr, "usage: %s -c <configuration file>\n", a_name);
     fprintf(stderr, "       -%c: %s\n", 'c' , "configuration file.");
-    fprintf(stderr, "       -%d: %s\n", 'd' , "register debug token");
+    fprintf(stderr, "       -%c: %s\n", 'd' , "register debug token");
     fprintf(stderr, "       -%c: %s\n", 'h' , "show help.");
     fprintf(stderr, "       -%c: %s\n", 'v' , "show version.");
 }
@@ -260,6 +260,19 @@ int main (int a_argc, char* a_argv[])
             start_cv.Wake();
         };
         
+        class Dummy {
+            
+        };
+        Dummy owner;
+        
+        ::ev::Loggable::Data* loggable_data_ = new ::ev::Loggable::Data(
+                /* owner_ptr_ */ &owner,
+                /* ip_addr_   */ "127.0.0.1",
+                /* module_    */ "monitor",
+                /* tag_       */ ""
+        );
+        ::ev::Signals::GetInstance().WarmUp(*loggable_data_);
+
         //
         // ... signal handing ...
         //
