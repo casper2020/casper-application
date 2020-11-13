@@ -70,10 +70,18 @@
             "depends_on" : ["redis", "beanstalkd", "postgresql"]
         },
         {
-            "id": "casper-print-queue-2",
-            "path": "@@APP_DIRECTORY_PREFIX@@/casper-print-queue-2/bin",
-            "executable": "casper-print-queue-2",
-            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-print-queue-2/conf.json -i 1",
+            "id": "casper-job-sequencer",
+            "path": "@@APP_DIRECTORY_PREFIX@@/casper-job-sequencer/bin",
+            "executable": "casper-job-sequencer",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-job-sequencer/conf.1.json -i 1",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["beanstalkd", "redis", "postgresql"]
+        },
+	{
+            "id": "casper-fs-assistant",
+            "path": "@@APP_DIRECTORY_PREFIX@@/casper-fs-assistant/bin",
+            "executable": "casper-fs-assistant",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-fs-assistant/conf.1.json -i 1",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         }
