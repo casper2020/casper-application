@@ -111,7 +111,6 @@ void casper::app::Logger::InnerShutdown (const bool a_complete)
     // ... logger ...
     ::ev::LoggerV2::GetInstance().Unregister(client_);
     ::ev::LoggerV2::GetInstance().Shutdown();
-    ::ev::LoggerV2::Destroy();
     
     if ( false == a_complete ) {
         return;

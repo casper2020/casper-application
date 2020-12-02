@@ -76,7 +76,28 @@ namespace casper
         namespace monitor
         {
             
-            class Helper final : public osal::Singleton<Helper>
+            // ---- //
+            class Helper;
+            class HelperInitializer final : public ::osal::Initializer<Helper>
+            {
+                
+            public: // Constructor(s) / Destructor
+                
+                HelperInitializer (Helper& a_instance)
+                : ::osal::Initializer<Helper>(a_instance)
+                {
+                    /* empty */
+                }
+                
+                virtual ~HelperInitializer ()
+                {
+                    /* empty */
+                }
+                
+            };
+            
+            // ---- //
+            class Helper final : public osal::Singleton<Helper, HelperInitializer>
             {
                 
             private: // Threading

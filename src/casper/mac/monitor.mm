@@ -197,10 +197,8 @@ void casper::app::mac::Monitor::Stop (bool a_soft)
     }
     if ( false == a_soft ) {
         cc::sockets::dgram::ipc::Server::GetInstance().Stop(SIGQUIT);
-        cc::sockets::dgram::ipc::Server::Destroy();
     } else {
         cc::sockets::dgram::ipc::Client::GetInstance().Stop(SIGQUIT);
-        cc::sockets::dgram::ipc::Client::Destroy();
     }
 }
 
