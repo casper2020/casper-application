@@ -597,7 +597,7 @@ void casper::app::monitor::Watchdog::Loop ()
             child.terminated_ = true;
             // ... grab exit status of the child ...
             child.status_     = WEXITSTATUS(child.status_);
-            child.reason_     = "terminated normally";
+            child.reason_     = "terminated normally, status = " + std::to_string(child.status_);
         } else if ( true == WIFSIGNALED(child.status_) ) {
             // ... child process was signaled by a signal ...
             child.signalled_ = true;

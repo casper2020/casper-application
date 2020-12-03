@@ -381,6 +381,8 @@ int main (int a_argc, char* a_argv[])
     } catch (const ::cc::Exception& a_cc_exception) {
         // ... failure ...
         CASPER_APP_LOG("error", "%s", a_cc_exception.what());
+        fprintf(stderr, "%s\n", a_cc_exception.what());
+        fflush(stderr);
     } catch (const Json::Exception& a_json_exception) {
         // ... failure ...
         CASPER_APP_LOG("error", "%s", a_json_exception.what());

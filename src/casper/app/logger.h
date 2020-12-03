@@ -35,7 +35,12 @@
     #undef CASPER_APP_LOG
 #endif
 #define CASPER_APP_LOG(a_token, a_format, ...) \
-    ::ev::LoggerV2::GetInstance().Log(::casper::app::Logger::GetInstance().client(), a_token, "[%-16.16s] " a_format, __FUNCTION__, __VA_ARGS__);
+    if ( ::ev::LoggerV2::GetInstance().IsRegistered(::casper::app::Logger::GetInstance().client(), a_token) ) { \
+        ::ev::LoggerV2::GetInstance().Log(::casper::app::Logger::GetInstance().client(), a_token, "[%-16.16s] " a_format, __FUNCTION__, __VA_ARGS__); \
+    } else { \
+        fprintf(stderr, a_format, __VA_ARGS__); \
+        fflush(stderr); \
+    }
 
 #ifdef CASPER_APP_DEBUG_LOG
     #undef CASPER_APP_DEBUG_LOG
