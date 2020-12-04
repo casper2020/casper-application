@@ -119,7 +119,7 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
     
     // ... start a unidirectional message channel to send messages to 'monitor' process ...
     // ( on error, an exception will be thrown )
-    cc::sockets::dgram::ipc::Client::GetInstance().Start("monitor", runtime_dir);
+    cc::sockets::dgram::ipc::Client::GetInstance().Start("monitor", runtime_dir, /* a_standalone */ false);
 
     process_ = new ::sys::darwin::Process(::sys::Process::Info({
         /* id_          */ "monitor",

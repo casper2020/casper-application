@@ -701,7 +701,7 @@ int main (int a_argc, char* a_argv[])
                          
                      },
                      [] {
-                         casper::app::mac::Monitor::GetInstance().Stop(/* a_destroy */ true);
+                         casper::app::mac::Monitor::GetInstance().Stop(/* a_soft */ true);
                      }
     );
 }

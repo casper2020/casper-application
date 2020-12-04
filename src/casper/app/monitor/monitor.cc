@@ -247,6 +247,11 @@ int main (int a_argc, char* a_argv[])
         
         const Json::Value& directories = config["directories"];
 
+        const bool standalone = sys::bsd::Process::IsProcessBeingDebugged(getpid());
+        if ( true == standalone ) {
+            osal::File::Delete(directories["runtime"].asCString(), "*.socket", nullptr);
+        }
+
         // ... start logger ...
         ::casper::app::Logger::GetInstance().Startup(directories["logs"].asString(), "monitor", CASPER_MONITOR_VERSION);
                 
@@ -338,7 +343,7 @@ int main (int a_argc, char* a_argv[])
 
         // ... start a unidirectional message channel to send messages to parent process ...
         // ( on error, an exception will be thrown )
-        cc::sockets::dgram::ipc::Client::GetInstance().Start("casper", directories["runtime"].asString());
+        cc::sockets::dgram::ipc::Client::GetInstance().Start("casper", directories["runtime"].asString(), standalone);
         
         status["status"] = "started";
         cc::sockets::dgram::ipc::Client::GetInstance().Send(status);
