@@ -61,14 +61,6 @@
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         },
-	        {
-            "id": "nginx-epaper-2",
-            "path": "@@APP_DIRECTORY_PREFIX@@/nginx-epaper-2/bin",
-            "executable": "nginx-epaper-2",
-            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/nginx-epaper-2/nginx.conf",
-            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
-            "depends_on" : ["redis", "beanstalkd", "postgresql"]
-        },
         {
             "id": "casper-job-sequencer",
             "path": "@@APP_DIRECTORY_PREFIX@@/casper-job-sequencer/bin",
@@ -77,11 +69,19 @@
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         },
-	    {
+        {
             "id": "casper-fs-assistant",
             "path": "@@APP_DIRECTORY_PREFIX@@/casper-fs-assistant/bin",
             "executable": "casper-fs-assistant",
             "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-fs-assistant/conf.1.json -i 1",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["beanstalkd", "redis", "postgresql"]
+        },
+        {
+            "id": "casper-fs-worker",
+            "path": "@@APP_DIRECTORY_PREFIX@@/casper-fs-worker/bin",
+            "executable": "casper-fs-worker",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-fs-worker/conf.1.json -i 1",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         }
