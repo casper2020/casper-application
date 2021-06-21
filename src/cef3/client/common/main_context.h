@@ -44,7 +44,7 @@ namespace casper
 
                 private: // Status
                     
-                    typedef struct {
+                    typedef struct  _Status {
                         
                         bool initialized_;
                         bool shutdown_;

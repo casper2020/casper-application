@@ -50,7 +50,7 @@
 		47DDA053219DC06C009AA8A9 /* root_window_config.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DD9FFA219DC06C009AA8A9 /* root_window_config.cc */; };
 		47DDA055219DC06C009AA8A9 /* root_window.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DD9FFE219DC06C009AA8A9 /* root_window.cc */; };
 		47DDA056219DC06C009AA8A9 /* browser_window.cc in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA001219DC06C009AA8A9 /* browser_window.cc */; };
-		47DDA057219DC06C009AA8A9 /* root_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA004219DC06C009AA8A9 /* root_window.mm */; };
+		47DDA057219DC06C009AA8A9 /* root_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA004219DC06C009AA8A9 /* root_window.mm */; settings = {COMPILER_FLAGS = "-Wno-deprecated-copy"; }; };
 		47DDA058219DC06C009AA8A9 /* browser_window_std_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA005219DC06C009AA8A9 /* browser_window_std_mac.mm */; };
 		47DDA059219DC06C009AA8A9 /* main_message_loop_external_pump.mm in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA006219DC06C009AA8A9 /* main_message_loop_external_pump.mm */; };
 		47DDA05A219DC06C009AA8A9 /* root_window_delegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 47DDA009219DC06C009AA8A9 /* root_window_delegate.mm */; };
@@ -1710,6 +1710,7 @@
 					"-Wmost",
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
+					"-Wno-deprecated-copy",
 					"$(inherited)",
 				);
 			};
@@ -1820,6 +1821,7 @@
 					"-Wmost",
 					"-Wno-four-char-constants",
 					"-Wno-unknown-pragmas",
+					"-Wno-deprecated-copy",
 					"$(inherited)",
 				);
 			};

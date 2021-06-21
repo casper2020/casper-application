@@ -32,7 +32,7 @@ namespace casper
         namespace browser
         {
             
-            typedef struct
+            typedef struct _Settings
             {
                 
                 typedef struct {
