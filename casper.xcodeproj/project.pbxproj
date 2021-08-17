@@ -88,8 +88,10 @@
 		47EBA85C226DFD7000EAFB02 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47EBA851226DFD5200EAFB02 /* Sparkle.framework */; };
 		47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6694421949191007C11A0 /* OpenGL.framework */; };
 		47F669602194ACEF007C11A0 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6695F2194ACEF007C11A0 /* Quartz.framework */; };
-		C13B0D052577ACD2001DB030 /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C13B0D022577ACC7001DB030 /* libosal.a */; };
-		C13B0D102577AD62001DB030 /* libosal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C13B0D022577ACC7001DB030 /* libosal.a */; };
+		C1591FF626CBBD8F004D0D2C /* libcasper-osal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1591FEF26CBBD7B004D0D2C /* libcasper-osal.a */; };
+		C1591FF726CBBD9A004D0D2C /* libcasper-osal-ragel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1591FF326CBBD7B004D0D2C /* libcasper-osal-ragel.a */; };
+		C1591FFC26CBBDB6004D0D2C /* libcasper-osal-ragel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1591FF326CBBD7B004D0D2C /* libcasper-osal-ragel.a */; };
+		C1591FFD26CBBDC2004D0D2C /* libcasper-osal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1591FEF26CBBD7B004D0D2C /* libcasper-osal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,26 +235,54 @@
 			remoteGlobalIDString = 47BBC27E220D8A8A00F95DCE;
 			remoteInfo = monitor;
 		};
-		C13B0D012577ACC7001DB030 /* PBXContainerItemProxy */ = {
+		C1591FEE26CBBD7B004D0D2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C13B0CFD2577ACC6001DB030 /* osal.xcodeproj */;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 47CB40021E23EE58004FE268;
-			remoteInfo = osal;
+			remoteInfo = "casper-osal";
 		};
-		C13B0D032577ACCE001DB030 /* PBXContainerItemProxy */ = {
+		C1591FF026CBBD7B004D0D2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C13B0CFD2577ACC6001DB030 /* osal.xcodeproj */;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 47482EC824EFDEFF009D224C;
+			remoteInfo = "casper-osal-icu";
+		};
+		C1591FF226CBBD7B004D0D2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1579E70F24F7B6A000F6D139;
+			remoteInfo = "casper-osal-ragel";
+		};
+		C1591FF426CBBD87004D0D2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 47CB40011E23EE58004FE268;
-			remoteInfo = osal;
+			remoteInfo = "casper-osal";
 		};
-		C13B0D0A2577AD5B001DB030 /* PBXContainerItemProxy */ = {
+		C1591FF826CBBDA1004D0D2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C13B0CFD2577ACC6001DB030 /* osal.xcodeproj */;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1579E70E24F7B6A000F6D139;
+			remoteInfo = "casper-osal-ragel";
+		};
+		C1591FFA26CBBDB0004D0D2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 47CB40011E23EE58004FE268;
-			remoteInfo = osal;
+			remoteInfo = "casper-osal";
+		};
+		C1591FFE26CBBDCC004D0D2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1579E70E24F7B6A000F6D139;
+			remoteInfo = "casper-osal-ragel";
 		};
 		C1BE77522342145F00DB305B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -410,7 +440,7 @@
 		47F6694421949191007C11A0 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		47F6695F2194ACEF007C11A0 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4B44C31C5DF3485C88A8CA57 /* casper Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = "casper Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C13B0CFD2577ACC6001DB030 /* osal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = osal.xcodeproj; path = osal/osal.xcodeproj; sourceTree = "<group>"; };
+		C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "casper-osal.xcodeproj"; path = "casper-osal/casper-osal.xcodeproj"; sourceTree = "<group>"; };
 		C1BE77542342147300DB305B /* jsoncpp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = jsoncpp.xcodeproj; path = jsoncpp/jsoncpp.xcodeproj; sourceTree = "<group>"; };
 		D0A6C5658A684EEF9956A354 /* casper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = casper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -421,8 +451,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4725500A25780E9300BFCC1C /* libcasper-connectors.a in Frameworks */,
+				C1591FFD26CBBDC2004D0D2C /* libcasper-osal.a in Frameworks */,
+				C1591FFC26CBBDB6004D0D2C /* libcasper-osal-ragel.a in Frameworks */,
 				4725500B25780E9300BFCC1C /* libjsoncpp.a in Frameworks */,
-				C13B0D102577AD62001DB030 /* libosal.a in Frameworks */,
 				47F669602194ACEF007C11A0 /* Quartz.framework in Frameworks */,
 				47F6694521949191007C11A0 /* OpenGL.framework in Frameworks */,
 				47DD216C218C4BCD005EB1A6 /* AppKit.framework in Frameworks */,
@@ -446,9 +477,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1591FF726CBBD9A004D0D2C /* libcasper-osal-ragel.a in Frameworks */,
+				C1591FF626CBBD8F004D0D2C /* libcasper-osal.a in Frameworks */,
 				4725500425780E8200BFCC1C /* libcasper-connectors.a in Frameworks */,
 				4725500525780E8200BFCC1C /* libjsoncpp.a in Frameworks */,
-				C13B0D052577ACD2001DB030 /* libosal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -879,7 +911,7 @@
 		C13B0CD62577ABBE001DB030 /* casper-party */ = {
 			isa = PBXGroup;
 			children = (
-				C13B0CFD2577ACC6001DB030 /* osal.xcodeproj */,
+				C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */,
 				4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */,
 			);
 			name = "casper-party";
@@ -895,10 +927,12 @@
 			path = "../casper-packager";
 			sourceTree = "<group>";
 		};
-		C13B0CFE2577ACC6001DB030 /* Products */ = {
+		C1591FE926CBBD7B004D0D2C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C13B0D022577ACC7001DB030 /* libosal.a */,
+				C1591FEF26CBBD7B004D0D2C /* libcasper-osal.a */,
+				C1591FF126CBBD7B004D0D2C /* libcasper-osal-icu.a */,
+				C1591FF326CBBD7B004D0D2C /* libcasper-osal-ragel.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -922,7 +956,8 @@
 			dependencies = (
 				4725500725780E8D00BFCC1C /* PBXTargetDependency */,
 				4725500925780E8D00BFCC1C /* PBXTargetDependency */,
-				C13B0D0B2577AD5B001DB030 /* PBXTargetDependency */,
+				C1591FFB26CBBDB0004D0D2C /* PBXTargetDependency */,
+				C1591FFF26CBBDCC004D0D2C /* PBXTargetDependency */,
 				47EBA85B226DFD6900EAFB02 /* PBXTargetDependency */,
 				47420685218C5DF5006B43E5 /* PBXTargetDependency */,
 				47DD240C218C4DE8005EB1A6 /* PBXTargetDependency */,
@@ -944,8 +979,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				C1591FF926CBBDA1004D0D2C /* PBXTargetDependency */,
+				C1591FF526CBBD87004D0D2C /* PBXTargetDependency */,
 				4725500125780E7800BFCC1C /* PBXTargetDependency */,
-				C13B0D042577ACCE001DB030 /* PBXTargetDependency */,
 				4725500325780E7800BFCC1C /* PBXTargetDependency */,
 			);
 			name = monitor;
@@ -1002,16 +1038,16 @@
 					ProjectRef = 4757B0642428B48300A3EBC0 /* casper-connectors.xcodeproj */;
 				},
 				{
+					ProductGroup = C1591FE926CBBD7B004D0D2C /* Products */;
+					ProjectRef = C1591FE826CBBD7B004D0D2C /* casper-osal.xcodeproj */;
+				},
+				{
 					ProductGroup = 47DD2180218C4C7E005EB1A6 /* Products */;
 					ProjectRef = 47DD217F218C4C7E005EB1A6 /* cef_dll_wrapper.xcodeproj */;
 				},
 				{
 					ProductGroup = 47254FEA25780E5D00BFCC1C /* Products */;
 					ProjectRef = C1BE77542342147300DB305B /* jsoncpp.xcodeproj */;
-				},
-				{
-					ProductGroup = C13B0CFE2577ACC6001DB030 /* Products */;
-					ProjectRef = C13B0CFD2577ACC6001DB030 /* osal.xcodeproj */;
 				},
 				{
 					ProductGroup = 47EBA849226DFD5200EAFB02 /* Products */;
@@ -1105,11 +1141,25 @@
 			remoteRef = 47EBA858226DFD5200EAFB02 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C13B0D022577ACC7001DB030 /* libosal.a */ = {
+		C1591FEF26CBBD7B004D0D2C /* libcasper-osal.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libosal.a;
-			remoteRef = C13B0D012577ACC7001DB030 /* PBXContainerItemProxy */;
+			path = "libcasper-osal.a";
+			remoteRef = C1591FEE26CBBD7B004D0D2C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C1591FF126CBBD7B004D0D2C /* libcasper-osal-icu.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libcasper-osal-icu.a";
+			remoteRef = C1591FF026CBBD7B004D0D2C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C1591FF326CBBD7B004D0D2C /* libcasper-osal-ragel.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libcasper-osal-ragel.a";
+			remoteRef = C1591FF226CBBD7B004D0D2C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C1BE77532342145F00DB305B /* fileop */ = {
@@ -1339,15 +1389,25 @@
 			target = 47BBC27E220D8A8A00F95DCE /* monitor */;
 			targetProxy = 47F4018E2215D5E400E557A6 /* PBXContainerItemProxy */;
 		};
-		C13B0D042577ACCE001DB030 /* PBXTargetDependency */ = {
+		C1591FF526CBBD87004D0D2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = osal;
-			targetProxy = C13B0D032577ACCE001DB030 /* PBXContainerItemProxy */;
+			name = "casper-osal";
+			targetProxy = C1591FF426CBBD87004D0D2C /* PBXContainerItemProxy */;
 		};
-		C13B0D0B2577AD5B001DB030 /* PBXTargetDependency */ = {
+		C1591FF926CBBDA1004D0D2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = osal;
-			targetProxy = C13B0D0A2577AD5B001DB030 /* PBXContainerItemProxy */;
+			name = "casper-osal-ragel";
+			targetProxy = C1591FF826CBBDA1004D0D2C /* PBXContainerItemProxy */;
+		};
+		C1591FFB26CBBDB0004D0D2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "casper-osal";
+			targetProxy = C1591FFA26CBBDB0004D0D2C /* PBXContainerItemProxy */;
+		};
+		C1591FFF26CBBDCC004D0D2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "casper-osal-ragel";
+			targetProxy = C1591FFE26CBBDCC004D0D2C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
