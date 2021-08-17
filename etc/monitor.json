@@ -54,6 +54,14 @@
             "depends_on" : ["redis", "beanstalkd", "postgresql"]
         },
         {
+            "id": "nginx-epaper-2",
+            "path": "@@APP_DIRECTORY_PREFIX@@/nginx-epaper-2/bin",
+            "executable": "nginx-epaper-2",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/nginx-epaper-2/nginx.conf",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["redis", "beanstalkd", "postgresql"]
+        },
+        {
             "id": "casper-print-queue",
             "path": "@@APP_DIRECTORY_PREFIX@@/nginx-epaper/bin",
             "executable": "casper-print-queue",
