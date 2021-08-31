@@ -439,7 +439,6 @@ int main (int a_argc, char* a_argv[])
                                   return false;
                           }
                       },
-                      /* on_fatal_exception_  */ nullptr,
                       /* call_on_main_thread_ */ [] (std::function<void()> a_callback) {
                           a_callback();
                       }
