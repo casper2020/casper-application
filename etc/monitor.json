@@ -92,6 +92,14 @@
             "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-fs-worker/conf.1.json -i 1",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
+        },
+        {
+            "id": "cloudware-document-scanner",
+            "path": "@@APP_DIRECTORY_PREFIX@@/cloudware-document-scanner/bin",
+            "executable": "cloudware-document-scanner",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/cloudware-document-scanner/conf.1.json -i 1",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["beanstalkd", "redis", "postgresql"]
         }
     ]
 }
