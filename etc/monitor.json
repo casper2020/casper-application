@@ -70,6 +70,14 @@
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         },
         {
+            "id": "casper-print-queue-hd",
+            "path": "@@APP_DIRECTORY_PREFIX@@/nginx-epaper/bin",
+            "executable": "casper-print-queue",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-print-queue-hd/conf.json -d status",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["beanstalkd", "redis", "postgresql"]
+        },
+        {
             "id": "casper-job-sequencer",
             "path": "@@APP_DIRECTORY_PREFIX@@/casper-job-sequencer/bin",
             "executable": "casper-job-sequencer",
