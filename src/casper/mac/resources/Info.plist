@@ -22,6 +22,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>y.x.x</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright (c) 2011-2021 Cloudware S.A. All rights reserved.</string>
 	<key>CFBundleShortVersionString</key>
 	<string>x.x.x</string>
 	<key>LSEnvironment</key>
