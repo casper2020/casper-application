@@ -105,7 +105,7 @@
             "id": "casper-cpq-worker",
             "path": "@@APP_DIRECTORY_PREFIX@@/casper-cpq-worker/bin",
             "executable": "casper-cpq-worker",
-            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-cpq-worker/conf.1.json -i 1",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-cpq-worker/conf.json -i 1",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         },
