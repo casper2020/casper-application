@@ -4,7 +4,7 @@
             "id": "redis",
             "path": "@@APP_DIRECTORY_PREFIX@@/redis/bin",
             "executable": "redis-server",
-            "arguments": "@@APP_CONFIG_DIRECTORY_PREFIX@@/etc/redis/redis.conf",
+            "arguments": "@@APP_CONFIG_DIRECTORY_PREFIX@@/etc/redis/redis-master.conf",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@"
         },
         {
