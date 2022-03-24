@@ -46,7 +46,7 @@ namespace casper
                 public: // CefDisplayHandler Method(s) / Function(s)
                     
                     bool OnConsoleMessage       (CefRefPtr<CefBrowser> a_browser,
-                                                 cef_log_severity_t a_level, const CefString& a_message, const CefString& a_source, int a_line) OVERRIDE;
+                                                 cef_log_severity_t a_level, const CefString& a_message, const CefString& a_source, int a_line) override;
                     
                 protected: // Virtual Method(s) / Function(s)
                     

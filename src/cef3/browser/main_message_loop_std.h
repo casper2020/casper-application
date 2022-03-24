@@ -36,10 +36,10 @@ namespace casper
             public: // Overriden Method(s) / Function(s) - from MainMessageLoop
                 
                 // MainMessageLoop methods.
-                int  Run                      ()                        OVERRIDE;
-                void Quit                     ()                        OVERRIDE;
-                void PostTask                 (CefRefPtr<CefTask> task) OVERRIDE;
-                bool RunsTasksOnCurrentThread () const                  OVERRIDE;
+                int  Run                      ()                        override;
+                void Quit                     ()                        override;
+                void PostTask                 (CefRefPtr<CefTask> task) override;
+                bool RunsTasksOnCurrentThread () const                  override;
                 
             private:
                 

@@ -58,21 +58,21 @@ namespace casper
                     // CefApp methods.
                     void OnBeforeCommandLineProcessing(
                                                        const CefString& process_type,
-                                                       CefRefPtr<CefCommandLine> command_line) OVERRIDE;
-                    CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE {
+                                                       CefRefPtr<CefCommandLine> command_line) override;
+                    CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() override {
                         return this;
                     }
                     
                     // CefBrowserProcessHandler methods.
-                    void OnContextInitialized() OVERRIDE;
+                    void OnContextInitialized() override;
                     void OnBeforeChildProcessLaunch(
-                                                    CefRefPtr<CefCommandLine> command_line) OVERRIDE;
-                    void OnRenderProcessThreadCreated(
-                                                      CefRefPtr<CefListValue> extra_info) OVERRIDE;
-//                    CefRefPtr<CefPrintHandler> GetPrintHandler() OVERRIDE {
+                                                    CefRefPtr<CefCommandLine> command_line) override;
+//                    void OnRenderProcessThreadCreated(
+//                                                      CefRefPtr<CefListValue> extra_info) override;
+//                    CefRefPtr<CefPrintHandler> GetPrintHandler() override {
 //                        return print_handler_;
 //                    }
-                    void OnScheduleMessagePumpWork(int64 delay) OVERRIDE;
+                    void OnScheduleMessagePumpWork(int64 delay) override;
                     
                     // Set of supported Delegates.
                     DelegateSet delegates_;

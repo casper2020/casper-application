@@ -4,13 +4,18 @@ set -e
 set -x
 PWD=`pwd`
 
-NAME=Sparkle
-VERSION=1.21.2
 
 THIRD_PARTY_DIR=$PWD/third-party/Sparkle
 
+NAME=Sparkle
+# VERSION=1.21.2
+# TAR_BZ2=$NAME-${VERSION}.tar.bz2
+# TAR_BZ2_URL=https://github.com/sparkle-project/$NAME/releases/download/${VERSION}/$TAR_BZ2
+# TAR_BZ2_FILE=$THIRD_PARTY_DIR/$TAR_BZ2
+
+VERSION=2.1.0
 TAR_BZ2=$NAME-${VERSION}.tar.bz2
-TAR_BZ2_URL=https://github.com/sparkle-project/$NAME/releases/download/${VERSION}/$TAR_BZ2
+TAR_BZ2_URL=https://github.com/sparkle-project/$NAME/archive/refs/tags/$VERSION.zip
 TAR_BZ2_FILE=$THIRD_PARTY_DIR/$TAR_BZ2
 
 if [ ! -f $TAR_BZ2_FILE ] ; then
@@ -21,6 +26,7 @@ if [ ! -f $TAR_BZ2_FILE ] ; then
     mkdir -p $__dir
     curl -L -o $TAR_BZ2_FILE $TAR_BZ2_URL
     pushd $__dir
-    tar xvjf $__file
+    # tar xvjf $__file
+    unzip $__file
     popd
 fi

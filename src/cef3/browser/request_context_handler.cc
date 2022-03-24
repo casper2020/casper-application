@@ -24,36 +24,36 @@
  */
 casper::cef3::browser::RequestContextHandler::RequestContextHandler ()
 {
-    const CefRefPtr<CefCommandLine> command_line = CefCommandLine::GetGlobalCommandLine();
-    if ( command_line->HasSwitch(casper::cef3::common::client::switches::kRequestContextBlockCookies ) ) {
-        // Use a cookie manager that neither stores nor retrieves cookies.
-        cookie_manager_ = CefCookieManager::GetBlockingManager();
-    } else {
-        // TODO CW
-        cookie_manager_ = CefCookieManager::CreateManager("/tmp/", /* persist_session_cookies */ true,
-                                                          /* CefRefPtr<CefCompletionCallback */ nullptr
-        );
-    }
+//    const CefRefPtr<CefCommandLine> command_line = CefCommandLine::GetGlobalCommandLine();
+//    if ( command_line->HasSwitch(casper::cef3::common::client::switches::kRequestContextBlockCookies ) ) {
+//        // Use a cookie manager that neither stores nor retrieves cookies.
+//        cookie_manager_ = CefCookieManager::GetBlockingManager();
+//    } else {
+//        // TODO CW
+//        cookie_manager_ = CefCookieManager::CreateManager("/tmp/", /* persist_session_cookies */ true,
+//                                                          /* CefRefPtr<CefCompletionCallback */ nullptr
+//        );
+//    }
 }
 
 #ifdef __APPLE__
 #pragma mark - CefRequestContextHandler
 #endif
 
-bool casper::cef3::browser::RequestContextHandler::OnBeforePluginLoad (const CefString& mime_type,
-                                                                              const CefString &plugin_url,
-                                                                              bool is_main_frame,
-                                                                              const CefString &top_origin_url,
-                                                                              CefRefPtr<CefWebPluginInfo> plugin_info, PluginPolicy *plugin_policy)
-{
-    // Always allow the PDF plugin to load.
-    if ( *plugin_policy != PLUGIN_POLICY_ALLOW && mime_type == "application/pdf" ) {
-        *plugin_policy = PLUGIN_POLICY_ALLOW;
-        return true;
-    }
-    
-    return false;
-}
+//bool casper::cef3::browser::RequestContextHandler::OnBeforePluginLoad (const CefString& mime_type,
+//                                                                              const CefString &plugin_url,
+//                                                                              bool is_main_frame,
+//                                                                              const CefString &top_origin_url,
+//                                                                              CefRefPtr<CefWebPluginInfo> plugin_info, PluginPolicy *plugin_policy)
+//{
+//    // Always allow the PDF plugin to load.
+//    if ( *plugin_policy != PLUGIN_POLICY_ALLOW && mime_type == "application/pdf" ) {
+//        *plugin_policy = PLUGIN_POLICY_ALLOW;
+//        return true;
+//    }
+//
+//    return false;
+//}
 
 
 // The example extension loading implementation requires all browsers to

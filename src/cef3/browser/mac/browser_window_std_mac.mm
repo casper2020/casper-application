@@ -21,16 +21,17 @@ casper::cef3::browser::BrowserWindowStdMAC::BrowserWindowStdMAC (casper::cef3::b
 }
 
 void casper::cef3::browser::BrowserWindowStdMAC::CreateBrowser (ClientWindowHandle parent_handle,
-                                                                const CefRect& rect, const CefBrowserSettings& settings,
+                                                                const CefRect& rect,
+                                                                const CefBrowserSettings& settings,
+                                                                CefRefPtr<CefDictionaryValue> extra_info,
                                                                 CefRefPtr<CefRequestContext> request_context)
 {
     REQUIRE_MAIN_THREAD();
     
     CefWindowInfo window_info;
-    window_info.SetAsChild(parent_handle, rect.x, rect.y, rect.width, rect.height);
-    
-    
-    CefBrowserHost::CreateBrowser(window_info, client_handler_, startup_url_, settings, request_context);
+    window_info.SetAsChild(parent_handle, rect);
+        
+    CefBrowserHost::CreateBrowser(window_info, client_handler_, startup_url_, settings, extra_info, request_context);
 }
 
 void casper::cef3::browser::BrowserWindowStdMAC::GetPopupConfig(CefWindowHandle temp_handle,
@@ -41,7 +42,7 @@ void casper::cef3::browser::BrowserWindowStdMAC::GetPopupConfig(CefWindowHandle 
     CEF_REQUIRE_UI_THREAD();
     
     // The window will be properly sized after the browser is created.
-    windowInfo.SetAsChild(temp_handle, 0, 0, 0, 0);
+    windowInfo.SetAsChild(temp_handle, CefRect());
     client = client_handler_;
 }
 
@@ -53,12 +54,12 @@ void casper::cef3::browser::BrowserWindowStdMAC::ShowPopup(ClientWindowHandle pa
 {
     REQUIRE_MAIN_THREAD();
     
-    NSView* browser_view = GetWindowHandle();
-    
+    NSView* browser_view = CAST_CEF_WINDOW_HANDLE_TO_NSVIEW(GetWindowHandle());
+
     // Re-parent |browser_view| to |parent_handle|.
     [browser_view removeFromSuperview];
-    [parent_handle addSubview:browser_view];
-    
+    [CAST_CEF_WINDOW_HANDLE_TO_NSVIEW(parent_handle) addSubview:browser_view];
+
     NSSize size = NSMakeSize(static_cast<int>(width), static_cast<int>(height));
     [browser_view setFrameSize:size];
 }

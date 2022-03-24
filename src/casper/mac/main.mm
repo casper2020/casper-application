@@ -60,6 +60,8 @@
 
 #include "ev/loggable.h"
 
+#include "sys/darwin/process.h"
+
 #define READ_LINK(a_link, a_fallback)[&] () { \
     char tmp[PATH_MAX];  tmp[0] = 0; \
     const size_t len = ( sizeof(tmp) / sizeof(tmp[0]) ); \
@@ -299,7 +301,7 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     CASPER_APP_DEBUG_LOG("status", "%s", "CEF creating main context...");
     
     // ... reate the main context object ...
-    scoped_ptr<casper::cef3::client::mac::MainContext> context(new casper::cef3::client::mac::MainContext(a_settings, command_line));
+    std::unique_ptr<casper::cef3::client::mac::MainContext> context(new casper::cef3::client::mac::MainContext(a_settings, command_line));
     
     CefSettings settings;
     
@@ -307,13 +309,13 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     context->PopulateSettings(&settings);
     
     // ... create the main message loop object ...
-    scoped_ptr<casper::cef3::browser::MainMessageLoop> message_loop;
+    casper::cef3::browser::MainMessageLoopStd* message_loop;
     if ( NO == firstRun ) {
-        message_loop.reset(new casper::cef3::browser::MainMessageLoopStd([]() {
+        message_loop = new casper::cef3::browser::MainMessageLoopStd([]() {
             casper::app::mac::Monitor::GetInstance().Stop(/* a_soft*/ true);
-        }));
+        });
     } else {
-        message_loop.reset(new casper::cef3::browser::MainMessageLoopStd());
+        message_loop = new casper::cef3::browser::MainMessageLoopStd();
     }
     
     // ... initialize CEF ...
@@ -324,7 +326,8 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     // ... create the application delegate and window ...
     AppDelegate* delegate = [[AppDelegate alloc]
                              initWithControls:!command_line->HasSwitch(casper::cef3::common::client::switches::kHideControls)
-                             andOsr:settings.windowless_rendering_enabled ? true : false];
+                             withOsr:settings.windowless_rendering_enabled ? YES : NO
+                             andIsBeingDebugged: sys::bsd::Process::IsProcessBeingDebugged(getpid()) ? YES : NO];
     [delegate performSelectorOnMainThread:@selector(createApplication:)
                                withObject:nil
                             waitUntilDone:NO];
@@ -365,7 +368,7 @@ static int StartCEF3 (int a_argc, char* a_argv[],
     const BOOL relaunch = [delegate shouldRelaunch];
     
     // ... release objects ( in reverse order of creation ) ...
-    message_loop.reset();
+    delete message_loop;
     context.reset();
     
     CASPER_APP_DEBUG_LOG("status", "%s", "Stopped...");
@@ -692,7 +695,7 @@ int main (int a_argc, char* a_argv[])
                                                                         /* a_dispatch_callback */
                                                                         [lambda_hook] () {
                                                                             
-                                                                            CefPostTask(TID_UI, base::Bind(&CEF2APPHook::Callback, lambda_hook));
+                                                                            CefPostTask(TID_UI, base::BindOnce(&CEF2APPHook::Callback, lambda_hook));
                                                                             
                                                                         },
                                                                         quit_callback

@@ -8,6 +8,7 @@
 #include "include/cef_parser.h"
 #include "include/cef_path_util.h"
 #include "include/wrapper/cef_closure_task.h"
+#include "include/base/cef_cxx17_backports.h"
 
 #include "cef3/shared/browser/utils/file_util.h"
 #include "cef3/shared/browser/utils/resource_util.h"
@@ -58,52 +59,47 @@ namespace casper
                             return internal_path;
                         }
                         
-                        typedef base::Callback<void(CefRefPtr<CefDictionaryValue> /*manifest*/)>
-                        ManifestCallback;
-                        
-                        void RunManifestCallback(const ManifestCallback& callback,
-                                                 CefRefPtr<CefDictionaryValue> manifest) {
+                        using ManifestCallback = base::OnceCallback<void(CefRefPtr<CefDictionaryValue> /*manifest*/)>;
+                        void RunManifestCallback (ManifestCallback callback, CefRefPtr<CefDictionaryValue> manifest)
+                        {
                             if (!CefCurrentlyOn(TID_UI)) {
                                 // Execute on the browser UI thread.
-                                CefPostTask(TID_UI, base::Bind(RunManifestCallback, callback, manifest));
+                                CefPostTask(TID_UI, base::BindOnce(RunManifestCallback, std::move(callback), manifest));
                                 return;
                             }
-                            callback.Run(manifest);
+                            std::move(callback).Run(manifest);
                         }
                         
                         // Asynchronously reads the manifest and executes |callback| on the UI thread.
-                        void GetInternalManifest(const std::string& extension_path,
-                                                 const ManifestCallback& callback) {
-                            if (!CefCurrentlyOn(TID_FILE)) {
+                        void GetInternalManifest (const std::string& extension_path, ManifestCallback callback)
+                        {
+                            if ( !CefCurrentlyOn(TID_FILE_USER_BLOCKING) ) {
                                 // Execute on the browser FILE thread.
-                                CefPostTask(TID_FILE,
-                                            base::Bind(GetInternalManifest, extension_path, callback));
+                                CefPostTask(TID_FILE_USER_BLOCKING,
+                                            base::BindOnce(GetInternalManifest, extension_path, std::move(callback)));
                                 return;
                             }
                             
-                            const std::string& manifest_path = GetInternalExtensionResourcePath(
-                                                                                                casper::cef3::shared::browser::utils::file::JoinPath(extension_path, "manifest.json"));
+                            const std::string& manifest_path = GetInternalExtensionResourcePath(casper::cef3::shared::browser::utils::file::JoinPath(extension_path, "manifest.json"));
                             std::string manifest_contents;
                             if ( ! casper::cef3::shared::browser::utils::resource::LoadBinaryResource(manifest_path.c_str(), manifest_contents) || manifest_contents.empty() ) {
                                 LOG(ERROR) << "Failed to load manifest from " << manifest_path;
-                                RunManifestCallback(callback, NULL);
+                                RunManifestCallback(std::move(callback), nullptr);
                                 return;
                             }
                             
-                            cef_json_parser_error_t error_code;
                             CefString error_msg;
-                            CefRefPtr<CefValue> value = CefParseJSONAndReturnError(
-                                                                                   manifest_contents, JSON_PARSER_RFC, error_code, error_msg);
+                            CefRefPtr<CefValue> value = CefParseJSONAndReturnError(manifest_contents, JSON_PARSER_RFC, error_msg);
                             if (!value || value->GetType() != VTYPE_DICTIONARY) {
                                 if (error_msg.empty())
                                     error_msg = "Incorrectly formatted dictionary contents.";
                                 LOG(ERROR) << "Failed to parse manifest from " << manifest_path << "; "
                                 << error_msg.ToString();
-                                RunManifestCallback(callback, NULL);
+                                RunManifestCallback(std::move(callback), nullptr);
                                 return;
                             }
                             
-                            RunManifestCallback(callback, value->GetDictionary());
+                            RunManifestCallback(std::move(callback), value->GetDictionary());
                         }
                         
                         void LoadExtensionWithManifest(CefRefPtr<CefRequestContext> request_context,
@@ -133,7 +129,7 @@ bool casper::cef3::shared::browser::utils::extension::IsInternalExtension (const
     // List of internally handled extensions.
     static const char* extensions[] = {"set_page_color"};
     const std::string& internal_path = GetInternalPath(a_extension_path);
-    for ( size_t i = 0; i < arraysize(extensions); ++i ) {
+    for ( size_t i = 0; i < base::size(extensions); ++i ) {
         // Exact match or first directory component.
         const std::string& extension = extensions[i];
         if ( internal_path == extension || internal_path.find(extension + '/') == 0 ) {
@@ -159,7 +155,7 @@ std::string casper::cef3::shared::browser::utils::extension::GetExtensionResourc
 
 bool casper::cef3::shared::browser::utils::extension::GetExtensionResourceContents (const std::string& a_extension_path, std::string& o_contents)
 {
-    CEF_REQUIRE_FILE_THREAD();
+        CEF_REQUIRE_FILE_USER_BLOCKING_THREAD();
     
     if (IsInternalExtension(a_extension_path)) {
         const std::string& contents_path =
@@ -175,19 +171,19 @@ void casper::cef3::shared::browser::utils::extension::LoadExtension (CefRefPtr<C
 {
     if ( !CefCurrentlyOn(TID_UI) ) {
         // Execute on the browser UI thread.
-        CefPostTask(TID_UI, base::Bind(LoadExtension, request_context,
-                                       extension_path, handler));
+        CefPostTask(TID_UI, base::BindOnce(LoadExtension, request_context,
+                                           extension_path, handler));
         return;
     }
     
     if ( IsInternalExtension(extension_path) ) {
         // Read the extension manifest and load asynchronously.
         GetInternalManifest(extension_path,
-                            base::Bind(LoadExtensionWithManifest, request_context,
-                                       extension_path, handler));
+                            base::BindOnce(LoadExtensionWithManifest, request_context,
+                                           extension_path, handler));
     } else {
         // Load the extension from disk.
-        request_context->LoadExtension(extension_path, NULL, handler);
+        request_context->LoadExtension(extension_path, nullptr, handler);
     }
 }
 
@@ -197,7 +193,7 @@ void casper::cef3::shared::browser::utils::extension::AddInternalExtensionToReso
     
     if (!CefCurrentlyOn(TID_IO)) {
         // Execute on the browser IO thread.
-        CefPostTask(TID_IO, base::Bind(AddInternalExtensionToResourceManager, a_extension, a_resource_manager));
+        CefPostTask(TID_IO, base::BindOnce(AddInternalExtensionToResourceManager, a_extension, a_resource_manager));
         return;
     }
     

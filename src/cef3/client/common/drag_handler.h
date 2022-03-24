@@ -43,10 +43,11 @@ namespace casper
                     
                     bool OnDragEnter              (CefRefPtr<CefBrowser> browser,
                                                    CefRefPtr<CefDragData> dragData,
-                                                   CefDragHandler::DragOperationsMask mask) OVERRIDE;
+                                                   CefDragHandler::DragOperationsMask mask) override;
                     
                     void OnDraggableRegionsChanged (CefRefPtr<CefBrowser> browser,
-                                                    const std::vector<CefDraggableRegion>& regions) OVERRIDE;
+                                                    CefRefPtr<CefFrame> frame,
+                                                    const std::vector<CefDraggableRegion>& regions) override;
 
                 protected:
                     

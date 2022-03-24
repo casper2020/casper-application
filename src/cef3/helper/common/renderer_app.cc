@@ -30,7 +30,7 @@ void casper::cef3::helper::common::RendererApp::OnWebKitInitialized ()
 //        (*it)->OnWebKitInitialized(this);
 }
 
-void casper::cef3::helper::common::RendererApp::OnBrowserCreated (CefRefPtr<CefBrowser> browser)
+void casper::cef3::helper::common::RendererApp::OnBrowserCreated (CefRefPtr<CefBrowser> browser, CefRefPtr<CefDictionaryValue> extra_info)
 {
     // TODO CW
     return;
@@ -104,6 +104,7 @@ void casper::cef3::helper::common::RendererApp::OnFocusedNodeChanged (CefRefPtr<
 }
 
 bool casper::cef3::helper::common::RendererApp::OnProcessMessageReceived (CefRefPtr<CefBrowser> browser,
+                                                                          CefRefPtr<CefFrame> frame,
                                                                           CefProcessId source_process,
                                                                           CefRefPtr<CefProcessMessage> message)
 {

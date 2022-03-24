@@ -1,6 +1,8 @@
 #import "casper/mac/app_delegate.h"
 
 #import <Quartz/Quartz.h> // PDFDocument
+#import <PDFKit/PDFKit.h>
+#import <CoreText/CoreText.h>
 
 #import "Alerts.h"
 
@@ -43,14 +45,15 @@ namespace {
 @implementation AppDelegate
 
 
-- (id)initWithControls:(bool)with_controls andOsr:(bool)with_osr {
+- (id)initWithControls:(bool)with_controls withOsr:(BOOL)osr andIsBeingDebugged:(bool)isBeingDebugged {
     if (self = [super init]) {
-        with_controls_    = with_controls;
-        with_osr_         = with_osr;
-        relaunch          = NO;
-        relaunching       = NO;
-        updater           = nil;
-        updaterInvocation = nil;
+        with_controls_         = with_controls;
+        with_osr_              = osr;
+        relaunch               = NO;
+        relaunching            = NO;
+        isProcessBeingDebugged = isBeingDebugged;
+        updater                = nil;
+        updaterInvocation      = nil;
     }
     return self;
 }
@@ -136,6 +139,7 @@ namespace {
         
         preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@","];
         consoleMenuItem         = [[NSMenuItem alloc] initWithTitle:@"Console..."           action:@selector(showConsole:) keyEquivalent:@"k"];
+        activityMonitorMenuItem = [[NSMenuItem alloc] initWithTitle:@"Activity Monitor..."  action:@selector(showActivityMonitor:) keyEquivalent:@"m"];
         quitMenuItem            = [[NSMenuItem alloc] initWithTitle:@"Quit"                 action:@selector(quit:) keyEquivalent:@"Q"];
         
         [statusItem.menu addItem:aboutMenuItem];
@@ -146,14 +150,24 @@ namespace {
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:preferencesMenuItem];
         [statusItem.menu addItem:consoleMenuItem];
+        [statusItem.menu addItem:activityMonitorMenuItem];
         [statusItem.menu addItem:[NSMenuItem separatorItem]];
         [statusItem.menu addItem:quitMenuItem];
     } else {
         [self showWindow:self];
     }
     
-    updater = [[SUUpdater alloc]initForBundle:[NSBundle mainBundle]];
-    [updater setDelegate:self];
+    NSBundle* bundle = [NSBundle mainBundle];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+    updater = [[SPUUpdater alloc] initWithHostBundle:bundle applicationBundle:bundle userDriver:nil delegate:self];
+#pragma clang diagnostic pop
+    NSError *updaterError = nil;
+    if ( ! [updater startUpdater:&updaterError] ) {
+        [Alerts showCriticalMessage: @"Updater" informativeText:updaterError.localizedDescription andButtons:@[]];
+        fprintf(stderr, "Error: Failed to initialize updater with error (%ld): %s\n", updaterError.code, updaterError.localizedDescription.UTF8String);
+        fflush(stderr);
+    }
 }
 
 #pragma mark -
@@ -174,7 +188,7 @@ namespace {
 
 - (IBAction)checkForUpdates:(id)sender
 {
-    [updater checkForUpdates:self];
+    [updater checkForUpdates];
 }
 
 - (IBAction)reload:(id)sender {
@@ -230,9 +244,31 @@ namespace {
 
 -(void)printPDFByURL:(NSString*)urlString direclty:(BOOL)direclty
 {
-    NSURL *url = [[NSURL alloc]initWithString:urlString];
+    NSURL*       url      = [[NSURL alloc]initWithString:urlString];
+    PDFDocument* document = [[PDFDocument alloc]init];
     
-    PDFDocument* document = [[PDFDocument alloc]initWithURL:url];
+    // SAMPLE PDF
+    {
+        
+        PDFAnnotationText* annotation = [[PDFAnnotationText alloc] initWithBounds:NSMakeRect(40, 500, 200, 200)];
+        annotation.color = [NSColor redColor];
+        annotation.font = [NSFont fontWithName:@"Helvetica" size:14.0];
+        annotation.fontColor = [NSColor whiteColor];
+        annotation.contents = @"CASPER Sample PDF";
+        annotation.iconType = kPDFTextAnnotationIconNote;
+        annotation.shouldDisplay = YES;
+        annotation.shouldPrint = YES;
+        annotation.open = YES;
+                
+        PDFPage* page = [[PDFPage alloc]init];
+        [page addAnnotation: annotation];
+        
+        [document insertPage:page atIndex:0];
+        [[document pageAtIndex:0] addAnnotation: annotation];
+        [document writeToURL:url];
+    }
+    
+    // PRINT
     NSPrintInfo* printInfo = [[NSPrintInfo alloc]init];
     
     
@@ -271,7 +307,12 @@ namespace {
 
 - (void)showConsole:(id)sender
 {
-    [[NSWorkspace sharedWorkspace]launchApplication:@"/Applications/Utilities/Console.app"];
+    [[NSWorkspace sharedWorkspace]launchApplication:@"/System/Applications/Utilities/Console.app/Contents/MacOS/Console"];
+}
+
+- (void)showActivityMonitor:(id)sender
+{
+    [[NSWorkspace sharedWorkspace]launchApplication:@"/System/Applications/Utilities/Activity Monitor.app/Contents/MacOS/Activity Monitor"];
 }
 
 - (void)about:(id)sender
@@ -358,14 +399,15 @@ namespace {
 
 - (void)showError:(const Json::Value&)error andRelaunch:(BOOL)relaunch
 {
+    NSMutableArray* buttons = [[NSMutableArray alloc]initWithArray:@[@"Preferences", @"Quit", @"Relaunch", @"Console"]];
+    if ( YES == isProcessBeingDebugged ) {
+        [buttons addObject: @"Ignore"];
+    }
     const NSModalResponse r = [Alerts showCriticalMessage: @""
                                           informativeText: [NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]
-                                               andButtons: @[@"Preferences", @"Quit", @"Relaunch", @"Console"]
+                                               andButtons: buttons
     ];
     switch(r) {
-        case 1003:
-            [self showConsole: nil];
-            break;
         case NSAlertThirdButtonReturn:
             self->relaunch = YES;
             [self quit: nil];
@@ -377,6 +419,10 @@ namespace {
         case NSAlertFirstButtonReturn:
             [self showPreferences:self];
             break;
+        case NSAlertThirdButtonReturn + 1:
+            [self showConsole: nil];
+            break;
+        case NSAlertThirdButtonReturn + 2:
         default:
             break;
     }
@@ -584,7 +630,7 @@ namespace {
 
 #pragma mark - SUUpdaterDelegate
 
-- (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)item untilInvoking:(NSInvocation *)invocation
+- (BOOL)updater:(SPUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)item untilInvoking:(NSInvocation *)invocation
 {
     updaterInvocation = invocation;
     [updaterInvocation retain];
@@ -594,7 +640,7 @@ namespace {
     return YES;
 }
 
--(void)updaterWillRelaunchApplication:(SUUpdater *)updater
+-(void)updaterWillRelaunchApplication:(SPUUpdater *)updater
 {
     relaunching = YES;
 }

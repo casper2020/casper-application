@@ -11,7 +11,7 @@
 
 #include "include/cef_command_line.h"
 
-#include "include/base/cef_scoped_ptr.h"
+#include "include/base/cef_scoped_refptr.h"
 #include "include/base/cef_thread_checker.h"
 
 //#include "client/browser/osr_renderer.h"
@@ -60,8 +60,8 @@ namespace casper
                     
                 private: // Helpers
                     
-                    scoped_ptr<casper::cef3::browser::RootWindowManager> root_window_manager_;
-                    base::ThreadChecker                                  thread_checker_;      //!< Used to verify that methods are called on the correct thread.
+                    std::unique_ptr<casper::cef3::browser::RootWindowManager> root_window_manager_;
+                    base::ThreadChecker                                  	  thread_checker_;      //!< Used to verify that methods are called on the correct thread.
 
                     
                 public: // Constructor(s) / Destructor
@@ -72,20 +72,20 @@ namespace casper
                  public: // Method(s) / Function(s) - from
                     
                     // MainContext members.
-                    std::string GetConsoleLogPath       () OVERRIDE;
-                    std::string GetDownloadPath         (const std::string& file_name) OVERRIDE;
-                    std::string GetAppWorkingDirectory  () OVERRIDE;
-                    std::string GetMainURL              () OVERRIDE;
-                    cef_color_t GetBackgroundColor      () OVERRIDE;
+                    std::string GetConsoleLogPath       () override;
+                    std::string GetDownloadPath         (const std::string& file_name) override;
+                    std::string GetAppWorkingDirectory  () override;
+                    std::string GetMainURL              () override;
+                    cef_color_t GetBackgroundColor      () override;
                     
-                    bool UseViews                       () OVERRIDE;
-                    bool UseWindowlessRendering         () OVERRIDE;
+                    bool UseViews                       () override;
+                    bool UseWindowlessRendering         () override;
                     
-                    void PopulateSettings               (CefSettings* o_settings) OVERRIDE;
-                    void PopulateBrowserSettings        (CefBrowserSettings* o_settings) OVERRIDE;
+                    void PopulateSettings               (CefSettings* o_settings) override;
+                    void PopulateBrowserSettings        (CefBrowserSettings* o_settings) override;
 //                    void PopulateOsrSettings            (::client::OsrRenderer::Settings* o_settings) ;
                     
-                    casper::cef3::browser::RootWindowManager* GetRootWindowManager() OVERRIDE;
+                    casper::cef3::browser::RootWindowManager* GetRootWindowManager() override;
                     
                 public: // One-shot Call Method(s) / Function(s)
                     

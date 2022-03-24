@@ -8,6 +8,8 @@
 
 #include "cef3/browser/root_window_manager.h"
 
+#include "include/base/cef_callback_helpers.h"
+
 /**
  * @brief Default constructor.
  */
@@ -42,6 +44,6 @@ void casper::cef3::browser::RootWindow::OnExtensionsChanged (const casper::cef3:
     
     ExtensionSet::const_iterator it = extensions.begin();
     for (; it != extensions.end(); ++it) {
-        delegate_->CreateExtensionWindow(*it, CefRect(), NULL, base::Closure(), WithWindowlessRendering());
+        delegate_->CreateExtensionWindow(*it, CefRect(), nullptr, base::DoNothing(), WithWindowlessRendering());
     }
 }

@@ -120,17 +120,17 @@ namespace casper
                     
                 public: // CefClient Method(s) / Function(s)
                     
-                    CefRefPtr<CefLifeSpanHandler>    GetLifeSpanHandler    () OVERRIDE { return life_span_manager_; }
-                    CefRefPtr<CefDisplayHandler>     GetDisplayHandler     () OVERRIDE { return display_handler_; }
-                    CefRefPtr<CefContextMenuHandler> GetContextMenuHandler () OVERRIDE { return context_menu_handler_; }
+                    CefRefPtr<CefLifeSpanHandler>    GetLifeSpanHandler    () override { return life_span_manager_; }
+                    CefRefPtr<CefDisplayHandler>     GetDisplayHandler     () override { return display_handler_; }
+                    CefRefPtr<CefContextMenuHandler> GetContextMenuHandler () override { return context_menu_handler_; }
                     
-                    CefRefPtr<CefRequestHandler>    GetRequestHandler      () OVERRIDE { return request_handler_; }
-                    CefRefPtr<CefDownloadHandler>   GetDownloadHandler     () OVERRIDE { return download_handler_; }
+                    CefRefPtr<CefRequestHandler>    GetRequestHandler      () override { return request_handler_; }
+                    CefRefPtr<CefDownloadHandler>   GetDownloadHandler     () override { return download_handler_; }
                     
-                    CefRefPtr<CefDragHandler>       GetDragHandler         () OVERRIDE { return drag_handler_; }
-                    CefRefPtr<CefKeyboardHandler>   GetKeyboardHandler     () OVERRIDE { return keyboard_handler_; }
-                    CefRefPtr<CefFocusHandler>      GetFocusHandler        () OVERRIDE { return focus_handler_; }
-                    CefRefPtr<CefLoadHandler>       GetLoadHandler         () OVERRIDE { return load_handler_; }
+                    CefRefPtr<CefDragHandler>       GetDragHandler         () override { return drag_handler_; }
+                    CefRefPtr<CefKeyboardHandler>   GetKeyboardHandler     () override { return keyboard_handler_; }
+                    CefRefPtr<CefFocusHandler>      GetFocusHandler        () override { return focus_handler_; }
+                    CefRefPtr<CefLoadHandler>       GetLoadHandler         () override { return load_handler_; }
                 
                 public:
                     

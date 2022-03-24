@@ -10,6 +10,7 @@
 
 #include "include/base/cef_ref_counted.h"
 #include "include/internal/cef_types_wrappers.h"
+#include "include/base/cef_macros.h"
 
 
 #include "cef3/browser/main_context_types.h"

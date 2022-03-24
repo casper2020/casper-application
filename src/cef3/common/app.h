@@ -31,7 +31,7 @@ namespace casper
                 
             public: // Static Method(s) / Function(s)
                 
-                void OnRegisterCustomSchemes (CefRawPtr<CefSchemeRegistrar> registrar) OVERRIDE;
+                void OnRegisterCustomSchemes (CefRawPtr<CefSchemeRegistrar> registrar) override;
                 
             private:
                 

@@ -9,3 +9,7 @@ src/casper/mac/resources/English.lproj/InfoPlist.strings
 
 build
 libcef_dll_wrapper
+libcef_dll
+include
+cef.xcodeproj
+Frameworks

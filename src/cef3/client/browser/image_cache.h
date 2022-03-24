@@ -14,6 +14,7 @@
 #include "include/cef_image.h"
 #include "include/wrapper/cef_closure_task.h"
 #include "include/wrapper/cef_helpers.h"
+#include "include/base/cef_callback_helpers.h"
 
 namespace casper
 {
@@ -107,16 +108,14 @@ namespace casper
                         // True to force reload.
                         bool force_reload_;
                     };
-                    typedef std::vector<ImageInfo> ImageInfoSet;
                     
-                    typedef std::vector<CefRefPtr<CefImage>> ImageSet;
-                    
-                    typedef base::Callback<void(const ImageSet& /*images*/)> LoadImagesCallback;
+                    using ImageInfoSet = std::vector<ImageInfo>;
+                    using ImageSet = std::vector<CefRefPtr<CefImage>>;
+                    using LoadImagesCallback = base::OnceCallback<void(const ImageSet& /*images*/)>;
                     
                     // Loads the images represented by |image_info|. Executes |callback|
                     // either synchronously or asychronously on the UI thread after completion.
-                    void LoadImages(const ImageInfoSet& image_info,
-                                    const LoadImagesCallback& callback);
+                    void LoadImages(const ImageInfoSet& image_info, LoadImagesCallback callback);
                     
                     // Returns an image that has already been cached. Must be called on the
                     // UI thread.
@@ -134,7 +133,7 @@ namespace casper
                     // Load missing image contents on the FILE thread.
                     void LoadMissing(const ImageInfoSet& image_info,
                                      const ImageSet& images,
-                                     const LoadImagesCallback& callback);
+                                     LoadImagesCallback callback);
                     static bool LoadImageContents(const ImageInfo& info, ImageContent* content);
                     static bool LoadImageContents(const std::string& path,
                                                   bool internal,
@@ -144,7 +143,7 @@ namespace casper
                     // Create missing CefImage representations on the UI thread.
                     void UpdateCache(const ImageInfoSet& image_info,
                                      const ImageContentSet& contents,
-                                     const LoadImagesCallback& callback);
+                                     LoadImagesCallback callback);
                     static CefRefPtr<CefImage> CreateImage(const std::string& image_id,
                                                            const ImageContent& content);
                     

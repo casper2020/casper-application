@@ -32,11 +32,11 @@ namespace casper
                 
             public: // Overriden Method(s) / Function(s) - from CefExtensionHandler
                 
-                void OnExtensionLoaded(CefRefPtr<CefExtension> extension) OVERRIDE;
+                void OnExtensionLoaded(CefRefPtr<CefExtension> extension) override;
                 
                 CefRefPtr<CefBrowser> GetActiveBrowser(CefRefPtr<CefExtension> extension,
                                                        CefRefPtr<CefBrowser> browser,
-                                                       bool include_incognito) OVERRIDE;
+                                                       bool include_incognito) override;
                 
             }; // end of class 'ExtensionHandler'
             

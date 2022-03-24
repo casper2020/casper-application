@@ -16,6 +16,7 @@
 #include "include/wrapper/cef_resource_manager.h" // CefResourceManager
 
 #include "include/cef_load_handler.h"             // ErrorCode
+#include "include/cef_callback.h"
 
 #include "cef3/client/common/base_handler.h"
 
@@ -31,7 +32,7 @@ namespace casper
             namespace common
             {
                 
-                class RequestHandler : public CefRequestHandler
+                class RequestHandler : public CefRequestHandler, public CefResourceRequestHandler
                 {
                     
                     IMPLEMENT_REFCOUNTING(RequestHandler);
@@ -59,37 +60,40 @@ namespace casper
                     
                     bool OnBeforeBrowse (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                                          CefRefPtr<CefRequest> request,
-                                         bool user_gesture, bool is_redirect) OVERRIDE;
+                                         bool user_gesture, bool is_redirect) override;
                     
                     bool OnOpenURLFromTab (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                                            const CefString& target_url,
                                            CefRequestHandler::WindowOpenDisposition target_disposition,
-                                           bool user_gesture) OVERRIDE;
+                                           bool user_gesture) override;
+                    
+                public: // CefResourceRequestHandler Method(s) / Function(s)
                     
                     cef_return_value_t            OnBeforeResourceLoad      (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                                                                              CefRefPtr<CefRequest> request,
-                                                                             CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+                                                                             CefRefPtr<CefCallback> callback) override;
                     
                     CefRefPtr<CefResourceHandler> GetResourceHandler        (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-                                                                             CefRefPtr<CefRequest> request) OVERRIDE;
+                                                                             CefRefPtr<CefRequest> request) override;
                     
                     CefRefPtr<CefResponseFilter>  GetResourceResponseFilter (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                                                                              CefRefPtr<CefRequest> request,
-                                                                             CefRefPtr<CefResponse> response) OVERRIDE;
+                                                                             CefRefPtr<CefResponse> response) override;
                     bool OnQuotaRequest(CefRefPtr<CefBrowser> browser,
                                         const CefString& origin_url,
                                         int64 new_size,
-                                        CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+                                        CefRefPtr<CefCallback> callback) override;
                     
                     void OnProtocolExecution(CefRefPtr<CefBrowser> browser,
-                                             const CefString& url,
-                                             bool& allow_os_execution) OVERRIDE;
+                                             CefRefPtr<CefFrame> frame,
+                                             CefRefPtr<CefRequest> request,
+                                             bool& allow_os_execution) override;
                     
                     bool OnCertificateError(CefRefPtr<CefBrowser> browser,
                                             CefLoadHandler::ErrorCode cert_error,
                                             const CefString& request_url,
                                             CefRefPtr<CefSSLInfo> ssl_info,
-                                            CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+                                            CefRefPtr<CefCallback> callback) override;
                     
                     bool OnSelectClientCertificate(
                                                    CefRefPtr<CefBrowser> browser,
@@ -97,10 +101,10 @@ namespace casper
                                                    const CefString& host,
                                                    int port,
                                                    const X509CertificateList& certificates,
-                                                   CefRefPtr<CefSelectClientCertificateCallback> callback) OVERRIDE;
+                                                   CefRefPtr<CefSelectClientCertificateCallback> callback) override;
                     
                     void OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser,
-                                                   TerminationStatus status) OVERRIDE;
+                                                   TerminationStatus status) override;
                     
                 }; // end of class 'RequestHandler'
                 

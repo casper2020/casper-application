@@ -46,6 +46,7 @@ bool casper::cef3::client::common::LifeSpanHandler::OnBeforePopup (CefRefPtr<Cef
                                                                    CefWindowInfo& windowInfo,
                                                                    CefRefPtr<CefClient>& client,
                                                                    CefBrowserSettings& settings,
+                                                                   CefRefPtr<CefDictionaryValue>& extra_info,
                                                                    bool* no_javascript_access)
 {
     CEF_REQUIRE_UI_THREAD();
@@ -70,10 +71,6 @@ void casper::cef3::client::common::LifeSpanHandler::OnAfterCreated (CefRefPtr<Ce
         for (; it != message_handler_set_.end(); ++it)
             base_handler_->message_router_->AddHandler(*(it), false);
     }
-    
-    // Disable mouse cursor change if requested via the command-line flag.
-    if (mouse_cursor_change_disabled_)
-        browser->GetHost()->SetMouseCursorChangeDisabled(true);
     
     // TODO CW - WINDOW SIZE
     if (browser->GetHost()->GetExtension()) {
@@ -113,7 +110,7 @@ void casper::cef3::client::common::LifeSpanHandler::OnBeforeClose(CefRefPtr<CefB
             delete *(it);
         }
         message_handler_set_.clear();
-        base_handler_->message_router_ = NULL;
+        base_handler_->message_router_ = nullptr;
     }
     
     NotifyBrowserClosed(browser);
@@ -147,7 +144,7 @@ void casper::cef3::client::common::LifeSpanHandler::NotifyBrowserCreated (CefRef
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::LifeSpanHandler::NotifyBrowserCreated, this, browser));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::LifeSpanHandler::NotifyBrowserCreated, this, browser));
         return;
     }
     
@@ -160,7 +157,7 @@ void casper::cef3::client::common::LifeSpanHandler::NotifyBrowserClosing (CefRef
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::LifeSpanHandler::NotifyBrowserClosing, this, browser));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::LifeSpanHandler::NotifyBrowserClosing, this, browser));
         return;
     }
     
@@ -172,7 +169,7 @@ void casper::cef3::client::common::LifeSpanHandler::NotifyBrowserClosed (CefRefP
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::LifeSpanHandler::NotifyBrowserClosed, this, browser));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::LifeSpanHandler::NotifyBrowserClosed, this, browser));
         return;
     }
     

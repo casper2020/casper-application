@@ -60,13 +60,13 @@ CefRefPtr<CefStreamReader> casper::cef3::shared::browser::utils::resource::GetBi
 {
     std::string path;
     if (!GetResourceDir(path))
-        return NULL;
+        return nullptr;
     
     path.append("/");
     path.append(resource_name);
     
     if (! casper::cef3::shared::browser::utils::file::FileExists(path.c_str()) )
-        return NULL;
+        return nullptr;
     
     return CefStreamReader::CreateForFile(path);
 }

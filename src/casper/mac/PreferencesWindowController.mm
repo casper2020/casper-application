@@ -102,7 +102,7 @@
     }
 }
 
-- (instancetype)initWithSparkle:(SUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener
+- (instancetype)initWithSparkle:(SPUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener
 {
     self = [self init];
     if ( nil != self ) {
@@ -165,7 +165,7 @@
 
 - (IBAction)checkForUpdates:(id)sender
 {
-    [updater checkForUpdates:self];
+    [updater checkForUpdates];
 }
 
 - (IBAction)cancel:(id)sender

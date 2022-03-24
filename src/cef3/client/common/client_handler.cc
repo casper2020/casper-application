@@ -57,7 +57,7 @@ void casper::cef3::client::common::ClientHandler::DetachDelegate ()
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::ClientHandler::DetachDelegate, this));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::ClientHandler::DetachDelegate, this));
         return;
     }
     

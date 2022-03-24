@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "include/base/cef_scoped_ptr.h"
-
 #include "cef3/browser/root_window.h"
 
 #include "cef3/browser/browser_window.h"
@@ -42,23 +40,23 @@ namespace casper
             public: // Inherited Method(s) / Function(s) - casper::cef3::browser::RootWindow
                 
                 void Init (casper::cef3::browser::RootWindow::Delegate* delegate,
-                           const casper::cef3::browser::RootWindowConfig& config, const CefBrowserSettings& settings) OVERRIDE;
+                           const casper::cef3::browser::RootWindowConfig& config, const CefBrowserSettings& settings) override;
                 
                 void InitAsPopup(casper::cef3::browser::RootWindow::Delegate* delegate,
                                  bool with_controls, bool with_osr,
                                  const CefPopupFeatures& popupFeatures,
-                                 CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings) OVERRIDE;
+                                 CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings) override;
                 
-                void                  Show                     (ShowMode mode) OVERRIDE;
-                void                  Hide                     () OVERRIDE;
-                void                  SetBounds                (int x, int y, size_t width, size_t height) OVERRIDE;
-                void                  Close                    (bool force) OVERRIDE;
-                void                  SetDeviceScaleFactor     (float device_scale_factor) OVERRIDE;
-                float                 GetDeviceScaleFactor     () const OVERRIDE;
-                CefRefPtr<CefBrowser> GetBrowser               () const OVERRIDE;
-                ClientWindowHandle    GetWindowHandle          () const OVERRIDE;
-                bool                  WithWindowlessRendering  () const OVERRIDE;
-                bool                  WithExtension            () const OVERRIDE;
+                void                  Show                     (ShowMode mode) override;
+                void                  Hide                     () override;
+                void                  SetBounds                (int x, int y, size_t width, size_t height) override;
+                void                  Close                    (bool force) override;
+                void                  SetDeviceScaleFactor     (float device_scale_factor) override;
+                float                 GetDeviceScaleFactor     () const override;
+                CefRefPtr<CefBrowser> GetBrowser               () const override;
+                ClientWindowHandle    GetWindowHandle          () const override;
+                bool                  WithWindowlessRendering  () const override;
+                bool                  WithExtension            () const override;
                 
                 // Called by RootWindowDelegate after the associated NSWindow has been
                 // destroyed.
@@ -75,15 +73,15 @@ namespace casper
                 
             private: // Inherited Method(s) / Function(s) - ::client::BrowserWindow::Delegate
                 
-                void OnBrowserCreated         (CefRefPtr<CefBrowser> browser) OVERRIDE;
-                void OnBrowserWindowDestroyed () OVERRIDE;
+                void OnBrowserCreated         (CefRefPtr<CefBrowser> browser) override;
+                void OnBrowserWindowDestroyed () override;
                 
-                void OnSetAddress             (const ::std::string& url) OVERRIDE;
-                void OnSetTitle               (const ::std::string& title) OVERRIDE;
-                void OnSetFullscreen          (bool fullscreen) OVERRIDE;
-                void OnAutoResize             (const CefSize& new_size) OVERRIDE;
-                void OnSetLoadingState        (bool isLoading, bool canGoBack, bool canGoForward) OVERRIDE;
-                void OnSetDraggableRegions    (const ::std::vector<CefDraggableRegion>& regions) OVERRIDE;
+                void OnSetAddress             (const ::std::string& url) override;
+                void OnSetTitle               (const ::std::string& title) override;
+                void OnSetFullscreen          (bool fullscreen) override;
+                void OnAutoResize             (const CefSize& new_size) override;
+                void OnSetLoadingState        (bool isLoading, bool canGoBack, bool canGoForward) override;
+                void OnSetDraggableRegions    (const ::std::vector<CefDraggableRegion>& regions) override;
                 
                 void NotifyDestroyedIfDone();
                 
@@ -93,7 +91,7 @@ namespace casper
                 bool with_extension_;
                 bool is_popup_;
                 CefRect start_rect_;
-                scoped_ptr<casper::cef3::browser::BrowserWindow> browser_window_;
+                std::unique_ptr<casper::cef3::browser::BrowserWindow> browser_window_;
                 bool initialized_;
                 
                 // Main window.

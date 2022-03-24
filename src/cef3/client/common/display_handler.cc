@@ -97,7 +97,7 @@ bool casper::cef3::client::common::DisplayHandler::WriteToConsoleLog (const std:
 void casper::cef3::client::common::DisplayHandler::NotifyAddress (const CefString& url)
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::DisplayHandler::NotifyAddress, this, url));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::DisplayHandler::NotifyAddress, this, url));
         return;
     }
 
@@ -108,7 +108,7 @@ void casper::cef3::client::common::DisplayHandler::NotifyAddress (const CefStrin
 void casper::cef3::client::common::DisplayHandler::NotifyTitle (const CefString& title)
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::DisplayHandler::NotifyTitle, this, title));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::DisplayHandler::NotifyTitle, this, title));
         return;
     }
 
@@ -119,7 +119,7 @@ void casper::cef3::client::common::DisplayHandler::NotifyTitle (const CefString&
 void casper::cef3::client::common::DisplayHandler::NotifyFavicon (CefRefPtr<CefImage> image)
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::DisplayHandler::NotifyFavicon, this, image));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::DisplayHandler::NotifyFavicon, this, image));
         return;
     }
 
@@ -130,7 +130,7 @@ void casper::cef3::client::common::DisplayHandler::NotifyFavicon (CefRefPtr<CefI
 void casper::cef3::client::common::DisplayHandler::NotifyFullscreen (bool fullscreen)
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::DisplayHandler::NotifyFullscreen, this, fullscreen));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::DisplayHandler::NotifyFullscreen, this, fullscreen));
         return;
     }
 
@@ -141,7 +141,7 @@ void casper::cef3::client::common::DisplayHandler::NotifyFullscreen (bool fullsc
 void casper::cef3::client::common::DisplayHandler::NotifyAutoResize (const CefSize& new_size)
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::DisplayHandler::NotifyAutoResize, this, new_size));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::DisplayHandler::NotifyAutoResize, this, new_size));
         return;
     }
 

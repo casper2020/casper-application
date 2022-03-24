@@ -58,7 +58,7 @@ namespace casper
                 
                 // Callback to be executed when the window is closed. Will be executed on the
                 // main thread. This is currently only implemented for Views-based windows.
-                base::Closure close_callback;
+                base::OnceClosure close_callback;
                 
                 // Initial URL to load.
                 std::string url;

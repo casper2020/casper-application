@@ -8,7 +8,8 @@
 #pragma once
 
 #include "include/base/cef_bind.h"
-#include "include/base/cef_scoped_ptr.h"
+#include "include/base/cef_scoped_refptr.h"
+#include "include/base/cef_callback_forward.h"
 #include "include/cef_task.h"
 
 namespace casper
@@ -50,12 +51,14 @@ namespace casper
             public:
                 
                 // Post a closure for execution on the main message loop.
-                void PostClosure(const base::Closure& closure);
-                
+                void PostClosure(base::OnceClosure closure);
+                // Post a closure for execution on the main message loop.
+                void PostClosure(const base::RepeatingClosure& closure);
+
             protected:
                 
                 // Only allow deletion via scoped_ptr.
-                friend struct base::DefaultDeleter<MainMessageLoop>;
+                friend struct std::default_delete<MainMessageLoop>;
                 
                 MainMessageLoop();
                 virtual ~MainMessageLoop();
@@ -104,7 +107,7 @@ namespace casper
                     if ( CURRENTLY_ON_MAIN_THREAD() ) {
                         delete x;
                     } else {
-                        casper::cef3::browser::MainMessageLoop::Get()->PostClosure(base::Bind(&DeleteOnMainThread::Destruct<T>, x));
+                        casper::cef3::browser::MainMessageLoop::Get()->PostClosure(base::BindOnce(&DeleteOnMainThread::Destruct<T>, base::Unretained(x)));
                     }
                 }
             }; // end of struct 'DeleteOnMainThread'

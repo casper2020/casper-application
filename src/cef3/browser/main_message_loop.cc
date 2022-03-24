@@ -5,6 +5,8 @@
 #include "cef3/browser/main_message_loop.h"
 
 #include "include/wrapper/cef_closure_task.h" // CefCreateClosureTask
+#include "include/base/cef_callback.h"
+#include "include/cef_task.h"
 
 casper::cef3::browser::MainMessageLoop* s_main_message_loop_ = NULL;
 
@@ -39,7 +41,12 @@ casper::cef3::browser::MainMessageLoop* casper::cef3::browser::MainMessageLoop::
  *
  * @param a_closure
  */
-void casper::cef3::browser::MainMessageLoop::PostClosure (const base::Closure& a_closure)
+void casper::cef3::browser::MainMessageLoop::PostClosure (base::OnceClosure a_closure)
+{
+    PostTask(CefCreateClosureTask(std::move(a_closure)));
+}
+
+void casper::cef3::browser::MainMessageLoop::PostClosure (const base::RepeatingClosure& a_closure)
 {
     PostTask(CefCreateClosureTask(a_closure));
 }

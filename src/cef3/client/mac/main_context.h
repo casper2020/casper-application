@@ -48,8 +48,8 @@ namespace casper
                     
                 public: // Inherited Virtual Method(s) / Function(s)
                     
-                    virtual bool GetLogsPath      (std::string& o_path) OVERRIDE;
-                    virtual bool GetDownloadsPath (std::string& o_path) OVERRIDE;
+                    virtual bool GetLogsPath      (std::string& o_path) override;
+                    virtual bool GetDownloadsPath (std::string& o_path) override;
                     
                 private:
                     

@@ -2,48 +2,36 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CASPERInitialURL</key>
-	<string>http://localhost</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>casper.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<string>com.cldware.casper-helper-plugin</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>y.x.x</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (c) 2011-2022 Cloudware S.A. All rights reserved.</string>
-	<key>CFBundleShortVersionString</key>
-	<string>x.x.x</string>
 	<key>LSEnvironment</key>
 	<dict>
 		<key>MallocNanoZone</key>
 		<string>0</string>
 	</dict>
+	<key>LSFileQuarantineEnabled</key>
+	<true/>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.9.0</string>
 	<key>LSUIElement</key>
-	<true/>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>1</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
-	<key>SUFeedURL</key>
-	<string>&lt;insert-SUFeedURL-here&gt;</string>
-	<key>SUPublicEDKey</key>
-	<string>&lt;insert-SUPublicEDKey-here&gt;</string>
 </dict>
 </plist>

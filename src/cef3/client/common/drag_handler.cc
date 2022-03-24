@@ -40,6 +40,7 @@ bool casper::cef3::client::common::DragHandler::OnDragEnter (CefRefPtr<CefBrowse
 }
 
 void casper::cef3::client::common::DragHandler::OnDraggableRegionsChanged(CefRefPtr<CefBrowser> browser,
+                                                                          CefRefPtr<CefFrame> frame,
                                                                           const std::vector<CefDraggableRegion>& regions)
 {
     CEF_REQUIRE_UI_THREAD();
@@ -55,7 +56,7 @@ void casper::cef3::client::common::DragHandler::NotifyDraggableRegions (const st
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::DragHandler::NotifyDraggableRegions, this, regions));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::DragHandler::NotifyDraggableRegions, this, regions));
         return;
     }
     

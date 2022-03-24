@@ -89,15 +89,15 @@ scoped_refptr<casper::cef3::browser::RootWindow> casper::cef3::browser::RootWind
 }
 
 scoped_refptr<casper::cef3::browser::RootWindow> casper::cef3::browser::RootWindowManager::CreateRootWindowAsExtension (CefRefPtr<CefExtension> extension,
-                                                                                                        const CefRect& source_bounds,
-                                                                                                        CefRefPtr<CefWindow> parent_window,
-                                                                                                        const base::Closure& close_callback,
-                                                                                                        bool with_controls,
-                                                                                                        bool with_osr) {
+                                                                                                                        const CefRect& source_bounds,
+                                                                                                                        CefRefPtr<CefWindow> parent_window,
+                                                                                                                        base::OnceClosure close_callback,
+                                                                                                                        bool with_controls,
+                                                                                                                        bool with_osr) {
     const std::string& extension_url = casper::cef3::shared::browser::utils::extension::GetExtensionURL(extension);
     if (extension_url.empty()) {
         NOTREACHED() << "Extension cannot be loaded directly.";
-        return NULL;
+        return nullptr;
     }
 
     // Create an initially hidden browser window that loads the extension URL.
@@ -110,32 +110,29 @@ scoped_refptr<casper::cef3::browser::RootWindow> casper::cef3::browser::RootWind
     config.initially_hidden = true;
     config.source_bounds = source_bounds;
     config.parent_window = parent_window;
-    config.close_callback = close_callback;
+    config.close_callback = std::move(close_callback);
     config.url = extension_url;
     return CreateRootWindow(config);
-    
 }
 
 bool casper::cef3::browser::RootWindowManager::HasRootWindowAsExtension (CefRefPtr<CefExtension> extension)
 {
     REQUIRE_MAIN_THREAD();
     
-    RootWindowSet::const_iterator it = root_windows_.begin();
-    for (; it != root_windows_.end(); ++it) {
-        const casper::cef3::browser::RootWindow* root_window = (*it);
+    for (auto root_window : root_windows_) {
         if (!root_window->WithExtension())
-            continue;
-        
+          continue;
+
         CefRefPtr<CefBrowser> browser = root_window->GetBrowser();
         if (!browser)
-            continue;
-        
+          continue;
+
         CefRefPtr<CefExtension> browser_extension =
-        browser->GetHost()->GetExtension();
+            browser->GetHost()->GetExtension();
         DCHECK(browser_extension);
         if (browser_extension->GetIdentifier() == extension->GetIdentifier())
-            return true;
-    }
+          return true;
+      }
     
     return false;
 }
@@ -150,7 +147,7 @@ scoped_refptr<casper::cef3::browser::RootWindow> casper::cef3::browser::RootWind
         if (browser.get() && browser->GetIdentifier() == browser_id)
             return *it;
     }
-    return NULL;
+    return nullptr;
 }
 
 scoped_refptr<casper::cef3::browser::RootWindow> casper::cef3::browser::RootWindowManager::GetActiveRootWindow() const
@@ -169,7 +166,7 @@ void casper::cef3::browser::RootWindowManager::CloseAllWindows (bool force)
 {
     if ( !CURRENTLY_ON_MAIN_THREAD() ) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::browser::RootWindowManager::CloseAllWindows, base::Unretained(this), force));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::browser::RootWindowManager::CloseAllWindows, base::Unretained(this), force));
         return;
     }
     
@@ -185,7 +182,7 @@ void casper::cef3::browser::RootWindowManager::AddExtension (CefRefPtr<CefExtens
 {
     if ( !CURRENTLY_ON_MAIN_THREAD() ) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::browser::RootWindowManager::AddExtension, base::Unretained(this), extension));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::browser::RootWindowManager::AddExtension, base::Unretained(this), extension));
         return;
     }
 
@@ -208,8 +205,7 @@ void casper::cef3::browser::RootWindowManager::OnRootWindowCreated (scoped_refpt
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&RootWindowManager::OnRootWindowCreated,
-                                     base::Unretained(this), root_window));
+        MAIN_POST_CLOSURE(base::BindOnce(&RootWindowManager::OnRootWindowCreated, base::Unretained(this), root_window));
         return;
     }
     
@@ -220,7 +216,7 @@ void casper::cef3::browser::RootWindowManager::OnRootWindowCreated (scoped_refpt
         if (root_windows_.size() == 1U) {
             // The first non-extension root window should be considered the active
             // window.
-            OnRootWindowActivated(root_window);
+            OnRootWindowActivated(root_window.get());
         }
     }
 }
@@ -229,11 +225,10 @@ void casper::cef3::browser::RootWindowManager::NotifyExtensionsChanged()
 {
     REQUIRE_MAIN_THREAD();
     
-    RootWindowSet::const_iterator it = root_windows_.begin();
-    for (; it != root_windows_.end(); ++it) {
-        casper::cef3::browser::RootWindow* root_window = *it;
-        if (!root_window->WithExtension())
+    for ( auto root_window : root_windows_ ) {
+        if ( ! root_window->WithExtension() ) {
             root_window->OnExtensionsChanged(extensions_);
+        }
     }
 }
 
@@ -296,15 +291,15 @@ void casper::cef3::browser::RootWindowManager::OnRootWindowDestroyed (casper::ce
         root_windows_.erase(it);
     
     if (root_window == active_root_window_) {
-        active_root_window_ = NULL;
+        active_root_window_ = nullptr;
         
         base::AutoLock lock_scope(active_browser_lock_);
-        active_browser_ = NULL;
+        active_browser_ = nullptr;
     }
     
     if (terminate_when_all_windows_closed_ && root_windows_.empty()) {
         // All windows have closed. Clean up on the UI thread.
-        CefPostTask(TID_UI, base::Bind(&casper::cef3::browser::RootWindowManager::CleanupOnUIThread, base::Unretained(this)));
+        CefPostTask(TID_UI, base::BindOnce(&casper::cef3::browser::RootWindowManager::CleanupOnUIThread, base::Unretained(this)));
     }
 }
 
@@ -331,7 +326,8 @@ void casper::cef3::browser::RootWindowManager::OnRootWindowActivated (casper::ce
 }
 
 void casper::cef3::browser::RootWindowManager::OnBrowserCreated (casper::cef3::browser::RootWindow* root_window,
-                                         CefRefPtr<CefBrowser> browser) {
+                                                                 CefRefPtr<CefBrowser> browser)
+{
     REQUIRE_MAIN_THREAD();
     
     if (root_window == active_root_window_) {
@@ -340,17 +336,16 @@ void casper::cef3::browser::RootWindowManager::OnBrowserCreated (casper::cef3::b
     }
 }
 
-void casper::cef3::browser::RootWindowManager::CreateExtensionWindow(
-                                              CefRefPtr<CefExtension> extension,
-                                              const CefRect& source_bounds,
-                                              CefRefPtr<CefWindow> parent_window,
-                                              const base::Closure& close_callback,
-                                              bool with_osr) {
+void casper::cef3::browser::RootWindowManager::CreateExtensionWindow (CefRefPtr<CefExtension> extension,
+                                                                      const CefRect& source_bounds,
+                                                                      CefRefPtr<CefWindow> parent_window,
+                                                                      base::OnceClosure close_callback,
+                                                                      bool with_osr)
+{
     REQUIRE_MAIN_THREAD();
     
     if (!HasRootWindowAsExtension(extension)) {
-        CreateRootWindowAsExtension(extension, source_bounds, parent_window,
-                                    close_callback, false, with_osr);
+        CreateRootWindowAsExtension(extension, source_bounds, parent_window, std::move(close_callback), false, with_osr);
     }
 }
 

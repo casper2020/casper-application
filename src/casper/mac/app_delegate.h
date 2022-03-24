@@ -8,7 +8,7 @@
 #include "json/json.h"
 
 // Receives notifications from the application. Will delete itself when done.
-@interface AppDelegate : NSObject<NSApplicationDelegate, PreferencesWindowListener, SUUpdaterDelegate> {
+@interface AppDelegate : NSObject<NSApplicationDelegate, PreferencesWindowListener, SPUUpdaterDelegate> {
     @private
     bool with_controls_;
     bool with_osr_;
@@ -18,16 +18,18 @@
     NSMenuItem   *showWindowMenuItem;
     NSMenuItem   *preferencesMenuItem;
     NSMenuItem   *consoleMenuItem;
+    NSMenuItem   *activityMonitorMenuItem;
     NSMenuItem   *quitMenuItem;
     
     NSMutableDictionary* monitorMenuItems;
     
     @private
     
-    SUUpdater    *updater;
+    SPUUpdater   *updater;
     NSInvocation *updaterInvocation;
     BOOL         relaunch;
     BOOL         relaunching;
+    bool         isProcessBeingDebugged;
     
     @private
     
@@ -37,7 +39,7 @@
     
 }
     
-- (id)initWithControls:(bool)with_controls andOsr:(bool)with_osr;
+- (id)initWithControls:(bool)with_controls withOsr:(BOOL)with_osr andIsBeingDebugged:(BOOL)isBeingDebugged;
 - (void)createApplication:(id)object;
 - (void)tryToTerminateApplication:(NSApplication*)app;
 - (void)enableAccessibility:(bool)bEnable;

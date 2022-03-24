@@ -6,7 +6,7 @@
 #define CASPER_CEF3_BROWSER_BROWSER_WINDOW_H
 #pragma once
 
-#include "include/base/cef_scoped_ptr.h"
+#include "include/base/cef_scoped_refptr.h"
 #include "include/cef_browser.h"
 
 #include "cef3/browser/window_types.h"
@@ -69,6 +69,7 @@ namespace casper
                 virtual void CreateBrowser(ClientWindowHandle parent_handle,
                                            const CefRect& rect,
                                            const CefBrowserSettings& settings,
+                                           CefRefPtr<CefDictionaryValue> extra_info,
                                            CefRefPtr<CefRequestContext> request_context) = 0;
                 
                 // Retrieve the configuration that will be used when creating a popup window.
@@ -119,25 +120,25 @@ namespace casper
                 
             protected:
                 // Allow deletion via scoped_ptr only.
-                friend struct base::DefaultDeleter<BrowserWindow>;
+                friend struct std::default_delete<BrowserWindow>;
                 
                 // Constructor may be called on any thread.
                 // |delegate| must outlive this object.
                 explicit BrowserWindow(Delegate* delegate);
                 
                 // ClientHandlerDelegate methods.
-                void OnBrowserCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-                void OnBrowserClosing(CefRefPtr<CefBrowser> browser) OVERRIDE;
-                void OnBrowserClosed(CefRefPtr<CefBrowser> browser) OVERRIDE;
-                void OnSetAddress(const std::string& url) OVERRIDE;
-                void OnSetTitle(const std::string& title) OVERRIDE;
-                void OnSetFullscreen(bool fullscreen) OVERRIDE;
-                void OnAutoResize(const CefSize& new_size) OVERRIDE;
+                void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
+                void OnBrowserClosing(CefRefPtr<CefBrowser> browser) override;
+                void OnBrowserClosed(CefRefPtr<CefBrowser> browser) override;
+                void OnSetAddress(const std::string& url) override;
+                void OnSetTitle(const std::string& title) override;
+                void OnSetFullscreen(bool fullscreen) override;
+                void OnAutoResize(const CefSize& new_size) override;
                 void OnSetLoadingState(bool isLoading,
                                        bool canGoBack,
-                                       bool canGoForward) OVERRIDE;
+                                       bool canGoForward) override;
                 void OnSetDraggableRegions(
-                                           const std::vector<CefDraggableRegion>& regions) OVERRIDE;
+                                           const std::vector<CefDraggableRegion>& regions) override;
                 
                 Delegate* delegate_;
                 CefRefPtr<CefBrowser> browser_;

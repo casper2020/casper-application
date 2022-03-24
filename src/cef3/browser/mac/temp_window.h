@@ -34,7 +34,7 @@ namespace casper
                 // A single instance will be created/owned by RootWindowManager.
                 friend class RootWindowManager;
                 // Allow deletion via scoped_ptr only.
-                friend struct base::DefaultDeleter<TempWindowMAC>;
+                friend struct std::default_delete<TempWindowMAC>;
                 
                 TempWindowMAC();
                 ~TempWindowMAC();

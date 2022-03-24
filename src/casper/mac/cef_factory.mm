@@ -52,9 +52,9 @@ void casper::cef3::client::common::ClientHandler::SetupResourceManager (CefRefPt
 
 #include "cef3/browser/mac/main_message_loop_external_pump.h"
 
-scoped_ptr<casper::cef3::browser::MainMessageLoopExternalPump> casper::cef3::browser::MainMessageLoopExternalPump::Factory ()
+std::unique_ptr<casper::cef3::browser::MainMessageLoopExternalPump> casper::cef3::browser::MainMessageLoopExternalPump::Factory ()
 {
-    return scoped_ptr<casper::cef3::browser::MainMessageLoopExternalPump>(new casper::cef3::browser::MainMessageLoopExternalPumpMAC());
+    return std::make_unique<casper::cef3::browser::MainMessageLoopExternalPumpMAC>();
 }
 
 #pragma mark - RootWindow

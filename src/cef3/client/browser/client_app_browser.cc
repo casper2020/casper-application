@@ -54,7 +54,12 @@ void casper::cef3::client::browser::ClientAppBrowser::OnBeforeCommandLineProcess
             // Don't create a "GPUCache" directory when cache-path is unspecified.
             command_line->AppendSwitch("disable-gpu-shader-disk-cache");
         }
-        
+     
+#if defined(OS_MAC)
+    // Disable the toolchain prompt on macOS.
+    command_line->AppendSwitch("use-mock-keychain");
+#endif
+
         DelegateSet::iterator it = delegates_.begin();
         for (; it != delegates_.end(); ++it)
             (*it)->OnBeforeCommandLineProcessing(this, command_line);
@@ -65,9 +70,9 @@ void casper::cef3::client::browser::ClientAppBrowser::OnContextInitialized ()
 {
     // Register cookieable schemes with the global cookie manager.
     CefRefPtr<CefCookieManager> manager =
-    CefCookieManager::GetGlobalManager(NULL);
+    CefCookieManager::GetGlobalManager(nullptr);
     DCHECK(manager.get());
-    manager->SetSupportedSchemes(cookieable_schemes_, NULL);
+    // manager->SetSupportedSchemes(cookieable_schemes_, nullptr);
     
     DelegateSet::iterator it = delegates_.begin();
     for (; it != delegates_.end(); ++it)
@@ -81,12 +86,12 @@ void casper::cef3::client::browser::ClientAppBrowser::OnBeforeChildProcessLaunch
         (*it)->OnBeforeChildProcessLaunch(this, command_line);
 }
 
-void casper::cef3::client::browser::ClientAppBrowser::OnRenderProcessThreadCreated (CefRefPtr<CefListValue> extra_info)
-{
-    DelegateSet::iterator it = delegates_.begin();
-    for (; it != delegates_.end(); ++it)
-        (*it)->OnRenderProcessThreadCreated(this, extra_info);
-}
+//void casper::cef3::client::browser::ClientAppBrowser::OnRenderProcessThreadCreated (CefRefPtr<CefListValue> extra_info)
+//{
+//    DelegateSet::iterator it = delegates_.begin();
+//    for (; it != delegates_.end(); ++it)
+//        (*it)->OnRenderProcessThreadCreated(this, extra_info);
+//}
 
 void casper::cef3::client::browser::ClientAppBrowser::OnScheduleMessagePumpWork(int64 delay)
 {

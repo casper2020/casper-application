@@ -42,9 +42,9 @@ namespace casper
                 public: // CefContextMenuHandler Method(s) / Function(s)
                     
                     void OnBeforeContextMenu  (CefRefPtr<CefBrowser> a_browser, CefRefPtr<CefFrame> a_frame,
-                                               CefRefPtr<CefContextMenuParams> a_params, CefRefPtr<CefMenuModel> a_model) OVERRIDE;
+                                               CefRefPtr<CefContextMenuParams> a_params, CefRefPtr<CefMenuModel> a_model) override;
                     bool OnContextMenuCommand (CefRefPtr<CefBrowser> a_browser, CefRefPtr<CefFrame> a_frame,
-                                               CefRefPtr<CefContextMenuParams> a_params, int a_command_id, EventFlags a_event_flags) OVERRIDE;
+                                               CefRefPtr<CefContextMenuParams> a_params, int a_command_id, EventFlags a_event_flags) override;
                     
                 }; // end of class 'RequestHandler'
                 

@@ -30,11 +30,11 @@ namespace casper
                 ~MainMessageLoopExternalPumpMAC();
                 
                 // MainMessageLoopStd methods:
-                void Quit () OVERRIDE;
-                int  Run  () OVERRIDE;
+                void Quit () override;
+                int  Run  () override;
                 
                 // MainMessageLoopExternalPump methods:
-                void OnScheduleMessagePumpWork(int64 delay_ms) OVERRIDE;
+                void OnScheduleMessagePumpWork(int64 delay_ms) override;
                 
                 // Internal methods used for processing the event callbacks. They are public
                 // for simplicity but should not be used directly.
@@ -44,9 +44,9 @@ namespace casper
             protected:
                 
                 // MainMessageLoopExternalPump methods:
-                void SetTimer(int64 delay_ms) OVERRIDE;
-                void KillTimer() OVERRIDE;
-                bool IsTimerPending() OVERRIDE { return timer_ != nil; }
+                void SetTimer(int64 delay_ms) override;
+                void KillTimer() override;
+                bool IsTimerPending() override { return timer_ != nil; }
                 
             private:
                 // Owner thread that will run events.

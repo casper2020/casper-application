@@ -44,12 +44,12 @@ namespace casper
                 public: // CefLoadHandler Method(s) / Function(s)
                     
                     void OnLoadingStateChange (CefRefPtr<CefBrowser> browser,
-                                               bool isLoading, bool canGoBack, bool canGoForward) OVERRIDE;
+                                               bool isLoading, bool canGoBack, bool canGoForward) override;
                     
                     void OnLoadError          (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                                                CefLoadHandler::ErrorCode errorCode,
                                                const CefString& errorText,
-                                               const CefString& failedUrl) OVERRIDE;
+                                               const CefString& failedUrl) override;
                     
                 protected: //
                     

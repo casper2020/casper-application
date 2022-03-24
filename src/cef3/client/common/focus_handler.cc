@@ -40,7 +40,7 @@ void casper::cef3::client::common::FocusHandler::NotifyTakeFocus (bool next)
 {
     if (!CURRENTLY_ON_MAIN_THREAD()) {
         // Execute this method on the main thread.
-        MAIN_POST_CLOSURE(base::Bind(&casper::cef3::client::common::FocusHandler::NotifyTakeFocus, this, next));
+        MAIN_POST_CLOSURE(base::BindOnce(&casper::cef3::client::common::FocusHandler::NotifyTakeFocus, this, next));
         return;
     }
     

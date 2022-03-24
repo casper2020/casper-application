@@ -5,7 +5,7 @@
 #include "cef3/shared/browser/utils/file_util.h"
 
 #include "include/base/cef_build.h"
-#include "include/base/cef_scoped_ptr.h"
+#include "include/base/cef_scoped_refptr.h"
 #include "include/cef_task.h"
 
 #include <algorithm>
@@ -58,7 +58,7 @@ bool casper::cef3::shared::browser::utils::file::ReadFileToString (const std::st
         return false;
     
     const size_t kBufferSize = 1 << 16;
-    scoped_ptr<char[]> buf(new char[kBufferSize]);
+    std::unique_ptr<char[]> buf(new char[kBufferSize]);
     size_t len;
     size_t size = 0;
     bool read_status = true;

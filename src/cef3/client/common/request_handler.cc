@@ -76,7 +76,7 @@ bool casper::cef3::client::common::RequestHandler::OnOpenURLFromTab (CefRefPtr<C
 
 cef_return_value_t casper::cef3::client::common::RequestHandler::OnBeforeResourceLoad (CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                                                                                        CefRefPtr<CefRequest> request,
-                                                                                       CefRefPtr<CefRequestCallback> callback)
+                                                                                       CefRefPtr<CefCallback> callback)
 {
     CEF_REQUIRE_IO_THREAD();
     
@@ -105,20 +105,24 @@ CefRefPtr<CefResponseFilter> casper::cef3::client::common::RequestHandler::GetRe
 bool casper::cef3::client::common::RequestHandler::OnQuotaRequest (CefRefPtr<CefBrowser> browser,
                                                                    const CefString& origin_url,
                                                                    int64 new_size,
-                                                                   CefRefPtr<CefRequestCallback> callback)
+                                                                   CefRefPtr<CefCallback> callback)
 {
     CEF_REQUIRE_IO_THREAD();
     
     static const int64 max_size = 1024 * 1024 * 20;  // 20mb.
     
     // Grant the quota request if the size is reasonable.
-    callback->Continue(new_size <= max_size);
+    if ( new_size <= max_size ) {
+        callback->Continue();
+    } else {
+        callback->Cancel();
+    }
     return true;
 }
 
-
 void casper::cef3::client::common::RequestHandler::OnProtocolExecution (CefRefPtr<CefBrowser> browser,
-                                                                        const CefString& url,
+                                                                        CefRefPtr<CefFrame> frame,
+                                                                        CefRefPtr<CefRequest> request,
                                                                         bool& allow_os_execution)
 {
     CEF_REQUIRE_UI_THREAD();
@@ -128,19 +132,12 @@ void casper::cef3::client::common::RequestHandler::OnProtocolExecution (CefRefPt
 
 
 bool casper::cef3::client::common::RequestHandler::OnCertificateError (CefRefPtr<CefBrowser> browser,
-                                                                       CefLoadHandler::ErrorCode cert_error,
+                                                                       cef_errorcode_t cert_error,
                                                                        const CefString& request_url,
                                                                        CefRefPtr<CefSSLInfo> ssl_info,
-                                                                       CefRefPtr<CefRequestCallback> callback)
+                                                                       CefRefPtr<CefCallback> callback)
 {
     CEF_REQUIRE_UI_THREAD();
-    
-    if (cert_error == ERR_CERT_AUTHORITY_INVALID &&
-        request_url.ToString().find("https://www.magpcss.org/") == 0U) {
-        // Allow the CEF Forum to load. It has a self-signed certificate.
-        callback->Continue(true);
-        return true;
-    }
     
     CefRefPtr<CefX509Certificate> cert = ssl_info->GetX509Certificate();
     if ( cert.get() ) {
@@ -170,7 +167,7 @@ bool casper::cef3::client::common::RequestHandler::OnSelectClientCertificate (Ce
     const std::string& cert_name = command_line->GetSwitchValue(casper::cef3::common::client::switches::kSslClientCertificate);
     
     if (cert_name.empty()) {
-        callback->Select(NULL);
+        callback->Select(nullptr);
         return true;
     }
     

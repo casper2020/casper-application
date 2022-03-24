@@ -67,7 +67,7 @@ namespace casper
                     virtual void CreateExtensionWindow(CefRefPtr<CefExtension> extension,
                                                        const CefRect& source_bounds,
                                                        CefRefPtr<CefWindow> parent_window,
-                                                       const base::Closure& close_callback,
+                                                       base::OnceClosure close_callback,
                                                        bool with_osr) = 0;
                     
                 protected:

@@ -30,7 +30,7 @@ namespace casper
                     
                     ClientBrowserDelegate();
                     
-                    void OnContextInitialized(CefRefPtr<ClientAppBrowser> app) OVERRIDE;
+                    void OnContextInitialized(CefRefPtr<ClientAppBrowser> app) override;
                     
                 private:
                     DISALLOW_COPY_AND_ASSIGN(ClientBrowserDelegate);

@@ -167,9 +167,9 @@ void casper::cef3::client::common::MainContext::PopulateSettings (CefSettings* o
         o_settings->external_message_pump = command_line_->HasSwitch(casper::cef3::common::client::switches::kExternalMessagePump);
     }
     
-    CefString(&o_settings->user_agent)      = settings_.application_.user_agent_;
-    CefString(&o_settings->product_version) = settings_.product_.version_;
-    CefString(&o_settings->cache_path)      = command_line_->GetSwitchValue(casper::cef3::common::client::switches::kCachePath);
+    CefString(&o_settings->user_agent)         = settings_.application_.user_agent_;
+    CefString(&o_settings->user_agent_product) = settings_.product_.version_;
+    CefString(&o_settings->cache_path)         = command_line_->GetSwitchValue(casper::cef3::common::client::switches::kCachePath);
 //    // TODO CW
 //    if ( nullptr == o_settings->cache_path.str || 0 == o_settings->cache_path.length ) {
 //        cef_string_ascii_to_utf16(settings_.paths_.cache_path_.c_str(), settings_.paths_.cache_path_.length(), &o_settings->cache_path);
@@ -194,9 +194,9 @@ void casper::cef3::client::common::MainContext::PopulateBrowserSettings (CefBrow
         o_settings->background_color = settings_.application_.window_.background_color_;
     }
     
-    if ( settings_.paths_.cache_path_.length() > 0 ) {
-        o_settings->application_cache = STATE_ENABLED;
-    }
+//    if ( settings_.paths_.cache_path_.length() > 0 ) {
+//        o_settings->application_cache = STATE_ENABLED;
+//    }
 }
 // TODO CW
 //void casper::cef3::client::common::MainContext::PopulateOsrSettings (::client::OsrRenderer::Settings* o_settings)

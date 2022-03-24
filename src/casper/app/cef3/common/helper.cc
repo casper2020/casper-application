@@ -10,7 +10,6 @@
 #include "cef3/browser/main_context.h"
 #include "cef3/browser/root_window_manager.h"
 
-#include "include/base/cef_string16.h"
 
 bool casper::app::cef3::common::Helper::Reload (CefRefPtr<CefBrowser> a_browser)
 {
@@ -37,7 +36,7 @@ void casper::app::cef3::common::Helper::ZoomReset (CefRefPtr<CefBrowser> a_brows
         return;
     }
     if ( !CefCurrentlyOn(TID_UI) ) {
-        CefPostTask(TID_UI, base::Bind(&casper::app::cef3::common::Helper::ZoomReset, a_browser));
+        CefPostTask(TID_UI, base::BindOnce(&casper::app::cef3::common::Helper::ZoomReset, a_browser));
     } else {
         a_browser->GetHost()->SetZoomLevel(0.0);
     }
@@ -49,7 +48,7 @@ void casper::app::cef3::common::Helper::SetZoom (CefRefPtr<CefBrowser> a_browser
         return;
     }
     if ( !CefCurrentlyOn(TID_UI) ) {
-        CefPostTask(TID_UI, base::Bind(&casper::app::cef3::common::Helper::SetZoom, a_browser, a_delta));
+        CefPostTask(TID_UI, base::BindOnce(&casper::app::cef3::common::Helper::SetZoom, a_browser, a_delta));
     } else {
         a_browser->GetHost()->SetZoomLevel(a_browser->GetHost()->GetZoomLevel() + a_delta);
     }

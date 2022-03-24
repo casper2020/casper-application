@@ -41,7 +41,7 @@ namespace casper
 
                 public: // CefFocusHandler Method(s) / Function(s)
                     
-                    void OnTakeFocus(CefRefPtr<CefBrowser> browser, bool next) OVERRIDE;
+                    void OnTakeFocus(CefRefPtr<CefBrowser> browser, bool next) override;
                     
                 protected:
                     

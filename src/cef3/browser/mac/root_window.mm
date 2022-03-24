@@ -67,7 +67,7 @@ void casper::cef3::browser::RootWindowMAC::Init (casper::cef3::browser::RootWind
     if (CURRENTLY_ON_MAIN_THREAD()) {
         CreateRootWindow(settings, config.initially_hidden);
     } else {
-        MAIN_POST_CLOSURE(base::Bind(&::casper::cef3::browser::RootWindowMAC::CreateRootWindow, this, settings, config.initially_hidden));
+        MAIN_POST_CLOSURE(base::BindOnce(&::casper::cef3::browser::RootWindowMAC::CreateRootWindow, this, settings, config.initially_hidden));
     }
 }
 
@@ -224,7 +224,7 @@ CefRefPtr<CefBrowser> casper::cef3::browser::RootWindowMAC::GetBrowser() const {
     
     if (browser_window_)
         return browser_window_->GetBrowser();
-    return NULL;
+    return nullptr;
 }
 
 ClientWindowHandle casper::cef3::browser::RootWindowMAC::GetWindowHandle() const {
@@ -280,16 +280,17 @@ void casper::cef3::browser::RootWindowMAC::CreateRootWindow (const CefBrowserSet
         window_rect.size.width  = [(NSNumber*)[windowBounds objectAtIndex: 2] unsignedIntValue];
         window_rect.size.height = [(NSNumber*)[windowBounds objectAtIndex: 3] unsignedIntValue];
     } else if ( false == start_rect_.IsEmpty() ) {
+        window_rect.origin.x    = static_cast<NSUInteger>(start_rect_.x);
+        window_rect.origin.y    = static_cast<NSUInteger>(start_rect_.y);
+        window_rect.size.width  = static_cast<NSUInteger>(start_rect_.width);
+        window_rect.size.height = static_cast<NSUInteger>(start_rect_.height);
+        center = YES;
+    } else {
         window_rect.origin.x    = 0;
         window_rect.origin.y    = 0;
         window_rect.size.width  = minimumSize.width;
         window_rect.size.height = minimumSize.height;
         center = YES;
-    } else {
-        window_rect.origin.x    = static_cast<NSUInteger>(start_rect_.x);
-        window_rect.origin.y    = static_cast<NSUInteger>(start_rect_.y);
-        window_rect.size.width  = static_cast<NSUInteger>(start_rect_.width);
-        window_rect.size.height = static_cast<NSUInteger>(start_rect_.height);
     }
     
     // The CEF framework library is loaded at runtime so we need to use this
@@ -348,8 +349,8 @@ void casper::cef3::browser::RootWindowMAC::CreateRootWindow (const CefBrowserSet
     
     if ( false == is_popup_ ) {
         // Create the browser window.
-        browser_window_->CreateBrowser(contentView, CefRect(0, 0, static_cast<int>(window_rect.size.width), static_cast<int>(window_rect.size.height)),
-                                       settings,
+        browser_window_->CreateBrowser(CAST_NSVIEW_TO_CEF_WINDOW_HANDLE(contentView), CefRect(0, 0, static_cast<int>(window_rect.size.width), static_cast<int>(window_rect.size.height)),
+                                       settings, nullptr,
                                        delegate_->GetRequestContext(this));
     } else {
         // With popups we already have a browser window. Parent the browser window

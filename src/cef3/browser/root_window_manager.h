@@ -9,7 +9,7 @@
 
 #include <set>
 
-#include "include/base/cef_scoped_ptr.h"
+#include "include/base/cef_scoped_refptr.h"
 #include "include/cef_command_line.h"
 
 #include "cef3/client/browser/image_cache.h"
@@ -54,7 +54,7 @@ namespace casper
                 CefRefPtr<CefBrowser> active_browser_;
                 
                 // Singleton window used as the temporary parent for popup browsers.
-                scoped_ptr<casper::cef3::browser::TempWindow> temp_window_;
+                std::unique_ptr<casper::cef3::browser::TempWindow> temp_window_;
                 
                 CefRefPtr<CefRequestContext> shared_request_context_;
                 
@@ -70,7 +70,7 @@ namespace casper
             private: // Destructor
                 
                 // Allow deletion via scoped_ptr only.
-                friend struct base::DefaultDeleter<RootWindowManager>;
+                friend struct std::default_delete<RootWindowManager>;
                 
                 ~RootWindowManager();
                 
@@ -97,13 +97,12 @@ namespace casper
                 // If |with_controls| is true the window will show controls.
                 // If |with_osr| is true the window will use off-screen rendering.
                 // This method can be called from anywhere.
-                scoped_refptr<casper::cef3::browser::RootWindow> CreateRootWindowAsExtension(
-                                                                                                     CefRefPtr<CefExtension> extension,
-                                                                                                     const CefRect& source_bounds,
-                                                                                                     CefRefPtr<CefWindow> parent_window,
-                                                                                                     const base::Closure& close_callback,
-                                                                                                     bool with_controls,
-                                                                                                     bool with_osr);
+                scoped_refptr<casper::cef3::browser::RootWindow> CreateRootWindowAsExtension(CefRefPtr<CefExtension> extension,
+                                                                                             const CefRect& source_bounds,
+                                                                                             CefRefPtr<CefWindow> parent_window,
+                                                                                             base::OnceClosure close_callback,
+                                                                                             bool with_controls,
+                                                                                             bool with_osr);
                 
                 // Returns true if a window hosting |extension| currently exists. Must be
                 // called on the main thread.
@@ -135,19 +134,19 @@ namespace casper
                 
             private: // Overriden Method(s) / Function(s) - from casper::cef3::browser::RootWindow::Delegate methods.
                 
-                CefRefPtr<CefRequestContext> GetRequestContext (casper::cef3::browser::RootWindow* root_window) OVERRIDE;
+                CefRefPtr<CefRequestContext> GetRequestContext (casper::cef3::browser::RootWindow* root_window) override;
                 
-                scoped_refptr<client::browser::ImageCache> GetImageCache() OVERRIDE;
-                void OnExit(casper::cef3::browser::RootWindow* root_window) OVERRIDE;
-                void OnRootWindowDestroyed(casper::cef3::browser::RootWindow* root_window) OVERRIDE;
-                void OnRootWindowActivated(casper::cef3::browser::RootWindow* root_window) OVERRIDE;
+                scoped_refptr<client::browser::ImageCache> GetImageCache() override;
+                void OnExit(casper::cef3::browser::RootWindow* root_window) override;
+                void OnRootWindowDestroyed(casper::cef3::browser::RootWindow* root_window) override;
+                void OnRootWindowActivated(casper::cef3::browser::RootWindow* root_window) override;
                 void OnBrowserCreated(casper::cef3::browser::RootWindow* root_window,
-                                      CefRefPtr<CefBrowser> browser) OVERRIDE;
+                                      CefRefPtr<CefBrowser> browser) override;
                 void CreateExtensionWindow(CefRefPtr<CefExtension> extension,
                                            const CefRect& source_bounds,
                                            CefRefPtr<CefWindow> parent_window,
-                                           const base::Closure& close_callback,
-                                           bool with_osr) OVERRIDE;
+                                           base::OnceClosure close_callback,
+                                           bool with_osr) override;
                 
             private:
                 

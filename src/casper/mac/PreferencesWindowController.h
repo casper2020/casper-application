@@ -72,7 +72,7 @@
     struct URLSetting          runtimeDirectoryPrefixSetting;
     struct URLSetting          postgresqlDataDirectorySetting;
     struct StringSetting       postgreSQLArgumentsSetting;
-    SUUpdater*                 updater;
+    SPUUpdater*                updater;
     struct ControlStateSetting automaticallyCheckForUpdatesSetting;
     struct ControlStateSetting automaticallyDownloadUpdatesSetting;
     
@@ -84,7 +84,7 @@
     
 }
 
-- (instancetype)initWithSparkle:(SUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener;
+- (instancetype)initWithSparkle:(SPUUpdater*)updater andWithListener:(id<PreferencesWindowListener>)listener;
 
 - (IBAction)showGeneralPreferences:(id)sender;
 

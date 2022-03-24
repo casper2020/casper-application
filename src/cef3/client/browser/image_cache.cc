@@ -83,14 +83,13 @@ casper::cef3::client::browser::ImageCache::ImageInfo casper::cef3::client::brows
     return Create2x(id, id + ".1x.png", id + ".2x.png", true);
 }
 
-void casper::cef3::client::browser::ImageCache::LoadImages (const ImageInfoSet& image_info, const LoadImagesCallback& callback)
+void casper::cef3::client::browser::ImageCache::LoadImages (const ImageInfoSet& image_info, LoadImagesCallback callback)
 {
     DCHECK(!image_info.empty());
     DCHECK(!callback.is_null());
     
     if (!CefCurrentlyOn(TID_UI)) {
-        CefPostTask(TID_UI, base::Bind(&ImageCache::LoadImages, this, image_info,
-                                       callback));
+        CefPostTask(TID_UI, base::BindOnce(&ImageCache::LoadImages, this, image_info, std::move(callback)));
         return;
     }
     
@@ -103,7 +102,7 @@ void casper::cef3::client::browser::ImageCache::LoadImages (const ImageInfoSet& 
         
         if (info.id_ == kEmptyId) {
             // Image intentionally left empty.
-            images.push_back(NULL);
+            images.push_back(nullptr);
             continue;
         }
         
@@ -120,16 +119,15 @@ void casper::cef3::client::browser::ImageCache::LoadImages (const ImageInfoSet& 
         }
         
         // Load the image.
-        images.push_back(NULL);
+        images.push_back(nullptr);
         if (!missing_images)
             missing_images = true;
     }
     
     if (missing_images) {
-        CefPostTask(TID_FILE, base::Bind(&ImageCache::LoadMissing, this, image_info,
-                                         images, callback));
+        CefPostTask(TID_FILE_USER_BLOCKING, base::BindOnce(&ImageCache::LoadMissing, this, image_info, images, std::move(callback)));
     } else {
-        callback.Run(images);
+        std::move(callback).Run(images);
     }
 }
 
@@ -142,7 +140,7 @@ CefRefPtr<CefImage> casper::cef3::client::browser::ImageCache::GetCachedImage (c
     if (it != image_map_.end())
         return it->second;
     
-    return NULL;
+    return nullptr;
 }
 
 // static
@@ -163,9 +161,9 @@ casper::cef3::client::browser::ImageCache::ImageType casper::cef3::client::brows
 
 void casper::cef3::client::browser::ImageCache::LoadMissing (const casper::cef3::client::browser::ImageCache::ImageInfoSet& image_info,
                                                              const casper::cef3::client::browser::ImageCache::ImageSet& images,
-                                                             const casper::cef3::client::browser::ImageCache::LoadImagesCallback& callback)
+                                                             casper::cef3::client::browser::ImageCache::LoadImagesCallback callback)
 {
-    CEF_REQUIRE_FILE_THREAD();
+    CEF_REQUIRE_FILE_USER_BLOCKING_THREAD();
     
     DCHECK_EQ(image_info.size(), images.size());
     
@@ -185,15 +183,14 @@ void casper::cef3::client::browser::ImageCache::LoadMissing (const casper::cef3:
         contents.push_back(content);
     }
     
-    CefPostTask(TID_UI, base::Bind(&ImageCache::UpdateCache, this, image_info,
-                                   contents, callback));
+    CefPostTask(TID_UI, base::BindOnce(&ImageCache::UpdateCache, this, image_info, contents, std::move(callback)));
 }
 
 // static
 bool casper::cef3::client::browser::ImageCache::LoadImageContents (const casper::cef3::client::browser::ImageCache::ImageInfo& info,
                                                                    casper::cef3::client::browser::ImageCache::ImageContent* content)
 {
-    CEF_REQUIRE_FILE_THREAD();
+    CEF_REQUIRE_FILE_USER_BLOCKING_THREAD();
     
     ImageRepSet::const_iterator it = info.reps_.begin();
     for (; it != info.reps_.end(); ++it) {
@@ -206,8 +203,7 @@ bool casper::cef3::client::browser::ImageCache::LoadImageContents (const casper:
             << rep.path_;
             return false;
         }
-        content->contents_.push_back(
-                                     casper::cef3::client::browser::ImageCache::ImageContent::RepContent(rep_type, rep.scale_factor_, rep_contents));
+        content->contents_.push_back(casper::cef3::client::browser::ImageCache::ImageContent::RepContent(rep_type, rep.scale_factor_, rep_contents));
     }
     
     return true;
@@ -217,7 +213,7 @@ bool casper::cef3::client::browser::ImageCache::LoadImageContents (const casper:
 bool casper::cef3::client::browser::ImageCache::LoadImageContents (const std::string& path, bool internal,
                                                                    casper::cef3::client::browser::ImageCache::ImageType* type, std::string* contents)
 {
-    CEF_REQUIRE_FILE_THREAD();
+    CEF_REQUIRE_FILE_USER_BLOCKING_THREAD();
     
     *type = GetImageType(path);
     if ( *type == TYPE_NONE ) {
@@ -237,7 +233,7 @@ bool casper::cef3::client::browser::ImageCache::LoadImageContents (const std::st
 
 void casper::cef3::client::browser::ImageCache::UpdateCache (const casper::cef3::client::browser::ImageCache::ImageInfoSet& image_info,
                                                              const casper::cef3::client::browser::ImageCache::ImageContentSet& contents,
-                                                             const casper::cef3::client::browser::ImageCache::LoadImagesCallback& callback)
+                                                             casper::cef3::client::browser::ImageCache::LoadImagesCallback callback)
 {
     CEF_REQUIRE_UI_THREAD();
     
@@ -262,7 +258,7 @@ void casper::cef3::client::browser::ImageCache::UpdateCache (const casper::cef3:
         }
     }
     
-    callback.Run(images);
+    std::move(callback).Run(images);
 }
 
 // static
@@ -275,7 +271,7 @@ CefRefPtr<CefImage> casper::cef3::client::browser::ImageCache::CreateImage (cons
     DCHECK(!content.image_);
     
     if (content.contents_.empty())
-        return NULL;
+        return nullptr;
     
     CefRefPtr<CefImage> image = CefImage::CreateImage();
     
@@ -287,18 +283,18 @@ CefRefPtr<CefImage> casper::cef3::client::browser::ImageCache::CreateImage (cons
                                rep.contents_.size())) {
                 LOG(ERROR) << "Failed to create image " << image_id << " for PNG@"
                 << rep.scale_factor_;
-                return NULL;
+                return nullptr;
             }
         } else if (rep.type_ == TYPE_JPEG) {
             if (!image->AddJPEG(rep.scale_factor_, rep.contents_.c_str(),
                                 rep.contents_.size())) {
                 LOG(ERROR) << "Failed to create image " << image_id << " for JPG@"
                 << rep.scale_factor_;
-                return NULL;
+                return nullptr;
             }
         } else {
             NOTREACHED();
-            return NULL;
+            return nullptr;
         }
     }
     

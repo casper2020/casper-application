@@ -34,11 +34,11 @@ namespace casper
                     
                     void OnBeforeDownload (CefRefPtr<CefBrowser> a_browser,
                                            CefRefPtr<CefDownloadItem> a_download_item, const CefString& a_suggested_name,
-                                           CefRefPtr<CefBeforeDownloadCallback> a_callback) OVERRIDE;
+                                           CefRefPtr<CefBeforeDownloadCallback> a_callback) override;
                     
                     void OnDownloadUpdated(CefRefPtr<CefBrowser> a_browser,
                                            CefRefPtr<CefDownloadItem> a_download_item,
-                                           CefRefPtr<CefDownloadItemCallback> a_callback) OVERRIDE;
+                                           CefRefPtr<CefDownloadItemCallback> a_callback) override;
 
                 }; // end of class 'DownloadHandler'
                 
