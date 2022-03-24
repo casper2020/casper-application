@@ -123,8 +123,8 @@ namespace {
         NSStatusBar *statusBar = [NSStatusBar systemStatusBar];
         
         statusItem = [statusBar statusItemWithLength:NSSquareStatusItemLength];
-        statusItem.image =  [NSImage imageNamed:@"StatusBar"];
-        [statusItem.image setTemplate:YES];
+        statusItem.button.image =  [NSImage imageNamed:@"StatusBar"];
+        [statusItem.button.image setTemplate:YES];
         [statusItem retain];
         
         statusItem.menu = [[[NSMenu alloc]init]retain];
@@ -135,7 +135,7 @@ namespace {
         aboutMenuItem           = [[NSMenuItem alloc] initWithTitle:@"About"                action:@selector(about:) keyEquivalent:@""];
         
         showWindowMenuItem      = [[NSMenuItem alloc] initWithTitle:@"Show Window"          action:@selector(showWindow:) keyEquivalent:@"1"];
-        [showWindowMenuItem setKeyEquivalentModifierMask: ( NSShiftKeyMask | NSCommandKeyMask )];
+        [showWindowMenuItem setKeyEquivalentModifierMask: ( NSEventModifierFlagShift | NSEventModifierFlagCommand )];
         
         preferencesMenuItem     = [[NSMenuItem alloc] initWithTitle:@"Preferences..."       action:@selector(showPreferences:) keyEquivalent:@","];
         consoleMenuItem         = [[NSMenuItem alloc] initWithTitle:@"Console..."           action:@selector(showConsole:) keyEquivalent:@"k"];
@@ -247,10 +247,10 @@ namespace {
     NSURL*       url      = [[NSURL alloc]initWithString:urlString];
     PDFDocument* document = [[PDFDocument alloc]init];
     
+    // TODO CW
     // SAMPLE PDF
     {
-        
-        PDFAnnotationText* annotation = [[PDFAnnotationText alloc] initWithBounds:NSMakeRect(40, 500, 200, 200)];
+        PDFAnnotation* annotation = [[PDFAnnotation alloc]initWithBounds:NSMakeRect(40, 500, 200, 200) forType:PDFAnnotationSubtypeText withProperties:nil];
         annotation.color = [NSColor redColor];
         annotation.font = [NSFont fontWithName:@"Helvetica" size:14.0];
         annotation.fontColor = [NSColor whiteColor];
@@ -258,25 +258,22 @@ namespace {
         annotation.iconType = kPDFTextAnnotationIconNote;
         annotation.shouldDisplay = YES;
         annotation.shouldPrint = YES;
-        annotation.open = YES;
-                
+        
         PDFPage* page = [[PDFPage alloc]init];
         [page addAnnotation: annotation];
         
         [document insertPage:page atIndex:0];
         [[document pageAtIndex:0] addAnnotation: annotation];
+
         [document writeToURL:url];
     }
     
     // PRINT
     NSPrintInfo* printInfo = [[NSPrintInfo alloc]init];
     
-    
     NSPrintOperation* op = [document printOperationForPrintInfo:printInfo scalingMode:kPDFPrintPageScaleDownToFit autoRotate:NO];
-    
     [op setShowsPrintPanel: NO == direclty];
-    
-    
+        
     BOOL success = [op runOperation];
     
     NSLog(@"success = %@", success ? @"YES" : @"NO");
@@ -307,12 +304,34 @@ namespace {
 
 - (void)showConsole:(id)sender
 {
-    [[NSWorkspace sharedWorkspace]launchApplication:@"/System/Applications/Utilities/Console.app/Contents/MacOS/Console"];
+    NSURL* url = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.apple.Console"];
+    NSWorkspaceOpenConfiguration* configuration = [NSWorkspaceOpenConfiguration configuration];
+    [configuration setCreatesNewApplicationInstance: NO];
+    configuration.arguments = @[];
+    [[NSWorkspace sharedWorkspace]  openApplicationAtURL:url
+                                           configuration: configuration
+                                       completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Failed to run the app: %@", error.description);
+        }
+        return;
+    }];
 }
 
 - (void)showActivityMonitor:(id)sender
 {
-    [[NSWorkspace sharedWorkspace]launchApplication:@"/System/Applications/Utilities/Activity Monitor.app/Contents/MacOS/Activity Monitor"];
+    NSURL* url = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.apple.ActivityMonitor"];
+    NSWorkspaceOpenConfiguration* configuration = [NSWorkspaceOpenConfiguration configuration];
+    [configuration setCreatesNewApplicationInstance: NO];
+    configuration.arguments = @[];
+    [[NSWorkspace sharedWorkspace]  openApplicationAtURL:url
+                                           configuration: configuration
+                                       completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Failed to run the app: %@", error.description);
+        }
+        return;
+    }];
 }
 
 - (void)about:(id)sender
@@ -352,7 +371,7 @@ namespace {
     }
     
     if ( true == list.isNull() ) {
-        statusItem.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor redColor]];
+        statusItem.button.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor redColor]];
     } else {
         
         Json::ArrayIndex cnt = 0;
@@ -385,12 +404,12 @@ namespace {
         
         if ( list.size() != cnt ) {
             if ( 0 == cnt ) {
-                statusItem.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor redColor]];
+                statusItem.button.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor redColor]];
             } else {
-                statusItem.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor yellowColor]];
+                statusItem.button.image = [AppDelegate tintImage:[NSImage imageNamed:@"StatusBar"] withColor:[NSColor yellowColor]];
             }
         } else {
-            statusItem.image = [NSImage imageNamed:@"StatusBar"];
+            statusItem.button.image = [NSImage imageNamed:@"StatusBar"];
         }
         
     }

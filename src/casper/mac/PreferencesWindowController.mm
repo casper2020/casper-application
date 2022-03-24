@@ -322,7 +322,7 @@
     [panel setAllowsMultipleSelection:NO];
     
     [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
-        if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSModalResponseOK) {
             NSArray* urls = [panel URLs];
             NSURL* url = [urls objectAtIndex:0];
             if ( YES == url.isFileURL  ) {

@@ -300,7 +300,7 @@ void casper::cef3::browser::RootWindowMAC::CreateRootWindow (const CefBrowserSet
     
     window_ = [[window_class alloc]
                initWithContentRect:window_rect
-               styleMask:(NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask | NSUnifiedTitleAndToolbarWindowMask)
+               styleMask:(NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable | NSWindowStyleMaskUnifiedTitleAndToolbar)
                backing:NSBackingStoreBuffered
                defer:NO
             ];
