@@ -6,6 +6,7 @@ Frameworks/*
 src/casper/app/version.h
 src/casper/app/monitor/version.h
 src/casper/mac/resources/English.lproj/InfoPlist.strings
+src/casper/mac/resources/Info.plist
 
 build
 libcef_dll_wrapper
