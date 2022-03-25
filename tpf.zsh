@@ -34,6 +34,7 @@ else
             continue;
         fi
         build_dir=${NRS_PRODUCTS_DIR/tpf/}
+        mkdir -p ${build_dir}
         pushd ${build_dir}
         ln -sf "./casper.app/Contents/Frameworks/Chromium Embedded Framework.framework" 'Chromium Embedded Framework.framework'
         popd
