@@ -2,8 +2,6 @@
 
 set -e
 
-ACTION="$@"
-
 PWD=`pwd`
 
 CEF_FRAMEWORK_DIR=${CASPER_APP_SRC_DIR}/../third-party/cef/Frameworks/${CONFIGURATION}/Chromium\ Embedded\ Framework.framework
@@ -21,4 +19,24 @@ else
         cp -RfL "${CEF_FRAMEWORK_DIR}" ${CASPER_APP_FRAMEWORKS_DIR}
         cp -fL "${CEF_FRAMEWORK_LIB}" ${CASPER_APP_FRAMEWORKS_DIR}
     fi
+fi
+
+#
+# for cef library loaded
+#
+if [ ! -z "${ACTION}" ] && [ 'clean' = "${ACTION}" ]  ; then
+    : # pass
+else
+    HELPERS=('casper Helper' 'casper Helper (GPU)' 'casper Helper (Renderer)' 'casper Helper (Plugin)')
+    for helper in ${HELPERS[@]} ; do
+        build_dir=${NRS_PRODUCTS_DIR/tpf/${helper}}
+        if [ ! -d ${build_dir} ] ; then
+            continue;
+        fi
+        build_dir=${NRS_PRODUCTS_DIR/tpf/}
+        pushd ${build_dir}
+        ln -sf "./casper.app/Contents/Frameworks/Chromium Embedded Framework.framework" 'Chromium Embedded Framework.framework'
+        popd
+        break
+    done
 fi

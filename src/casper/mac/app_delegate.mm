@@ -45,7 +45,7 @@ namespace {
 @implementation AppDelegate
 
 
-- (id)initWithControls:(bool)with_controls withOsr:(BOOL)osr andIsBeingDebugged:(bool)isBeingDebugged {
+- (id)initWithControls:(bool)with_controls withOsr:(BOOL)osr andIsBeingDebugged:(BOOL)isBeingDebugged {
     if (self = [super init]) {
         with_controls_         = with_controls;
         with_osr_              = osr;
