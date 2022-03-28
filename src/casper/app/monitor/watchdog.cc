@@ -23,6 +23,9 @@
 
 #include "casper/app/monitor/helper.h"
 
+#include "cc/utc_time.h"
+#include "cc/threading/worker.h"
+
 #include <unistd.h> // access, pid_t, getppid
 #include <errno.h>  // errno
 #include <signal.h> // sigemptyset, sigaddset, pthread_sigmask, etc
@@ -46,22 +49,6 @@
 #include <fstream>  // std::filebuf
 
 #include <fcntl.h>
-
-#ifdef CASPER_APP_WATCHDOG_LOCK
-    #undef CASPER_APP_WATCHDOG_LOCK
-#endif
-#define CASPER_APP_WATCHDOG_LOCK() [&] () { \
-    assert(0 == locks_.fetch_add(1)); \
-    mutex_.lock(); \
-} ()
-
-#ifdef CASPER_APP_WATCHDOG_UNLOCK
-    #undef CASPER_APP_WATCHDOG_UNLOCK
-#endif
-#define CASPER_APP_WATCHDOG_UNLOCK() [&]() { \
-    assert(1 == locks_.fetch_sub(1)); \
-    mutex_.unlock(); \
-} ()
 
 #ifdef CASPER_APP_WATCHDOG_BARK_ONCE_UNSAFE
     #undef CASPER_APP_WATCHDOG_BARK_ONCE_UNSAFE
@@ -241,7 +228,16 @@ void casper::app::monitor::Watchdog::Start (const Json::Value& a_config, const b
     // ... load processes to launch and monitor ...
     //
    
+    const auto                        sleep   = 2;
+    size_t                            f_rogue = 0;
+    size_t                            m_rogue = 0;
+    std::set<std::string>             targets;
     std::vector<::sys::Process::Info> vector;
+    
+    FILE* log_file = fopen((logs_dir + "/monitor.log").c_str(), "w");
+    if ( NULL != log_file ) {
+        fprintf(log_file, "--- casper-watchdog: %s ---\n", ::cc::UTCTime::NowISO8601DateTime().c_str());
+    }
     
     for ( Json::ArrayIndex idx = 0 ; idx < children.size() ; ++idx ) {
         
@@ -273,10 +269,121 @@ void casper::app::monitor::Watchdog::Start (const Json::Value& a_config, const b
             /* group_       */ "",
             /* working_dir_ */ replace_variables(entry.get("working_dir", "").asString(), common_variables, /* a_is_path */ true),
             /* log_dir      */ logs_dir,
-            /* pid_file_    */ entry.get("pid_file", ( runtime_dir + entry["executable"].asString() + ".pid" ) ).asString(),
+            /* pid_file_    */ entry.get("pid_file", ( runtime_dir + entry["id"].asString() + ".pid" ) ).asString(),
             /* depends_on_  */ precedents
         });
         
+        bool exists;
+        {
+            struct stat stat_info;
+            if ( 0 == stat(vector.back().pid_file_.c_str(), &stat_info) ) {
+                exists = ( 0 != S_ISREG(stat_info.st_mode) );
+            } else if ( ENOENT == errno ) {
+                exists = false;
+            } else {
+                exists = false;
+            }
+        }
+        
+        if ( true == exists ) {
+            pid_t     pid = 0;
+            const int eno = casper::app::monitor::Watchdog::ReadPIDFromFile(vector.back().pid_file_.c_str(), pid);
+            if ( 0 == eno ) {
+                const int signo = casper::app::monitor::Watchdog::KillSignalForProcess(vector.back().id_.c_str());
+                if ( 0 != kill(pid, signo) ) {
+                    if ( nullptr != log_file ) {
+                        if ( ESRCH != errno && NULL != log_file ) {
+                            fprintf(log_file, "%-26s: %-7s: already running, FAILED to send signal %d to process with pid %d - (%d) : %s\n", entry["id"].asCString(), "fROGUE", signo, pid, errno, strerror(errno));
+                        }
+                    }
+                } else if ( nullptr != log_file ) {
+                    f_rogue++;
+                    fprintf(log_file, "%-26s: %-7s: already running, but signal %d was sent to process with pid %d\n", entry["id"].asCString(), "fROGUE", signo, pid);
+                }
+            }
+        }
+        
+        targets.insert(entry["executable"].asCString());
+    }
+    
+    // ... add 'monitor' process ...
+    targets.insert("monitor");
+    
+    // ... wait?
+    if ( 0 != f_rogue ) {
+        if ( nullptr != log_file ) {
+            fprintf(log_file, "Waiting %d second(s) for %ld fROGUE process(es) to handle sent signal(s)....\n", sleep, f_rogue);
+        }
+        usleep(sleep * 1000000);
+    } else {
+        if ( nullptr != log_file ) {
+            fprintf(log_file, "No fROGUE processes found....\n");
+        }
+    }
+    
+    //
+    // KILL ALL ROGUE PROCESSES
+    //
+    {
+        std::vector<sys::bsd::Process::BasicInfo> list;
+        const int eno = sys::bsd::Process::GetAll(list);
+        if ( 0 == eno ) {
+            std::string real_name;
+            for ( const auto& process : list ) {
+                real_name = process.name_;
+                // ... not a target?
+                bool should_kill = ( targets.end() != targets.find(process.name_) );
+                if ( false == should_kill ) {
+                    // ... double check due to process name limitations ...
+                    for ( const auto& target : targets ) {
+                        if ( 0 == strncasecmp(process.name_.c_str(), target.c_str(), process.name_.length()) ) {
+                            if ( not ( 0 == strcasecmp(process.name_.c_str(), "casper") ) ) {
+                                should_kill = true;
+                                real_name   = target.c_str();
+                            }
+                            break;
+                        }
+                    }
+                }
+                if ( false == should_kill ) {
+                    continue;
+                } else if ( 0 == strcasecmp(process.name_.c_str(), "monitor") ) {
+                    if ( getpid() == process.pid_ ) {
+                        continue;
+                    }
+                }
+                
+                const int signo = casper::app::monitor::Watchdog::KillSignalForProcess(process.name_.c_str());
+                if ( 0 != kill(process.pid_, signo) ) {
+                    if ( ESRCH != errno && NULL != log_file ) {
+                        fprintf(log_file, "%-26s: %-7s: already running, unable to send signal %d to process with pid %d - (%d) : %s\n", real_name.c_str(), "rROGUE", signo, process.pid_, errno, strerror(errno));
+                    }
+                } else {
+                    ++m_rogue;
+                    if ( NULL != log_file  ) {
+                        fprintf(log_file, "%-26s: %-7s: already running, but signal %d was sent to process with pid %d\n", real_name.c_str(), "rROGUE", signo, process.pid_);
+                    }
+                }
+            }
+        } else if ( NULL != log_file ) {
+            fprintf(log_file, "Unable to obtain running processes list: - (%d) : %s\n", errno, strerror(errno));
+        }
+        // ... wait?
+        if ( 0 != m_rogue ) {
+            if ( nullptr != log_file ) {
+                fprintf(log_file, "Waiting %d second(s) for %ld rROGUE process(es) to handle sent signal(s)....\n", sleep, m_rogue);
+            }
+            usleep(sleep * 1000000);
+        } else {
+            if ( nullptr != log_file ) {
+                fprintf(log_file, "No mROGUE processes found....\n");
+            }
+        }
+    }
+
+    if ( NULL != log_file ) {
+        fflush(log_file);
+        fclose(log_file);
     }
  
     std::list<::sys::Process::Info> sorted;
@@ -308,7 +415,7 @@ bool casper::app::monitor::Watchdog::Start (const std::list<::sys::Process::Info
     // ... cleanup, if required ...
     Stop();
     
-    CASPER_APP_WATCHDOG_LOCK();
+    CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
     
     listener_ptr_ = &a_listener;
     detached_     = a_detached;
@@ -323,7 +430,7 @@ bool casper::app::monitor::Watchdog::Start (const std::list<::sys::Process::Info
             // ... forget process ...
             delete process;
             // ... failure, unlock mutex ...
-            CASPER_APP_WATCHDOG_UNLOCK();
+            CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
             // ... done ...
             return false;
         }
@@ -338,7 +445,7 @@ bool casper::app::monitor::Watchdog::Start (const std::list<::sys::Process::Info
         CASPER_APP_WATCHDOG_BITE_UNSAFE();
     }
     
-    CASPER_APP_WATCHDOG_UNLOCK();
+    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
     
     // ... install signal(s) handler(s) ...
     signal(SIGUSR2, casper::app::monitor::Watchdog::OnSignal);
@@ -349,7 +456,7 @@ bool casper::app::monitor::Watchdog::Start (const std::list<::sys::Process::Info
     abort_flag_ = a_abort_flag;
     
     // ... start a new thread? ....
-    if ( true == a_detached ) {
+    if ( true == detached_ ) {
         // ... start a new thread ....
         thread_ = new std::thread(&casper::app::monitor::Watchdog::Loop, this);
         thread_->detach();
@@ -374,7 +481,7 @@ void casper::app::monitor::Watchdog::Stop ()
         thread_ = nullptr;
     }
     
-    CASPER_APP_WATCHDOG_LOCK();
+    CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
     
     // ... now try to terminate all running processes, launched by this app ...
     if ( false == TerminateAll(/* a_optional */ true) ) {
@@ -393,7 +500,7 @@ void casper::app::monitor::Watchdog::Stop ()
     detached_     = false;
     main_pid_     = 0;
     
-    CASPER_APP_WATCHDOG_UNLOCK();
+    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
 }
 
 /**
@@ -426,7 +533,7 @@ void casper::app::monitor::Watchdog::Refresh ()
  * @brief Thread function where the 'loop' will run.
  */
 void casper::app::monitor::Watchdog::Loop ()
-{
+{    
     // ... log ...
     CASPER_APP_DEBUG_LOG("status", "%s", "Starting...");
 
@@ -447,7 +554,7 @@ void casper::app::monitor::Watchdog::Loop ()
         pthread_setname_np("Monitor");
     }
     
-    CASPER_APP_WATCHDOG_LOCK();
+    CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
 
     // ... first try to terminate all running processes, launched by this app ...
     if ( false == TerminateAll(/* a_optional */ true) ) {
@@ -463,13 +570,13 @@ void casper::app::monitor::Watchdog::Loop ()
         
         // TODO CW: fix this?
         // ... give some time to process start ...
-        CASPER_APP_WATCHDOG_UNLOCK();
+        CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
         usleep(1000*1000);
-        CASPER_APP_WATCHDOG_LOCK();
+        CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
         
     }
 
-    CASPER_APP_WATCHDOG_UNLOCK();
+    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
 
     // ... restore the signal mask ...
     pthread_sigmask(SIG_SETMASK, &saved_sigmask, NULL);
@@ -561,7 +668,7 @@ void casper::app::monitor::Watchdog::Loop ()
         // ... log ...
         CASPER_APP_DEBUG_LOG("status", "%s", "Received signal...");
         
-        CASPER_APP_WATCHDOG_LOCK();
+        CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
 
         for ( auto process : list_ ) {
             if ( process->pid() == child.pid_ ) {
@@ -577,14 +684,14 @@ void casper::app::monitor::Watchdog::Loop ()
             );
         }
         
-        CASPER_APP_WATCHDOG_UNLOCK();
+        CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
         
         // ... if an error is set, we're in a invalid state!
         if ( true == IsErrorSet() ) {
             break;
         }
         
-        CASPER_APP_WATCHDOG_LOCK();
+        CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
 
         // ... log ...
         CASPER_APP_DEBUG_LOG("status", "... for child %s ( %d )...",
@@ -648,7 +755,7 @@ void casper::app::monitor::Watchdog::Loop ()
             
         }
 
-        CASPER_APP_WATCHDOG_UNLOCK();
+        CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
         
         if ( true == IsErrorSet() ) {
             break;
@@ -664,7 +771,7 @@ void casper::app::monitor::Watchdog::Loop ()
     signal(SIGCHLD, SIG_DFL);
     signal(SIGTERM, SIG_DFL);
 
-    CASPER_APP_WATCHDOG_LOCK();
+    CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
     
     const pid_t my_pid = getpid();
     
@@ -712,12 +819,12 @@ void casper::app::monitor::Watchdog::Loop ()
                 
             }
 
-            CASPER_APP_WATCHDOG_UNLOCK();
+            CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
 
             Notify(SIGUSR2);
             usleep(500*1000);
 
-            CASPER_APP_WATCHDOG_LOCK();
+            CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
 
             pending.clear();
             if ( false == sys::Process::Filter(interest, pending) ) {
@@ -727,7 +834,7 @@ void casper::app::monitor::Watchdog::Loop ()
         }
     }
     
-    CASPER_APP_WATCHDOG_UNLOCK();
+    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
 
     Notify(SIGUSR2);
 
@@ -827,6 +934,7 @@ bool casper::app::monitor::Watchdog::Spawn (::sys::Process& a_process, const boo
     // ... block SIGCHLD?
     if ( true == a_block_sigchld ) {
         sigaddset(&sigmask, SIGCHLD);
+        sigaddset(&sigmask, SIGTERM);
         pthread_sigmask(SIG_BLOCK, &sigmask, &saved_sigmask);
     }
 
@@ -1123,10 +1231,16 @@ void casper::app::monitor::Watchdog::OnSignal (int a_signal_no)
     casper::app::monitor::Watchdog& instance = casper::app::monitor::Watchdog::GetInstance();
     
     // ... log ...
-    CASPER_APP_DEBUG_LOG("status", "%2d", a_signal_no);
+    CASPER_APP_DEBUG_LOG("status", "%2d - [E]", a_signal_no);
     
     // ... notify parent?
     if ( getpid() == instance.main_pid_ ) {
         instance.Notify(a_signal_no);
+    } else {
+        // ... log ...
+        CASPER_APP_DEBUG_LOG("status", "%2d - [I]", a_signal_no);
     }
+    
+    // ... log ...
+    CASPER_APP_DEBUG_LOG("status", "%2d - [L]", a_signal_no);
 }

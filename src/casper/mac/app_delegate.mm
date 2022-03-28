@@ -51,6 +51,7 @@ namespace {
         with_osr_              = osr;
         relaunch               = NO;
         relaunching            = NO;
+        quitting               = NO;
         isProcessBeingDebugged = isBeingDebugged;
         updater                = nil;
         updaterInvocation      = nil;
@@ -419,6 +420,7 @@ namespace {
 - (void)showError:(const Json::Value&)error andRelaunch:(BOOL)relaunch
 {
     NSMutableArray* buttons = [[NSMutableArray alloc]initWithArray:@[@"Preferences", @"Quit", @"Relaunch", @"Console"]];
+    
     if ( YES == isProcessBeingDebugged ) {
         [buttons addObject: @"Ignore"];
     }
@@ -426,6 +428,7 @@ namespace {
                                           informativeText: [NSString stringWithCString: error["msg"].asCString() encoding: NSUTF8StringEncoding]
                                                andButtons: buttons
     ];
+        
     switch(r) {
         case NSAlertThirdButtonReturn:
             self->relaunch = YES;
@@ -547,11 +550,17 @@ namespace {
 
 - (BOOL)shouldRelaunch
 {
-    return ( YES == relaunch );
+    return relaunch;
+}
+
+- (BOOL)shouldQuit
+{
+    return quitting;
 }
 
 - (void)quit:(id)sender
 {
+    quitting = true;
     // .. close open window(s) ( if any ) ...
     casper::cef3::browser::MainContext::Get()->GetRootWindowManager()->CloseAllWindows(true);
     // ... and the main message loop ...

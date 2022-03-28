@@ -680,6 +680,7 @@ int main (int a_argc, char* a_argv[])
                          Json::Value config = Json::Value(Json::ValueType::objectValue);
                          
                          config["directories"]["runtime"] = directories["runtime"].asCString();
+                         config["directories"]["logs"]    = directories["logs"].asCString();
                          config["monitor"]["path"] = launch_path;
                          config["monitor"]["arguments"] = Json::Value(Json::ValueType::arrayValue);
                          config["monitor"]["arguments"].append("-c");

@@ -28,6 +28,7 @@
     SPUUpdater   *updater;
     NSInvocation *updaterInvocation;
     BOOL         relaunch;
+    BOOL         quitting;
     BOOL         relaunching;
     bool         isProcessBeingDebugged;
     
@@ -63,6 +64,7 @@
 - (void)startProcess:(const Json::Value&)process notifyWhenStarted:(void(^)(pid_t))startedCallback andWhenFinished:(void(^)(int,Json::Value))finishedCallback;
 - (void)stopProcess:(pid_t)pid notifyWhenFinished:(void(^)(int,Json::Value))finishedCallback;
 - (BOOL)shouldRelaunch;
+- (BOOL)shouldQuit;
 - (void)quit:(id)sender;
 - (BOOL)updatePending;
 - (void)proceedWithUpdate;

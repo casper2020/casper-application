@@ -24,6 +24,10 @@
 #include "cc/sockets/dgram/ipc/client.h"
 #include "cc/sockets/dgram/ipc/server.h"
 
+#include "casper/app/monitor/watchdog.h"
+
+#include "cc/utc_time.h"
+
 #include "sys/darwin/process.h"
 
 #include "osal/osal_file.h"
@@ -87,6 +91,7 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
     const Json::Value& directories = a_config["directories"];
     
     const std::string runtime_dir = directories["runtime"].asString();
+    const std::string logs_dir    = directories["logs"].asString();
     
     osal::File::Delete(directories["runtime"].asCString(), "*.socket", nullptr);
 
@@ -164,11 +169,107 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
              
          }
         andWhenFinished:^(int a_code, Json::Value a_error) {
-             if ( nullptr != process_ ) {
-                 (void)process_->UnlinkPID(/* a_optional */ true);
-                 delete process_;
-                 process_ = nullptr;
-             }
+            if ( not ( YES == [app_delegate_ shouldQuit] || YES == [app_delegate_ shouldRelaunch ] ) ) {
+                // ... possible crash?
+                if ( EXIT_SUCCESS == a_code ) {
+                    a_code = EXIT_FAILURE;
+                    if ( true == a_error.isNull() ) {
+                        a_error              = Json::Value(Json::ValueType::objectValue);
+                        a_error["msg"]       = "Abnormal 'monitor' process termination - killed by external signal sent illegally?";
+                        a_error["terminate"] = true;
+                    }
+                }
+                
+                class FindCallback : public ::osal::File::FindCallback
+                {
+                    
+                private: // Const Data
+                    
+                    const std::string logs_dir_;
+                    FILE*             log_file_;
+                    
+                public: // Constructor(s) / Destructor
+                    
+                    FindCallback () = delete;
+                    FindCallback (const std::string& a_error, const std::string& a_logs_dir)
+                     : logs_dir_(a_logs_dir)
+                    {
+                        log_file_ = fopen((logs_dir_ + "/monitor.log").c_str(), "w+");
+                        if ( nullptr != log_file_ ) {
+                            fprintf(log_file_, "--- casper-monitor: %s ---\n", ::cc::UTCTime::NowISO8601DateTime().c_str());
+                            fprintf(log_file_, "%s\n", a_error.c_str());
+                            fflush(log_file_);
+                        }
+                    }
+                    
+                    virtual ~FindCallback ()
+                    {
+                        if ( nullptr != log_file_ ) {
+                            fflush(log_file_);
+                            fclose(log_file_);
+                        }
+                    }
+                    
+                public: // Inherited Vrtual Method(s) / Funciton(s)
+                    
+                    virtual bool OnNewFileEntry (const char* a_dir_name, const char* a_file_name)
+                    {
+                        pid_t pid = 0;
+                        try {
+                            const std::string uri = a_dir_name + std::string(a_file_name);
+                            if ( false == osal::File::Exists(uri.c_str()) ) {
+                                // ... next ...
+                                return true;
+                            }
+                            const std::string name = std::string(a_file_name, strlen(a_file_name) - 4);
+                            const int         signo = casper::app::monitor::Watchdog::KillSignalForProcess(name);
+                            // ... try to kill it ...
+                            const int eno = casper::app::monitor::Watchdog::ReadPIDFromFile(uri, pid);
+                            if ( 0 == eno ) {
+                                if ( 0 != kill(pid, signo) && nullptr != log_file_ ) {
+                                    if ( nullptr == strcasestr(a_file_name, "monitor") ) {
+                                        fprintf(log_file_, "%-26s: %-7s: unable to send signal %d to process with pid %d - (%d) : %s\n", name.c_str(), "WARNING", signo, pid, eno, strerror(eno));
+                                    }
+                                } else if ( nullptr != log_file_ ) {
+                                    fprintf(log_file_, "%-26s: %-7s: signal %d sent to process with pid %d\n", name.c_str(), "WARNING", signo, pid);
+                                }
+                            } else {
+                                fprintf(log_file_, "%-26s: %-7s: unable to obtain process pid %d - (%d) : %s\n", name.c_str(), "WARNING", pid, eno, strerror(eno));
+                            }
+                            fflush(log_file_);
+                            (void)osal::File::Delete(uri.c_str());
+                        } catch (...) {
+                            try {
+                                ::cc::Exception::Rethrow(/* a_unhandled */ false, __FILE__, __LINE__, __FUNCTION__);
+                            } catch (const ::cc::Exception& a_cc_exception) {
+                                if ( nullptr != log_file_ ) {
+                                    fprintf(log_file_, "%-26s: %-7s: unable to kill this child process - %s\n", a_file_name, "WARNING", a_cc_exception.what());
+                                    fflush(log_file_);
+                                }
+                            }
+                        }
+                        // ... next ...
+                        return true;
+                    }
+                    
+                };
+                
+                if ( EXIT_SUCCESS != a_code ) {
+                    // ... search for all child processes ( via pid file ) ...
+                    FindCallback c(a_error["msg"].asString(), logs_dir);
+                    // ... kill all child processes ...
+                    ::osal::File::FindRecursive(runtime_dir.c_str(), {"*.pid"}, &c);
+                    // ... stop monitoring ...
+                    cc::sockets::dgram::ipc::Server::GetInstance().Stop(SIGQUIT);
+                }
+            }
+
+            if ( nullptr != process_ ) {
+                (void)process_->UnlinkPID(/* a_optional */ true);
+                delete process_;
+                process_ = nullptr;
+            }
+
             if ( EXIT_SUCCESS != a_code ) {
                 
                 Json::Value message = Json::Value(Json::ValueType::objectValue);

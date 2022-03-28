@@ -27,6 +27,7 @@
 #include <map>
 
 #include "casper/app/monitor/watchdog.h"
+
 #include "cc/sockets/dgram/ipc/client.h"
 #include "cc/sockets/dgram/ipc/server.h"
 
@@ -390,6 +391,13 @@ int main (int a_argc, char* a_argv[])
     } catch (const Json::Exception& a_json_exception) {
         // ... failure ...
         CASPER_APP_LOG("error", "%s", a_json_exception.what());
+    } catch (...) {
+        try {
+            ::cc::Exception::Rethrow(/* a_unhandled */ false, __FILE__, __LINE__, __FUNCTION__);
+        } catch (const ::cc::Exception& a_cc_exception) {
+            // ... failure ...
+            CASPER_APP_LOG("error", "%s", a_cc_exception.what());
+        }
     }
     
     // ... done ...

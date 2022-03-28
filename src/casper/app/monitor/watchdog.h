@@ -33,6 +33,7 @@
 #include <mutex>
 #include <functional>
 #include <atomic>  // std::atomic
+#include <fstream>  // std::ifstream
 
 #include "cc/singleton.h"
 #include "casper/app/logger.h"
@@ -44,6 +45,28 @@
 #include "cc/exception.h"
 
 #include "json/json.h"
+
+#ifdef CASPER_APP_WATCHDOG_LOCK
+    #undef CASPER_APP_WATCHDOG_LOCK
+#endif
+#define CASPER_APP_WATCHDOG_LOCK(a_function, a_line) [&] () { \
+    if ( true == detached_ ) { \
+        CASPER_APP_LOG("status", "%s:%d %s", a_function, a_line, "lock"); \
+        if ( false ) assert(0 == locks_.fetch_add(1)); \
+        mutex_.lock(); \
+    } \
+} ()
+
+#ifdef CASPER_APP_WATCHDOG_UNLOCK
+    #undef CASPER_APP_WATCHDOG_UNLOCK
+#endif
+#define CASPER_APP_WATCHDOG_UNLOCK(a_function, a_line) [&]() { \
+    if ( true == detached_ ) { \
+        CASPER_APP_LOG("status", "%s:%d %s", a_function, a_line, "unlock"); \
+        if ( false ) assert(1 == locks_.fetch_sub(1)); \
+        mutex_.unlock(); \
+    }\
+} ()
 
 namespace casper
 {
@@ -159,6 +182,11 @@ namespace casper
                 void Bark               (const sys::Error& a_error, FILE* a_stream = nullptr) const;
                 void Notify             (const int a_sigal_no);
                 
+            public: // Static Method(s) / Function(s)
+                
+                static int KillSignalForProcess (const std::string& a_name);
+                static int ReadPIDFromFile      (const std::string& a_uri, pid_t& o_pid);
+                
             }; // end of class 'Watchdog'
             
             /**
@@ -166,8 +194,10 @@ namespace casper
              */
             inline bool Watchdog::IsErrorSet ()
             {
-                std::lock_guard<std::mutex> lock(mutex_);
-                return IsErrorSetUnsafe();
+                CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
+                const bool rv = IsErrorSetUnsafe();
+                CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                return rv;
             }
             
             /**
@@ -177,8 +207,14 @@ namespace casper
              */
             inline void Watchdog::GetError (const std::function<void(const ::sys::Error& a_last_error)>& a_callback)
             {
-                std::lock_guard<std::mutex> lock(mutex_);
-                a_callback(last_error_);
+                CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
+                try {
+                    a_callback(last_error_);
+                    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                } catch (...) {
+                    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                    std::rethrow_exception(std::current_exception());
+                }
             }
             
             /**
@@ -197,8 +233,14 @@ namespace casper
              */
             inline void Watchdog::Bite (const bool a_fatal)
             {
-                std::lock_guard<std::mutex> lock(mutex_);
-                BiteUnsafe(a_fatal);
+                CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
+                try {
+                    BiteUnsafe(a_fatal);
+                    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                } catch (...) {
+                    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                    std::rethrow_exception(std::current_exception());
+                }
             }
             
             /**
@@ -255,15 +297,47 @@ namespace casper
              */
             inline void casper::app::monitor::Watchdog::Notify (const int a_signal_no)
             {
-                std::lock_guard<std::mutex> lock(mutex_);
-                if ( nullptr != listener_ptr_ ) {
-                    if ( SIGTERM == a_signal_no ) {
-                        listener_ptr_->OnTerminated();
-                    } else if ( SIGUSR2 == a_signal_no ) {
-                        listener_ptr_->OnRunningProcessesUpdated(list_);
+                CASPER_APP_WATCHDOG_LOCK(__PRETTY_FUNCTION__, __LINE__);
+                try {
+                    if ( nullptr != listener_ptr_ ) {
+                        if ( SIGTERM == a_signal_no ) {
+                            listener_ptr_->OnTerminated();
+                        } else if ( SIGUSR2 == a_signal_no ) {
+                            listener_ptr_->OnRunningProcessesUpdated(list_);
+                        }
                     }
+                    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                } catch (...) {
+                    CASPER_APP_WATCHDOG_UNLOCK(__PRETTY_FUNCTION__, __LINE__);
+                    std::rethrow_exception(std::current_exception());
                 }
             }
+                
+            inline int Watchdog::KillSignalForProcess (const std::string& a_name)
+            {
+                if ( nullptr != strcasestr(a_name.c_str(), "postgres") ) {
+                    return SIGTERM;
+                } else {
+                    return SIGKILL;
+                }
+            }
+
+            inline int Watchdog::ReadPIDFromFile (const std::string& a_uri, pid_t& o_pid)
+            {
+                std::ifstream stream(a_uri);
+                if ( true == stream.is_open() ) {
+                    int pid = 0;
+                    while ( stream >> pid ) {
+                        o_pid = static_cast<pid_t>(pid);
+                        break;
+                    }
+                    stream.close();
+                } else {
+                    return EPERM;
+                }
+                return 0;
+            }
+
             
         } // end of namespace 'monitor'
         
