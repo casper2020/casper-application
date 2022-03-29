@@ -92,8 +92,6 @@ void casper::app::mac::Monitor::Start (const Json::Value& a_config,
     
     const std::string runtime_dir = directories["runtime"].asString();
     const std::string logs_dir    = directories["logs"].asString();
-    
-    osal::File::Delete(directories["runtime"].asCString(), "*.socket", nullptr);
 
     // ... start a unidirectional message channel to send messages to parent process ...
     // ( on error, an exception will be thrown )
