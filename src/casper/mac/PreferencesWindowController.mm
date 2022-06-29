@@ -94,7 +94,7 @@
 - (void)windowWillClose:(NSNotification *)notification
 {    
     if ( self.window == notification.object ) {
-        const int windowCount = [[[NSApplication sharedApplication] windows] count];
+        const auto windowCount = [[[NSApplication sharedApplication] windows] count];
         // TODO CW 2 ==
         if ( 2 == ( windowCount - 1 ) ) {
             [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];

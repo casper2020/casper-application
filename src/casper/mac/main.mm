@@ -65,7 +65,7 @@
 #define READ_LINK(a_link, a_fallback)[&] () { \
     char tmp[PATH_MAX];  tmp[0] = 0; \
     const size_t len = ( sizeof(tmp) / sizeof(tmp[0]) ); \
-    const int count  = readlink(a_link.c_str(), tmp, len); \
+    const ssize_t count  = readlink(a_link.c_str(), tmp, len); \
     if ( -1 == count ) { \
         const int err_no = errno;\
         if ( 22 == err_no ) { \
