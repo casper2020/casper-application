@@ -328,10 +328,10 @@ void casper::app::mac::Monitor::ProcessReceivedMessages ()
         } else if ( 0 == strcasecmp("status", type_c_str) ) {
 
             if ( 0 == strcasecmp("started", data.asCString()) ) {
-                Json::Value message = Json::Value(Json::ValueType::objectValue);
-                message["type"]    = "control";
-                message["control"] = "start";
-                client.Send(message);
+                Json::Value msg = Json::Value(Json::ValueType::objectValue);
+                msg["type"]    = "control";
+                msg["control"] = "start";
+                client.Send(msg);
             } else if ( 0 == strcasecmp("terminated", data.asCString()) ) {
                 client.Stop(SIGQUIT);
                 quit_callback_(message.get("error", Json::Value::null));
