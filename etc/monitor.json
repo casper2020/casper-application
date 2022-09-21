@@ -81,7 +81,7 @@
             "id": "casper-print-queue-2",
             "path": "@@APP_DIRECTORY_PREFIX@@/casper-print-queue-2/bin",
             "executable": "casper-print-queue-2",
-            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-print-queue-2/conf.json -d status",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/casper-print-queue-2/conf.json -d status -i 1",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
         },
