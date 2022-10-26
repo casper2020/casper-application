@@ -1,7 +1,7 @@
 /**
  * @file PreferencesWindowController.m
  *
- * Copyright (c) 2011-2018 Cloudware S.A. All rights reserved.
+ * Copyright (c) 2011-2022 Cloudware S.A. All rights reserved.
  *
  * This file is part of casper.
  *

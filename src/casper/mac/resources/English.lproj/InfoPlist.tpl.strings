@@ -1,5 +1,5 @@
 /* Localized versions of Info.plist keys */
 
-NSHumanReadableCopyright = "Copyright (c) 2011-2019 Cloudware S.A. All rights reserved.";
+NSHumanReadableCopyright = "Copyright (c) 2011-2022 Cloudware S.A. All rights reserved.";
 CFBundleShortVersionString = "x.x.x";
 CFBundleVersion = "y.x.x";
