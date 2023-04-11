@@ -140,6 +140,14 @@
             "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/cloudware-document-scanner/conf.1.json -i 1",
             "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
             "depends_on" : ["beanstalkd", "redis", "postgresql"]
+        },
+        {
+            "id": "jsexcel-calculator",
+            "path": "@@APP_DIRECTORY_PREFIX@@/jsexcel-calculator/bin",
+            "executable": "jsexcel-calculator",
+            "arguments": "-c @@APP_CONFIG_DIRECTORY_PREFIX@@/etc/jsexcel-calculator/conf.json -i 1",
+            "working_dir": "@@APP_WORKING_DIRECTORY_PATH@@",
+            "depends_on" : ["beanstalkd", "redis", "postgresql"]
         }
     ]
 }
