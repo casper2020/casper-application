@@ -99,7 +99,7 @@ void casper::app::Logger::InnerStartup (const std::string& a_path,
                                       ":::: %s ::::", "::::"
     );
     ::ev::LoggerV2::GetInstance().Log(client(), "status",
-                                      ":::: %s (%p) by %s ::::", a_caller_func, this, a_tag.c_str()
+                                      ":::: %s (%p) by %s ::::", a_caller_func, (void*)this, a_tag.c_str()
     );
     ::ev::LoggerV2::GetInstance().Log(client(), "status",
                                       ":::: %s ::::", "::::"
